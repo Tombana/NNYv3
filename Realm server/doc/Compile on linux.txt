@@ -1,0 +1,18 @@
+==How to compile on linux==
+
+1) Install dependencies:
+apt-get install make libpthread glibc(g++ compiler?) libmysqlclient15-dev(later)
+
+2) make init
+Create obj directory
+
+3) make
+Compile sources with g++
+
+4) make clean
+Delete obj directory
+
+=> Alternatively, you can keep the obj directory. The most avantage is when you will update
+SVN files (and use make command again), it will only re-compiles needed files :)
+
+Have fun :]

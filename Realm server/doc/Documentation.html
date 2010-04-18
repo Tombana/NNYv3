@@ -1,0 +1,53 @@
+<html>
+<head>
+<meta http-equiv="Content-Type"/>
+<title>Test</title>
+
+<script>
+
+// Ajax test
+xmlHttp="";
+try{
+// Firefox, Opera 8.0+, Safari
+xmlHttp=new XMLHttpRequest();
+}
+catch (e){
+// Internet Explorer
+try{
+xmlHttp=new ActiveXObject("Msxml2.XMLHTTP");
+}
+catch (e){
+try{
+xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+}
+catch (e){
+alert("Your browser does not support Javascript/Ajax. Please contact support.");
+}
+}
+}
+
+function check(url){
+xmlHttp.onreadystatechange=function(){
+if(xmlHttp.readyState==4){
+if (xmlHttp.responseText.length > 20){
+document.getElementById("result").innerHTML="Loading..."
+window.location=url;
+} else {
+document.getElementById("result").innerHTML="Please run \"GENERATE DOC.bat\" to generate the documentation files, then reload this page :)" 
+
+}
+
+}
+}
+xmlHttp.open("GET", url, true);
+xmlHttp.send(null);
+}
+</script>
+
+</head>
+<body onload="check('html/index.html')">
+
+<span id="result"></span>
+
+</body>
+</html>

@@ -1,0 +1,42 @@
+===========================
+IMPORTANT: Requirements on Linux
+===========================
+=> IMPORTANT: Makefile do some calls to externals PHP tools! Please make sure you have php4 or higher installed first.
+# apt-get install php-cli5
+=> IMPORTANT: Program also needs MySQL library to work properly
+# apt-get install libmysqlclient15-dev
+
+===========================
+[Code::Blocks] How to compile on Windows:
+===========================
+1- Run codeblock project file
+
+2- Compile sources, press F9
+
+3- The program should launch fine, else make sure all DLLs
+are in the same directory the compiled program is running
+
+===========================
+[Easiest] How to compile on Linux:
+===========================
+$ make auto
+
+===========================
+[Harder] How to compile on Linux:
+===========================
+1 - Create objects required folders
+$ make init
+
+2 - Make some changes to sources if needed
+$ emacs/nano/and stuff
+
+3 - Compile the code
+$ make
+
+4 - Run it
+$ ./nnyserver
+
+* Now repeat step 2-4 as long as desired
+
+5 - Clean objects folders
+$ make clean

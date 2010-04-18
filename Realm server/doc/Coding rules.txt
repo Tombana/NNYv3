@@ -1,0 +1,45 @@
+=== CODING RULES ===
+
+- Full capital words are reserved to #defines
+
+- Some function/variables prefix are reserved:
+    mysql_*
+    pthread_*
+    s_*  (structures)
+    v_* (vectors)
+    g_* (global vars)
+    m_* (class member vars)
+    x_* (mutex flags)
+    [ Examples ]
+    g_v_example (global vector example)
+    v_s_example (vector of structures)
+    m_example (member of a class)
+    g_v_s_x_example (global vector of structures + is a mutex)
+
+- Variables name always start with a lowercase letter
+
+- Classes name always start with a CAPITAL letter such as:
+    ZSocket::example();   <- Notice the capital 'Z'
+    ByteArray::example(); <- Notice the capital 'B'
+
+- Namespace names always start with a lowercase letter such as:
+    updater::process(); <- Notice the lowercase 'u'
+
+- ALWAYS use full namespaces! Ie:
+    std::cout
+    std::cin
+    std::endl
+    std::string
+
+- Every functions must be encapsulated into a namespace Ie:
+    updater::process();
+   * NOTE*
+   The only function not encapsulated is threadHandler() since its called by pthread_create
+   (wich is a very old C library and doesnt support namespaces quite well).
+
+- #Defines also have their rules:
+    PCKT_C_* = all packets sent by the client
+    PCKT_S_* = all packets sent by the server
+    H_* = file headers (protection agaisnt inclusion errors)
+    MYSQL_* = mysql connection infos
+    BUILD_* = server version/compilation infos

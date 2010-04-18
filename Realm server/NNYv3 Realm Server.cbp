@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="NNYv3 Realm Server" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Option virtualFolders="Extras\;Sources\;Headers\;Capsule handlers\;" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\Debug\NNYv3 Realm Server" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="dep\" />
+				<Option object_output="obj\Debug\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin\Release\NNYv3 Realm Server" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="dep\" />
+				<Option object_output="obj\Release\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-O3" />
+			<Add option="-O2" />
+			<Add option="-O1" />
+			<Add option="-O" />
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+			<Add directory="dep\pthread\include" />
+			<Add directory="dep\MySQL\include" />
+		</Compiler>
+		<Linker>
+			<Add library="dep\winsocks2\libws2_32.a" />
+			<Add library="dep\pthread\lib\libpthreadGCE2.a" />
+			<Add library="dep\MySQL\lib\libmysqlclient.a" />
+		</Linker>
+		<ExtraCommands>
+			<Add before="$(PROJECT_DIR)tool\Autoversioning\gen.exe" />
+		</ExtraCommands>
+		<Unit filename="src\ByteArray.cpp">
+			<Option virtualFolder="Sources\" />
+		</Unit>
+		<Unit filename="src\ByteArray.h">
+			<Option virtualFolder="Headers\" />
+		</Unit>
+		<Unit filename="src\Database.cpp">
+			<Option virtualFolder="Sources\" />
+		</Unit>
+		<Unit filename="src\Database.h">
+			<Option virtualFolder="Headers\" />
+		</Unit>
+		<Unit filename="src\Dispatcher.cpp">
+			<Option virtualFolder="Sources\" />
+		</Unit>
+		<Unit filename="src\Dispatcher.h">
+			<Option virtualFolder="Headers\" />
+		</Unit>
+		<Unit filename="src\ZSocket.cpp">
+			<Option virtualFolder="Sources\" />
+		</Unit>
+		<Unit filename="src\ZSocket.h">
+			<Option virtualFolder="Headers\" />
+		</Unit>
+		<Unit filename="src\capsuleHandler.hpp">
+			<Option virtualFolder="Extras\" />
+		</Unit>
+		<Unit filename="src\capsuleHdl_default.hpp">
+			<Option virtualFolder="Capsule handlers\" />
+		</Unit>
+		<Unit filename="src\capsuleHdl_sync.hpp">
+			<Option virtualFolder="Capsule handlers\" />
+		</Unit>
+		<Unit filename="src\capsuleHdl_updater.hpp">
+			<Option virtualFolder="Capsule handlers\" />
+		</Unit>
+		<Unit filename="src\config.hpp">
+			<Option virtualFolder="Extras\" />
+		</Unit>
+		<Unit filename="src\main.cpp">
+			<Option virtualFolder="Sources\" />
+		</Unit>
+		<Unit filename="src\main.h">
+			<Option virtualFolder="Headers\" />
+		</Unit>
+		<Unit filename="src\protocol.hpp">
+			<Option virtualFolder="Extras\" />
+		</Unit>
+		<Unit filename="src\threadHandler.cpp">
+			<Option virtualFolder="Sources\" />
+		</Unit>
+		<Unit filename="src\threadHandler.h">
+			<Option virtualFolder="Headers\" />
+		</Unit>
+		<Unit filename="src\version.hpp">
+			<Option virtualFolder="Extras\" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

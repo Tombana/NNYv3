@@ -1,0 +1,10 @@
+=== HEADER === (6bytes in total)
+[Byte] Header "~"
+[Dword] Data size
+[Byte] NbCmds
+
+=== DATA === (variable size)
+/- loop begining
+|	[Short] CmdID
+|	[...] different structures according to CmdID
+\- loop end
