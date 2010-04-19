@@ -55,6 +55,12 @@
 		<Unit filename="src\ByteArray.h">
 			<Option virtualFolder="Classes\" />
 		</Unit>
+		<Unit filename="src\ConfigFile.cpp">
+			<Option virtualFolder="Classes\" />
+		</Unit>
+		<Unit filename="src\ConfigFile.h">
+			<Option virtualFolder="Classes\" />
+		</Unit>
 		<Unit filename="src\ZSocket.cpp">
 			<Option virtualFolder="Classes\" />
 		</Unit>

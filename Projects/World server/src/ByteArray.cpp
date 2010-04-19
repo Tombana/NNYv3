@@ -78,6 +78,12 @@ void ByteArray::addString(std::string &str) {
     m_buffer.append(str);
 }
 
+//! This function append a DWORD and std::string to the byte array
+void ByteArray::addString(std::string str) {
+    addDword((int)str.size());
+    m_buffer.append(str);
+}
+
 //! Clear the byte array entirely
 void ByteArray::clear() {
     m_buffer.clear();

@@ -1,35 +1,39 @@
-//General configuration
-#define CONFIG_SERVER_PORT                  6132
+#ifndef H_CONFIG
+#define H_CONFIG
 
+//Settings
+#define CONFIG_VERBOSE   2
+#define CONFIG_FILENAME  "world.conf"
+
+//=================================================
+//   DO NOT EDIT BELOW THIS LINE UNLESS YOU KNOW
+//              WHAT YOU ARE DOING
+//=================================================
+
+//Server configuration
+#define CONFIG_SERVER_ID                            g_CONFIG.read<unsigned int>  ("SERVER_ID")
+#define CONFIG_SERVER_PORT                          g_CONFIG.read<unsigned int>  ("SERVER_PORT")
+#define CONFIG_SERVER_KEY                           g_CONFIG.read<std::string>   ("SERVER_KEY")
+#define CONFIG_ZSOCKET_MAX_PENDING_CONNECTION       g_CONFIG.read<unsigned int>  ("ZSOCKET_MAX_PENDING_CONNECTION")
 //Realm configuration
-#define CONFIG_REALM_IP                     "127.0.0.1"
-#define CONFIG_REALM_PORT                   6131
-#define CONFIG_SERVER_ID                    1
-#define CONFIG_SERVER_KEY                   "SDFXqjs7nX"
-#define CONFIG_REALMCONNECTOR_RETRY         3 //Retry 3 times before setting a sleep delay
-#define CONFIG_REALMCONNECTOR_RETRY_SLEEP   10 //Sleep 10 seconds, then retry again; (looping)
-
-//#define CONFIG_DATABASE_SUPPORTED         3
-#define CONFIG_VERBOSE                      1
-#define CONFIG_VERBOSE_NOTHING              0
-#define CONFIG_VERBOSE_IMPORTANT            1
-#define CONFIG_VERBOSE_DEBUGGING            2
-
+#define CONFIG_REALM_IP                             g_CONFIG.read<std::string>   ("REALM_IP")
+#define CONFIG_REALM_PORT                           g_CONFIG.read<unsigned int>  ("REALM_PORT")
+#define CONFIG_REALMCONNECTOR_RETRY                 g_CONFIG.read<unsigned int>  ("REALMCONNECTOR_RETRY")
+#define CONFIG_REALMCONNECTOR_RETRY_SLEEP           g_CONFIG.read<unsigned int>  ("REALMCONNECTOR_RETRY_SLEEP")
+//Console error mode
+#define CONFIG_VERBOSE_NOTHING                      0
+#define CONFIG_VERBOSE_IMPORTANT                    1
+#define CONFIG_VERBOSE_DEBUGGING                    2
 //ThreadPool configuration
-#define CONFIG_THREADPOOL_DEFAULT_WORKER    5 //Default first thread workers
-#define CONFIG_THREADPOOL_ADD_WORKER        20 //Amount of threads to create when we are running out
-#define CONFIG_THREADPOOL_MAX_WORKER        500 //Maximum workers/clients allowed to be created
-//TODO (NitriX#): The following thing is to be implemented, otherwise, threads never get destroyed even if no more needed
-//#define CONFIG_THREADPOOL_THRESHOLD       10 //Keep only <threshold value> spare threads in cache, kill all others
-
+#define CONFIG_THREADPOOL_DEFAULT_WORKER            g_CONFIG.read<unsigned int>  ("THREADPOOL_DEFAULT_WORKER")
+#define CONFIG_THREADPOOL_ADD_WORKER                g_CONFIG.read<unsigned int>  ("THREADPOOL_ADD_WORKER")
+#define CONFIG_THREADPOOL_MAX_WORKER                g_CONFIG.read<unsigned int>  ("THREADPOOL_MAX_WORKER")
 //ZSocket configuration
-#define CONFIG_MAX_PENDING_CONNECTION       10
+#define CONFIG_ZSOCKET_MAX_PENDING_CONNECTION       g_CONFIG.read<unsigned int>  ("ZSOCKET_MAX_PENDING_CONNECTION")
 
-//MySQL informations
-//#define CONFIG_MYSQL_SERVER               "localhost"
-//#define CONFIG_MYSQL_USERNAME             "root"
-//#define CONFIG_MYSQL_PASSWORD             "*********"
-//#define CONFIG_MYSQL_DATABASE             "nnyv3_v3"
+//Loading configuration
+#include "ConfigFile.h"
+extern ConfigFile g_CONFIG;
 
 //Easier typedefs
 typedef unsigned char  BYTE;  //1 byte
@@ -42,4 +46,6 @@ typedef unsigned long  DWORD; //4 bytes
     #define sleep(x) Sleep(x * 1000)
 #else
     #include <unistd.h>
+#endif
+
 #endif

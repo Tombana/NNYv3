@@ -90,7 +90,7 @@ bool ZSocket::socket_bind(int port) {
     }
 
     //Listen
-    listen(m_socket.id,CONFIG_MAX_PENDING_CONNECTION); //max connections pending
+    listen(m_socket.id,CONFIG_ZSOCKET_MAX_PENDING_CONNECTION); //max connections pending
 
     return result;
 }
