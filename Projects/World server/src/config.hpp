@@ -1,7 +1,19 @@
 //General configuration
 #define CONFIG_SERVER_PORT                  6132
-//#define CONFIG_DATABASE_SUPPORTED           3
-#define CONFIG_VERBOSE                      2 //[0]Nothing, [1]Important stuff, [2]Debugging
+
+//Realm configuration
+#define CONFIG_REALM_IP                     "127.0.0.1"
+#define CONFIG_REALM_PORT                   6131
+#define CONFIG_SERVER_ID                    1
+#define CONFIG_SERVER_KEY                   "SDFXqjs7nX"
+#define CONFIG_REALMCONNECTOR_RETRY         3 //Retry 3 times before setting a sleep delay
+#define CONFIG_REALMCONNECTOR_RETRY_SLEEP   10 //Sleep 10 seconds, then retry again; (looping)
+
+//#define CONFIG_DATABASE_SUPPORTED         3
+#define CONFIG_VERBOSE                      1
+#define CONFIG_VERBOSE_NOTHING              0
+#define CONFIG_VERBOSE_IMPORTANT            1
+#define CONFIG_VERBOSE_DEBUGGING            2
 
 //ThreadPool configuration
 #define CONFIG_THREADPOOL_DEFAULT_WORKER    5 //Default first thread workers
@@ -11,13 +23,13 @@
 //#define CONFIG_THREADPOOL_THRESHOLD       10 //Keep only <threshold value> spare threads in cache, kill all others
 
 //ZSocket configuration
-#define MAX_PENDING_CONNECTION              10
+#define CONFIG_MAX_PENDING_CONNECTION       10
 
 //MySQL informations
-//#define CONFIG_MYSQL_SERVER                 "localhost"
-//#define CONFIG_MYSQL_USERNAME               "root"
-//#define CONFIG_MYSQL_PASSWORD               "d9klmav5hrya0"
-//#define CONFIG_MYSQL_DATABASE               "nnyv3_v3"
+//#define CONFIG_MYSQL_SERVER               "localhost"
+//#define CONFIG_MYSQL_USERNAME             "root"
+//#define CONFIG_MYSQL_PASSWORD             "*********"
+//#define CONFIG_MYSQL_DATABASE             "nnyv3_v3"
 
 //Easier typedefs
 typedef unsigned char  BYTE;  //1 byte

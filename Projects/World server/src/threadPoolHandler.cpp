@@ -3,8 +3,8 @@
 extern  SOCKET          g_threadStartupData_socketID; //exported from main()
 extern  pthread_mutex_t g_threadPool_mutex; //exported from main()
 extern  pthread_cond_t  g_threadPool_cond; //exported from main()
-extern  int             g_threadPool_counter_job; //exported from main()
-extern  int             g_threadPool_counter_thread; //exported from main()
+extern  unsigned int    g_threadPool_counter_job; //exported from main()
+extern  unsigned int    g_threadPool_counter_thread; //exported from main()
 extern  pthread_mutex_t g_threadPool_counter_mutex; //exported from main()
 
 void *threadPoolHandler (void *ptr) {
@@ -22,7 +22,7 @@ void *threadPoolHandler (void *ptr) {
         //        IMPORTANT VARS TO COPY LOCALLY!
         //          [all g_threadStartupData_]
         //====================================================
-        ZSocket j_socket(g_threadStartupData_socketID);
+        SOCKET job_socketID = g_threadStartupData_socketID;
 
         //====================================================
         //                  RELEASE LOCK
@@ -33,16 +33,14 @@ void *threadPoolHandler (void *ptr) {
         //====================================================
         //                    JOB HERE
         //====================================================
-
-        sleep(20);
-        j_socket.socket_close();
+        threadHandler(job_socketID);
 
         //====================================================
         //                  JOB IS DONE :)
         //====================================================
         pthread_mutex_lock(&g_threadPool_counter_mutex);
         g_threadPool_counter_job--;
-        #if CONFIG_VERBOSE >= 2
+        #if CONFIG_VERBOSE >= CONFIG_VERBOSE_DEBUGGING
             std::cerr << "[threadPoolHandler] " << g_threadPool_counter_job << " active jobs in " <<
             g_threadPool_counter_thread << " threads." << std::endl;
         #endif

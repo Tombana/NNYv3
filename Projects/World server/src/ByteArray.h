@@ -7,6 +7,8 @@
 #include "protocol.hpp"
 #include "config.hpp"
 
+#define BYTEARRAY_VERSION "1.1"
+
 class ByteArray {
 public:
     //Constructors/destructors
@@ -33,11 +35,11 @@ public:
     WORD readWord();
     DWORD readDword();
     std::string readString();
-    void setSeek(DWORD newSeek);
+    void setSeek(unsigned int newSeek);
     void modSeek(int newSeek);
     //Processing packets
-    std::string getPacket();
-    std::string getBuffer();
+    std::string genPacket();
+    std::string getRaw();
     void append(ByteArray &obj);
     void append(std::string &obj);
     void printHex();

@@ -2,5 +2,5 @@
 
 //==== WARNING! DONT EDIT BELOW THIS LINE! ====
 //This part is dinamically generated on compilation by AutoVersioning tool
-#define BUILD_DATE "April 18, 2010 3:01pm"
-#define BUILD_NUMBER 1006
+#define BUILD_DATE "April 18, 2010 8:46pm"
+#define BUILD_NUMBER 1007

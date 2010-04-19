@@ -23,7 +23,7 @@
     #define closesocket(s) close(s);
 #endif
 
-#define ZSOCKET_VERSION "1.2"
+#define ZSOCKET_VERSION "1.3.1"
 
 class ZSocket {
     typedef struct {
@@ -33,15 +33,18 @@ class ZSocket {
 
 public:
                 ZSocket();
-                ZSocket(SOCKET socketID);
                 ~ZSocket();
-    bool        socket_connect(std::string host, int port, bool persistant);
+    void        operator<=(SOCKET &socketID);
+    SOCKET      getSocketID();
+    bool        socket_connect(std::string host, int port);
+    bool        socket_connect(const char *host, int port);
+    void        operator<<(const char *data);
+    void        operator<<(std::string output);
+    void        operator<<(ByteArray::ByteArray &pckt);
     void        socket_write(const char *data);
     void        socket_write(std::string output);
     void        socket_write(ByteArray::ByteArray &pckt);
     bool        socket_bind(int port);
-    SOCKET      getSocketID();
-    void        setSocketID(SOCKET socketID);
     ByteArray   socket_read(int nbBytes);
     SOCKET      socket_acceptClient();
     bool        isAlive();

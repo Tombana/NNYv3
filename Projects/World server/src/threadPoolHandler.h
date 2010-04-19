@@ -5,6 +5,7 @@
 #include "pthread.h"
 #include "ByteArray.h"
 #include "config.hpp"
+#include "threadHandler.h"
 
 void *threadPoolHandler(void *ptr);
 

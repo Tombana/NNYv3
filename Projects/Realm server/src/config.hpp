@@ -2,7 +2,7 @@
 #define DATABASE_SUPPORTED 3
 #define MYSQL_SERVER    "localhost"
 #define MYSQL_USERNAME  "root"
-#define MYSQL_PASSWORD  "d9klmav5hrya0"
+#define MYSQL_PASSWORD  "*********"
 #define MYSQL_DATABASE  "nnyv3_v3"
 
 /*

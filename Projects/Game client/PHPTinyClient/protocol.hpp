@@ -1,6 +1,6 @@
-//Next available PCKT code is         0x000B //PCKT Code 11
+//Next available PCKT code is         0x000C //PCKT Code 12
 
-#define PROTOCOL_VERSION    26
+#define PROTOCOL_VERSION    27
 
 /*****************************
         [X] Multi-directional
@@ -55,3 +55,7 @@
 //Additional: Realmserver will reply with PCKT_R_SYNC_KEY_ACK
 //Params: [dword]serverID
 //Params: [pstr]sync_key
+
+#define PCKT_W_WELCOME      0x000B //PCKT Code 11
+//Info: Server signature sent by the world server to every sockets
+//Params: [None]

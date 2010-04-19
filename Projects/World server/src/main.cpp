@@ -1,15 +1,21 @@
 #include "main.h"
 
 //--------------- GLOBAL SECTION -----------------
+// == THREADPOOL ==
+// The threadpool over-abuse the same two vars all over: g_threadPool_mutex and g_threadPool_cond
+// We no need arrays or anything else.
+// Locks are cummulative, all threads can use thoses two same vars then :)
 SOCKET          g_threadStartupData_socketID; //Protected with g_threadPool_mutex
-//The threadpool over-abuse the same two vars all over: g_threadPool_mutex and g_threadPool_cond
-//We no need arrays or anything else.
-//Locks are cummulative, all threads can use thoses two same vars then :)
 pthread_mutex_t g_threadPool_mutex            = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
 pthread_cond_t  g_threadPool_cond             = PTHREAD_COND_INITIALIZER; //Protected with g_threadPool_mutex
 pthread_mutex_t g_threadPool_counter_mutex    = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
-int             g_threadPool_counter_thread   = 0; //Protected with g_threadPool_counter_mutex
-int             g_threadPool_counter_job      = 0; //Protected with g_threadPool_counter_mutex
+unsigned int    g_threadPool_counter_thread   = 0; //Protected with g_threadPool_counter_mutex
+unsigned int    g_threadPool_counter_job      = 0; //Protected with g_threadPool_counter_mutex
+// == REALM CONNECTOR ==
+pthread_mutex_t g_realmConnector_mutex        = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
+pthread_cond_t  g_realmConnector_cond         = PTHREAD_COND_INITIALIZER; //Protected with g_realmConnector_mutex
+bool            g_realmConnector_authorized   = false; //Protected with g_realmConnector_mutex
+//-------------------------------------------------
 
 int main() {
     //=========================================
@@ -27,7 +33,7 @@ int main() {
     //=========================================
     //          START LISTENING PORT
     //=========================================
-    std::cerr << "[main] Listening on port " << CONFIG_SERVER_PORT << "... ";
+    std::cerr << "Listening on port " << CONFIG_SERVER_PORT << "... ";
     ZSocket mainsocket; //Creating main server socket
     if (mainsocket.socket_bind(CONFIG_SERVER_PORT)) {
         std::cerr << "OK!" << std::endl;
@@ -37,9 +43,24 @@ int main() {
     }
 
     //=========================================
-    //          CONTACT REALM SERVER
+    //            REALM CONNECTOR
     //=========================================
-    //TODO (NitriX#): Put the server online
+    std::cerr << "Connecting to the Realm server... ";
+    pthread_t t_realmConnector;
+    int rc=0;
+    rc = pthread_create(&t_realmConnector, NULL, realmConnector, NULL); //here we launch the thread
+    rc = pthread_detach(t_realmConnector); //Detach thread so it works on its own
+    #if DEBUG_VERBOSE >= DEBUG_VERBOSE_IMPORTANT
+        if (rc) std::cerr << "[main] @ERROR: pthread: pthread_create() failed! (Realm connector)" << std::endl;
+    #endif
+    pthread_mutex_lock(&g_realmConnector_mutex);
+    pthread_cond_wait(&g_realmConnector_cond, &g_realmConnector_mutex);
+    if (g_realmConnector_authorized) {
+            std::cerr << "OK!" << std::endl;
+    } else {
+            std::cerr << "Failed!" << std::endl;
+    }
+    pthread_mutex_unlock(&g_realmConnector_mutex);
 
     //=========================================
     //          CREATING THREADPOOL
@@ -58,20 +79,18 @@ int main() {
         g_threadStartupData_socketID = mainsocket.socket_acceptClient();
         //-----------------------------------------------
 
-        std::cerr << "New client!" << std::endl;
-
-        //ThreadPool :D
+        //ThreadPool: counters
         pthread_mutex_lock(&g_threadPool_counter_mutex);
             g_threadPool_counter_job++;
-            int counter_job = g_threadPool_counter_job;
-            int counter_thread = g_threadPool_counter_thread;
-            #if CONFIG_VERBOSE >= 2
+            unsigned int counter_job = g_threadPool_counter_job;
+            unsigned int counter_thread = g_threadPool_counter_thread;
+            #if CONFIG_VERBOSE >= CONFIG_VERBOSE_DEBUGGING
                 std::cerr << "[threadPoolHandler] " << g_threadPool_counter_job << " active jobs in " <<
                 g_threadPool_counter_thread << " threads." << std::endl;
             #endif
         pthread_mutex_unlock(&g_threadPool_counter_mutex);
 
-        //Check if all threads are used
+        //ThreadPool: Check threads usage and perform action accordingly
         if (counter_job == counter_thread) {
             //Check if can still create more threads
             if (counter_thread < CONFIG_THREADPOOL_MAX_WORKER) {
@@ -109,8 +128,10 @@ void printStartupMessage() {
     "| Libraries/classes version: \t\t\t\t" << std::endl <<
     "| \tServer protocol: v" << PROTOCOL_VERSION << std::endl <<
     "| \tZSocket: " << ZSOCKET_VERSION << std::endl <<
+    "| \tByteArray: " << BYTEARRAY_VERSION << std::endl <<
     "|" << std::endl <<
     "| Recent modifications:" << std::endl <<
+    "|   Connect to the realm server to get online" << std::endl <<
     "|   ThreadPool implemented, finally!" << std::endl <<
     "|   Forked & very edited from Realm sources" << std::endl <<
     "\\-----" << std::endl;
@@ -122,7 +143,7 @@ void createNbThreadWorker(int amount) {
         pthread_t thread;
         //Counting threads...
         pthread_mutex_lock(&g_threadPool_counter_mutex);
-        g_threadPool_counter_thread++;
+        g_threadPool_counter_thread++; //Tread-safety: here is a mutex because threads may decrement(--) this variable
         pthread_mutex_unlock(&g_threadPool_counter_mutex);
 
         //Launching thread and send the threadData structure memory address as parameters
@@ -132,7 +153,7 @@ void createNbThreadWorker(int amount) {
         //Checking errors
         if (rc) std::cerr << "[main] @ERROR: pthread: pthread_create() failed!" << std::endl;
     }
-    #if CONFIG_VERBOSE >= 2
+    #if CONFIG_VERBOSE >= CONFIG_VERBOSE_DEBUGGING
         std::cerr << "[main] " << amount << " thread worker has been created!" << std::endl;
     #endif
 }

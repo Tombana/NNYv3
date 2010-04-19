@@ -7,6 +7,8 @@
 #include "protocol.hpp"
 #include "config.hpp"
 
+#define BYTEARRAY_VERSION "1.0"
+
 class ByteArray {
 public:
     //Constructors/destructors

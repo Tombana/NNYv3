@@ -11,4 +11,6 @@ foreach ($lines as $key=>$value) {
 		define($params[0], hexdec(str_replace('0X','',$params[1])));
 	}
 }
+
+echo 'Protocol loaded: v'.PROTOCOL_VERSION."\n";
 ?>

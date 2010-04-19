@@ -8,8 +8,11 @@ $SERVERID = 1;
 $SYNC_KEY = 'SDFXqjs7nX'; 
 $VERBOSE = False;
 /////////////////////////////////////////////////////
+echo 'PHPTinyClient v1.0.8'."\n";
 include('ByteArray.php');
 include('ProtocolLoader.php'); //Load protocol #defines
+
+echo "\n";
 
 $mainsock = socket_create(AF_INET, SOCK_STREAM, 0);
 socket_set_option($mainsock, SOL_SOCKET,SO_REUSEADDR, 1);
@@ -64,8 +67,18 @@ if($input==null){
 for ($j=0;$j<count($clients);$j++){ // on le cherche dans le tableau
 if($clients[$j]==$clients[$i]){ // trouvé
 echo '@ERROR: Connection closed by the remote host'."\n";
-array_splice($clients,$j,1); // on le retire du tableau
-$i--;
+	if ($RECONNECT) {
+		$clients[$j]['SOCKET']=@socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+		if (!@socket_connect($clients[$j]['SOCKET'], $RECONNECT_IP, $RECONNECT_PORT)) {
+			echo '@ERROR: Unable to re-connect to '.$RECONNECT_IP.' on port '.$RECONNECT_PORT."\n";
+			pause_exit();
+		}
+		echo '@INFO: Now connected to '.$RECONNECT_IP.' on port '.$RECONNECT_PORT."\n";
+		$clients[$nb]['BUFFER']=new ByteArray();
+	} else {
+		array_splice($clients,$j,1); // on le retire du tableau
+		$i--;
+	}
 }
 }
 }else{
@@ -133,10 +146,16 @@ while (true) {
 						echo '[capsuleHandler] Server is gone, ahah!'."\n";
 						break;
 					case PCKT_R_WELCOME:
-						echo '[capsuleHandler] Welcome packet'."\n";
+						echo '[capsuleHandler] Realm server welcome packet'."\n";
+						break;
+					case PCKT_W_WELCOME:
+						echo '[capsuleHandler] World server welcome packet'."\n";
 						break;
 					case PCKT_R_CONNECT:
-						echo '[capsuleHandler] Connect to server on '.$CAPSULE->readString().':'.$CAPSULE->readWord()."\n";
+						$RECONNECT = true;
+						$RECONNECT_IP = $CAPSULE->readString();
+						$RECONNECT_PORT = $CAPSULE->readWord();
+						echo '[capsuleHandler] Connect to server on '.$RECONNECT_IP.':'.$RECONNECT_PORT."\n";
 						break;
 					case PCKT_R_SYNC_KEY_ACK:
 						if ($CAPSULE->readByte()) {
@@ -146,7 +165,10 @@ while (true) {
 						}
 						break;
 					case PCKT_R_DOWNLOAD:
-						echo '[capsuleHandler] Download: '.$CAPSULE->readDword().'-'.$CAPSULE->readString().'-'.$CAPSULE->readString()."\n";
+						$CAPSULE->readDword();
+						$CAPSULE->readString();
+						$CAPSULE->readString();
+						echo '[capsuleHandler] File download requested but ignored'."\n";
 						break;
 					case PCKT_R_DOWNLOAD_EOF:
 						echo '[capsuleHandler] List complete!'."\n";
