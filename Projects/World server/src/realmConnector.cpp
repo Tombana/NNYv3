@@ -9,6 +9,7 @@ void *realmConnector (void *ptr) {
 
     while (true) {
         ZSocket realm;
+        realm.socket_create();
         realm.socket_connect(CONFIG_REALM_IP, CONFIG_REALM_PORT);
 
         ByteArray packetToSend;
@@ -19,8 +20,9 @@ void *realmConnector (void *ptr) {
         realm << packetToSend;
 
         while (true) {
-            ByteArray input = realm.socket_read(1024);
-            if (!realm.isAlive()) break;
+            ByteArray input;
+            realm >> input;
+            if (!realm.isConnected()) break;
 
             //input.readByte(); //Header
             //input.readDword(); //Size

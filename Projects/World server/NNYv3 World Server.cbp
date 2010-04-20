@@ -43,7 +43,7 @@
 		</Compiler>
 		<Linker>
 			<Add library="..\..\Dependencies\winsocks2\libws2_32.a" />
-			<Add library="..\..\Dependencies\pthread\lib\libpthreadGCE2.a" />
+			<Add library="..\..\Dependencies\pthread\lib\libpthreadGC2.a" />
 			<Add library="..\..\Dependencies\MySQL\lib\libmysqlclient.a" />
 		</Linker>
 		<ExtraCommands>

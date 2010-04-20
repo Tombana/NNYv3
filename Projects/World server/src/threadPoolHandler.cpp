@@ -49,6 +49,8 @@ void *threadPoolHandler (void *ptr) {
         //ALGORYTM HERE, WOHOO!
         //....
         //if() {
+
+        //LITTLE TEST
         //pthread_mutex_lock(&g_threadPool_counter_mutex);
         //g_threadPool_counter_thread--;
         //pthread_mutex_unlock(&g_threadPool_counter_mutex);

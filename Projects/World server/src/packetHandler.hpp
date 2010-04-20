@@ -5,14 +5,15 @@ while (true) {
     //+++ this is usually placed whiting a while(true) loop with a socketRead blocking just before +++
 
     //here we have read all bytes from the socket and put it into 'input'
-    ByteArray input = threadData.socket.socket_read(1024);
+    ByteArray input;
+    threadData.socket >> input;
     //'buffer' is a special ByteArray class to read/write a byte array.
     //This object is unique to all threads and is never destroyed.
     //(well its actually destroyed when the socket disconnect but yeah)
     buffer.append(input); //so we append the new input to the end of the buffer
 
     //!!!!!!!!!!!!!!!!!!
-    if (!threadData.socket.isAlive()) break; //socket disconnected
+    if (!threadData.socket.isDataReceived()) break; //if more than 0 bytes has been read
     //!!!!!!!!!!!!!!!!!!
 
     //a while() here:
@@ -94,7 +95,8 @@ while (true) {
                 std::cerr << "[threadHandler] @ERROR: Packets are corrupted!" << std::endl;
                 std::cerr << "[threadHandler] @ERROR: There is another capsule in this packet, not starting with 0x7E!" << std::endl;
             #endif
-            //TODO (NitriX#): threadHandler, packets corrupted! Drop the guy & log
+            threadData.socket.socket_close();
+            break;
         }
     }
 }

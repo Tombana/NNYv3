@@ -16,14 +16,15 @@
 #define CONFIG_VERBOSE_DEBUGGING            2
 
 //ThreadPool configuration
-#define CONFIG_THREADPOOL_DEFAULT_WORKER    5 //Default first thread workers
+#define CONFIG_THREADPOOL_DEFAULT_WORKER    10 //Default first thread workers
 #define CONFIG_THREADPOOL_ADD_WORKER        20 //Amount of threads to create when we are running out
 #define CONFIG_THREADPOOL_MAX_WORKER        500 //Maximum workers/clients allowed to be created
 //TODO (NitriX#): The following thing is to be implemented, otherwise, threads never get destroyed even if no more needed
 //#define CONFIG_THREADPOOL_THRESHOLD       10 //Keep only <threshold value> spare threads in cache, kill all others
 
 //ZSocket configuration
-#define CONFIG_MAX_PENDING_CONNECTION       10
+#define CONFIG_ZSOCKET_MAX_PENDING_CONNECTION  10
+#define CONFIG_ZSOCKET_READ_BUFFER_SIZE        1024 //1024 bytes
 
 //MySQL informations
 //#define CONFIG_MYSQL_SERVER               "localhost"

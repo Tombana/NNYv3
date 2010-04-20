@@ -39,7 +39,9 @@
 
 - #Defines also have their rules:
     PCKT_C_* = all packets sent by the client
-    PCKT_S_* = all packets sent by the server
+    PCKT_R_* = all packets sent by the realm server
+    PCKT_W_* = all packets sent by the world server
     H_* = file headers (protection agaisnt inclusion errors)
     MYSQL_* = mysql connection infos
     BUILD_* = server version/compilation infos
+    CONFIG_* = reserved to configuration vars
