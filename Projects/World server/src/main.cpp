@@ -1,6 +1,8 @@
 #include "main.h"
 
 //--------------- GLOBAL SECTION -----------------
+// == Configuration ==
+ConfigFile g_CONFIG(CONFIG_FILENAME);
 // == THREADPOOL ==
 // The threadpool over-abuse the same two vars all over: g_threadPool_mutex and g_threadPool_cond
 // We no need arrays or anything else.
@@ -163,7 +165,11 @@ void printStartupMessage() {
     "| \tByteArray: " << BYTEARRAY_VERSION << std::endl <<
     "|" << std::endl <<
     "| Recent modifications:" << std::endl <<
+<<<<<<< HEAD
     "|   Memory leak fixed in ZSocket" << std::endl <<
+=======
+    "|   Added configuration file support" << std::endl <<
+>>>>>>> c0dd233a4b01dfde5f23bf6383d5352e37ab0263
     "|   Connect to the realm server to get online" << std::endl <<
     "|   ThreadPool implemented" << std::endl <<
     "|   Forked & very edited from Realm sources" << std::endl <<

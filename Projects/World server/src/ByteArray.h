@@ -27,6 +27,7 @@ public:
     void addBool(bool cst);
     void addWord(WORD hex);
     void addDword(DWORD hex);
+    void addString(std::string str);
     void addString(std::string &str);
     void addString(const char *str);
     //Reading packets
