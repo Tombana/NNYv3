@@ -1,20 +1,7 @@
-    /*
-    std::string str;
-    std::ifstream configFile("config.ini");
-    while (!configFile.eof()) {
-        str.clear();
-        configFile>>str;
-        if (str.size() > 0) {
-            std::cout << "--> " << str << std::endl;
-        }
-    }
-    configFile.close();
-    */
-
-    //signal(SIGINT,leaving); signal(SIGTERM,leaving);
-    //signal(SIGILL,leaving); signal(SIGABRT,leaving);
+//signal(SIGINT,leaving); signal(SIGTERM,leaving);
+//signal(SIGILL,leaving); signal(SIGABRT,leaving);
     
-    //CCRC32 ccrc32;
-    //std::string test = "Omfg we rules :D";
-    //unsigned long hash = ccrc32.FullCRCString(test);
-    //std::cout << "Hash CRC32: " << hash << std::endl;
+//CCRC32 ccrc32;
+//std::string test = "Omfg we rules :D";
+//unsigned long hash = ccrc32.FullCRCString(test);
+//std::cout << "Hash CRC32: " << hash << std::endl;
