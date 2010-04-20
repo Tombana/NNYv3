@@ -7,7 +7,9 @@
 #include "protocol.hpp"
 #include "config.hpp"
 
-#define BYTEARRAY_VERSION "1.0"
+#define BYTEARRAY_VERSION "1.1"
+
+long double _pow(int base, int exponent);
 
 class ByteArray {
 public:
@@ -27,7 +29,7 @@ public:
     void addBool(bool cst);
     void addWord(WORD hex);
     void addDword(DWORD hex);
-    void addString(std::string &str);
+    void addString(std::string str);
     void addString(const char *str);
     //Reading packets
     BYTE readByte();
@@ -35,11 +37,11 @@ public:
     WORD readWord();
     DWORD readDword();
     std::string readString();
-    void setSeek(DWORD newSeek);
+    void setSeek(unsigned int newSeek);
     void modSeek(int newSeek);
     //Processing packets
-    std::string getPacket();
-    std::string getBuffer();
+    std::string genPacket();
+    std::string getRaw();
     void append(ByteArray &obj);
     void append(std::string &obj);
     void printHex();

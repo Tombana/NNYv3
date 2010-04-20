@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string.h>
 #include "ByteArray.h"
+#include "config.hpp"
 
 #if defined(WIN32)
     #include <winsock2.h>
@@ -22,7 +23,12 @@
     #define closesocket(s) close(s);
 #endif
 
-#define ZSOCKET_VERSION "1.2"
+#define ZSOCKET_VERSION "1.3.4"
+
+#if defined(WIN32)
+    void ZSocket_loadWinsock();
+    void ZSocket_unloadWinsock();
+#endif
 
 class ZSocket {
     typedef struct {
@@ -32,32 +38,30 @@ class ZSocket {
 
 public:
                 ZSocket();
-                ZSocket(SOCKET socketID);
                 ~ZSocket();
-    bool        socket_connect(std::string host, int port, bool persistant);
-    void        socket_write(const char *data);
-    void        socket_write(std::string output);
-    void        socket_write(ByteArray::ByteArray &pckt);
-    bool        socket_bind(int port);
+    void        operator<=(SOCKET &socketID);
+    bool        socket_create();
     SOCKET      getSocketID();
-    void        setSocketID(SOCKET socketID);
-    ByteArray   socket_read(int nbBytes);
+    bool        socket_connect(std::string host, int port);
+    bool        socket_connect(const char *host, int port);
+    void        operator<<(const char *data);
+    void        operator<<(std::string output);
+    void        operator<<(ByteArray &pckt);
+    void        operator>>(ByteArray &out);
+    bool        socket_bind(int port);
     SOCKET      socket_acceptClient();
-    bool        isAlive();
-    bool        checkIsAlive();
+    bool        isConnected();
+    bool        isDataReceived();
+    bool        checkIsConnected();
     void        socket_close();
 
 private:
-    void        _socket_init();
-    bool        _socket_create();
-    bool        m_connected; //TODO (NitriX#): if the connection is established, i think this doesnt works
-    bool        m_alive;
     int         m_port; //port number
     std::string m_host; //hostname or ip
     s_socket    m_socket; //socket info
-    #if defined(WIN32)
-    bool        m_created;
-    #endif
+    bool        m_created; //Works!
+    bool        m_connected; //Not quite sure yet
+    bool        m_dataReceived;
 };
 
 #endif

@@ -73,7 +73,7 @@ void ByteArray::addString(const char *str) {
 }
 
 //! This function append a DWORD and std::string to the byte array
-void ByteArray::addString(std::string &str) {
+void ByteArray::addString(std::string str) {
     addDword((int)str.size());
     m_buffer.append(str);
 }
@@ -126,17 +126,22 @@ void ByteArray::addCmd(WORD hex) {
 void ByteArray::addWord(WORD hex) {
     char buffer[2];
     buffer[0] = (char)(hex %256);
-    buffer[1] = (char)((int)(hex / pow(256,1)) %256);
+    buffer[1] = (char)((int)(hex / _pow(256,1)) %256);
     m_buffer.append(buffer,2);
+}
+
+long double _pow(int base, int exponent) {
+	long double x = base;
+	return pow(x, exponent);
 }
 
 //! This function append a DWORD to the byte array
 void ByteArray::addDword(DWORD hex) {
     char buffer[4];
     buffer[0] = (char)(hex %256);
-    buffer[1] = (char)((int)(hex / pow(256,1)) %256);
-    buffer[2] = (char)((int)(hex / pow(256,2)) %256);
-    buffer[3] = (char)((int)(hex / pow(256,3)) %256);
+    buffer[1] = (char)((int)(hex / _pow(256,1)) %256);
+    buffer[2] = (char)((int)(hex / _pow(256,2)) %256);
+    buffer[3] = (char)((int)(hex / _pow(256,3)) %256);
     m_buffer.append(buffer, 4);
 }
 
@@ -147,30 +152,30 @@ void ByteArray::append(std::string &obj) {
 
 //! [Harmful] This function append another ByteArray to the byte array
 void ByteArray::append(ByteArray &obj) {
-    m_buffer.append(obj.getBuffer());
+    m_buffer.append(obj.getRaw());
 }
 
 //! Returns the byte array buffer @return std::string byte array buffer
-std::string ByteArray::getBuffer() {
+std::string ByteArray::getRaw() {
     return m_buffer;
 }
 
 //! Generate a packet @return a ByteArray of a generated packet header + the byte array buffer
-std::string ByteArray::getPacket() {
+std::string ByteArray::genPacket() {
     //Packet begining [Byte]
     std::string output = "~";
 
     //Packet size [DWORD]
     int bufferSize = m_buffer.size();
     char buffer[4];
-    buffer[0] = (char)((int)bufferSize %256);
-    buffer[1] = (char)((int)(bufferSize / pow(256,1)) %256);
-    buffer[2] = (char)((int)(bufferSize / pow(256,2)) %256);
-    buffer[3] = (char)((int)(bufferSize / pow(256,3)) %256);
+    buffer[0] = (BYTE)((int)bufferSize %256);
+    buffer[1] = (BYTE)((int)(bufferSize / _pow(256,1)) %256);
+    buffer[2] = (BYTE)((int)(bufferSize / _pow(256,2)) %256);
+    buffer[3] = (BYTE)((int)(bufferSize / _pow(256,3)) %256);
     output.append(buffer,4); //packet size
 
     //Packet nbCmd [Byte]
-    output += (char)((int)m_nbCmd %256);
+    output += (BYTE)((int)m_nbCmd %256);
 
     //Packet content
     output.append(m_buffer);
@@ -188,7 +193,7 @@ BYTE ByteArray::readByte() {
 //! Read 2 bytes from the byte array @return WORD
 WORD ByteArray::readWord() {
     WORD val=0;
-    val+=(DWORD)pow(256, 1) * (BYTE)m_buffer[m_seek+1];
+    val+=(BYTE)_pow(256, 1) * (BYTE)m_buffer[m_seek+1];
     val+=(BYTE)m_buffer[m_seek];
     m_seek+=2;
     return val;
@@ -197,9 +202,9 @@ WORD ByteArray::readWord() {
 //! Read 4 bytes from the byte array @return DWORD
 DWORD ByteArray::readDword() {
     DWORD val=0;
-    val+=(DWORD)pow(256, 3) * (BYTE)m_buffer[m_seek+3];
-    val+=(DWORD)pow(256, 2) * (BYTE)m_buffer[m_seek+2];
-    val+=(DWORD)pow(256, 1) * (BYTE)m_buffer[m_seek+1];
+    val+=(BYTE)_pow(256, 3) * (BYTE)m_buffer[m_seek+3];
+    val+=(BYTE)_pow(256, 2) * (BYTE)m_buffer[m_seek+2];
+    val+=(BYTE)_pow(256, 1) * (BYTE)m_buffer[m_seek+1];
     val+=(BYTE)m_buffer[m_seek];
     m_seek+=4;
     return val;
@@ -211,14 +216,14 @@ DWORD ByteArray::readDword() {
 */
 std::string ByteArray::readString() {
     std::string output;
-    DWORD length = readDword();
+    unsigned int length = readDword();
     output.append(m_buffer.substr(m_seek, length));
     m_seek+=length;
     return output;
 }
 
 //! Position the seek to somewhere else in the byte array
-void ByteArray::setSeek(DWORD newSeek) {
+void ByteArray::setSeek(unsigned int newSeek) {
     m_seek = newSeek;
 }
 

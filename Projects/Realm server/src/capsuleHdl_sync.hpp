@@ -26,7 +26,7 @@ case PCKT_W_SYNC_KEY:
     }
     db_ptr->queryDone();
     if (!found) packetToSend.addBool(false);
-    socket.socket_write(packetToSend.getPacket());
+    socket << packetToSend.genPacket();
     //-----------------------------------------
     }
     break;

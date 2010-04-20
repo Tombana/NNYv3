@@ -13,7 +13,7 @@ Database::~Database() {
 
 bool Database::connect() {
     std::cout << "[Database] Connecting to MySQL server... ";
-    if (mysql_real_connect(m_mysql,MYSQL_SERVER,MYSQL_USERNAME,MYSQL_PASSWORD,MYSQL_DATABASE,0,NULL,0)) {
+    if (mysql_real_connect(m_mysql,CONFIG_MYSQL_SERVER,CONFIG_MYSQL_USERNAME,CONFIG_MYSQL_PASSWORD,CONFIG_MYSQL_DATABASE,0,NULL,0)) {
         std::cout << "OK!" << std::endl;
         return true;
     } else {
