@@ -20,27 +20,6 @@ bool            g_realmConnector_authorized   = false; //Protected with g_realmC
 //-------------------------------------------------
 
 int main() {
-    bool failed=false;
-    int error=0;
-    //===================================
-    //Definition Winsock [WIN32]
-    //===================================
-#if defined(WIN32)
-    WSADATA init_win32; // Variable permettant de récupérer la structure d'information sur l'initialisation
-#endif
-    //===================================
-    // Loading Winsock [WIN32]
-    //===================================
-#if defined(WIN32)
-    error=WSAStartup(MAKEWORD(2,2),&init_win32);
-    if (error!=0) {
-        std::cerr << "[ZSocket] @ERROR: ZSocket failed to load Winsock: #" << error << std::endl;
-        failed=true;
-    } else {
-        std::cout << "[ZSocket] Loading winsock:\tOK" << std::endl;
-    }
-#endif
-
     //=========================================
     //                TO-DOs
     //=========================================
@@ -52,6 +31,13 @@ int main() {
     //            STARTUP MESSAGE
     //=========================================
     printStartupMessage();
+
+    //===================================
+    // [WIN32] Load winsock
+    //===================================
+    #if defined(WIN32)
+        ZSocket_loadWinsock();
+    #endif
 
     //=========================================
     //          START LISTENING PORT
@@ -136,17 +122,14 @@ int main() {
 
     }
 
+    //===================================
+    // [WIN32] Unload winsock
+    //===================================
+    ZSocket_unloadWinsock();
 
-
-    #if defined(WIN32)
-    error=WSACleanup();
-        if (error!=0) {
-            std::cerr << "[main] @ERROR: ZSocket failed to cleanup WSA out of memory: " << error << std::endl;
-        } else {
-            std::cout << "[main] WSACleanup:\t\tOK" << std::endl;
-        }
-    #endif
-
+    //===================================
+    // Exit
+    //===================================
     return 0;
 }
 
@@ -165,11 +148,8 @@ void printStartupMessage() {
     "| \tByteArray: " << BYTEARRAY_VERSION << std::endl <<
     "|" << std::endl <<
     "| Recent modifications:" << std::endl <<
-<<<<<<< HEAD
     "|   Memory leak fixed in ZSocket" << std::endl <<
-=======
     "|   Added configuration file support" << std::endl <<
->>>>>>> c0dd233a4b01dfde5f23bf6383d5352e37ab0263
     "|   Connect to the realm server to get online" << std::endl <<
     "|   ThreadPool implemented" << std::endl <<
     "|   Forked & very edited from Realm sources" << std::endl <<

@@ -30,6 +30,7 @@
 #define CONFIG_THREADPOOL_MAX_WORKER                g_CONFIG.read<unsigned int>  ("THREADPOOL_MAX_WORKER")
 //ZSocket configuration
 #define CONFIG_ZSOCKET_MAX_PENDING_CONNECTION       g_CONFIG.read<unsigned int>  ("ZSOCKET_MAX_PENDING_CONNECTION")
+#define CONFIG_ZSOCKET_READ_BUFFER_SIZE             g_CONFIG.read<unsigned int>  ("ZSOCKET_READ_BUFFER_SIZE")
 
 //Loading configuration
 #include "ConfigFile.h"

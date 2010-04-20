@@ -25,6 +25,11 @@
 
 #define ZSOCKET_VERSION "1.3.4"
 
+#if defined(WIN32)
+    void ZSocket_loadWinsock();
+    void ZSocket_unloadWinsock();
+#endif
+
 class ZSocket {
     typedef struct {
         SOCKET id; // socket id

@@ -141,3 +141,23 @@ bool ZSocket::checkIsConnected() {
     }
     return m_connected;
 }
+
+#if defined(WIN32)
+    void ZSocket_loadWinsock() {
+        int error=0;
+        //Definition Winsock [WIN32]
+        WSADATA init_win32; // Variable permettant de récupérer la structure d'information sur l'initialisation
+        // Loading Winsock [WIN32]
+        error=WSAStartup(MAKEWORD(2,2),&init_win32);
+        if (error!=0) {
+            std::cerr << "[ZSocket] @ERROR: ZSocket failed to load Winsock: #" << error << std::endl;
+        }
+    }
+
+    void ZSocket_unloadWinsock() {
+        int error=WSACleanup();
+        if (error!=0) {
+            std::cerr << "[ZSocket] @ERROR: ZSocket failed to cleanup WSA out of memory: " << error << std::endl;
+        }
+    }
+#endif
