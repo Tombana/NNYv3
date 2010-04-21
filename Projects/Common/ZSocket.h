@@ -4,7 +4,6 @@
 #include <iostream>
 #include <string.h>
 #include "ByteArray.h"
-#include "config.hpp"
 
 #if defined(WIN32)
 	#include <windows.h>
@@ -23,12 +22,13 @@
     #define closesocket(s) close(s);
 #endif
 
-#define ZSOCKET_VERSION "1.3.4"
-
 #if defined(WIN32)
     void ZSocket_loadWinsock();
     void ZSocket_unloadWinsock();
 #endif
+
+#define CONFIG_ZSOCKET_MAX_PENDING_CONNECTION       10
+#define CONFIG_ZSOCKET_READ_BUFFER_SIZE             1024
 
 class ZSocket {
     typedef struct {

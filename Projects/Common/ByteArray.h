@@ -5,9 +5,11 @@
 #include <string.h>
 #include <math.h>
 #include "protocol.hpp"
-#include "config.hpp"
 
-#define BYTEARRAY_VERSION "1.1"
+//Specific typedefs
+typedef unsigned char  BYTE;  // 1byte
+typedef unsigned short WORD;  // 2bytes
+typedef unsigned long  DWORD; //4bytes
 
 long double _pow(int base, int exponent);
 
@@ -30,7 +32,6 @@ public:
     void addWord(WORD hex);
     void addDword(DWORD hex);
     void addString(std::string str);
-    void addString(std::string &str);
     void addString(const char *str);
     //Reading packets
     BYTE readByte();
