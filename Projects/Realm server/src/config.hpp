@@ -10,9 +10,6 @@
 #define CONFIG_MYSQL_DATABASE                       g_CONFIG.read<std::string>  ("MYSQL_DATABASE").c_str()
 //Server configuration
 #define CONFIG_SERVER_PORT                          g_CONFIG.read<unsigned int>  ("SERVER_PORT")
-//ZSocket configuration
-#define CONFIG_ZSOCKET_MAX_PENDING_CONNECTION       g_CONFIG.read<unsigned int>  ("ZSOCKET_MAX_PENDING_CONNECTION")
-#define CONFIG_ZSOCKET_READ_BUFFER_SIZE             1024
 
 //Loading configuration
 #include "ConfigFile.h"

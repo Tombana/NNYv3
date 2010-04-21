@@ -45,7 +45,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\Dependencies\MySQL\include;..\..\Dependencies\pthread\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Common;..\..\Dependencies\MySQL\include;..\..\Dependencies\pthread\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -71,29 +71,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\ByteArray.cpp" />
-    <ClCompile Include="src\ConfigFile.cpp" />
+    <ClCompile Include="..\Common\ByteArray.cpp" />
+    <ClCompile Include="..\Common\ConfigFile.cpp" />
+    <ClCompile Include="..\Common\ZSocket.cpp" />
     <ClCompile Include="src\Database.cpp" />
     <ClCompile Include="src\Dispatcher.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\threadHandler.cpp" />
-    <ClCompile Include="src\ZSocket.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ByteArray.h" />
+    <ClInclude Include="..\Common\ByteArray.h" />
+    <ClInclude Include="..\Common\ConfigFile.h" />
+    <ClInclude Include="..\Common\protocol.hpp" />
+    <ClInclude Include="..\Common\ZSocket.h" />
     <ClInclude Include="src\capsuleHandler.hpp" />
     <ClInclude Include="src\capsuleHdl_default.hpp" />
     <ClInclude Include="src\capsuleHdl_sync.hpp" />
     <ClInclude Include="src\capsuleHdl_updater.hpp" />
     <ClInclude Include="src\config.hpp" />
-    <ClInclude Include="src\ConfigFile.h" />
     <ClInclude Include="src\Database.h" />
     <ClInclude Include="src\Dispatcher.h" />
     <ClInclude Include="src\main.h" />
-    <ClInclude Include="src\protocol.hpp" />
     <ClInclude Include="src\threadHandler.h" />
     <ClInclude Include="src\version.hpp" />
-    <ClInclude Include="src\ZSocket.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

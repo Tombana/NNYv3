@@ -2,7 +2,7 @@
 /////////////////// CONFIGURATION ///////////////////
 $REMOTE_IP = '127.0.0.1';
 $REMOTE_PORT = 6131;
-$PROTOCOL_HPP_FILE = 'protocol.hpp';
+$PROTOCOL_HPP_FILE = '../../Common/protocol.hpp';
 $REVISION = 0;
 $SERVERID = 1;
 $SYNC_KEY = 'SDFXqjs7nX'; 

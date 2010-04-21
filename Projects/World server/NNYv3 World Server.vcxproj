@@ -48,14 +48,14 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\Dependencies\pthread\include;..\..\Dependencies\MySQL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Common;..\..\Dependencies\pthread\include;..\..\Dependencies\MySQL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>..\..\Dependencies\winsocks2\lib;..\..\Dependencies\pthread\lib;..\..\Dependencies\MySQL\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libmysqlclient.a;pthreadVCE2.lib;libws2_32.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libmysql.lib;pthreadVCE2.lib;libws2_32.a;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -74,30 +74,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\ByteArray.cpp" />
-    <ClCompile Include="src\ConfigFile.cpp" />
+    <ClCompile Include="..\Common\ByteArray.cpp" />
+    <ClCompile Include="..\Common\ConfigFile.cpp" />
+    <ClCompile Include="..\Common\ZSocket.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\realmConnector.cpp" />
     <ClCompile Include="src\threadHandler.cpp" />
     <ClCompile Include="src\threadPoolHandler.cpp" />
-    <ClCompile Include="src\ZSocket.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ByteArray.h" />
+    <ClInclude Include="..\Common\ByteArray.h" />
+    <ClInclude Include="..\Common\ConfigFile.h" />
+    <ClInclude Include="..\Common\protocol.hpp" />
+    <ClInclude Include="..\Common\ZSocket.h" />
     <ClInclude Include="src\capsuleHandler.hpp" />
     <ClInclude Include="src\capsuleHdl_default.hpp" />
     <ClInclude Include="src\capsuleHdl_sync.hpp" />
     <ClInclude Include="src\capsuleHdl_updater.hpp" />
     <ClInclude Include="src\config.hpp" />
-    <ClInclude Include="src\ConfigFile.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\packetHandler.hpp" />
-    <ClInclude Include="src\protocol.hpp" />
     <ClInclude Include="src\realmConnector.h" />
     <ClInclude Include="src\threadHandler.h" />
     <ClInclude Include="src\threadPoolHandler.h" />
     <ClInclude Include="src\version.hpp" />
-    <ClInclude Include="src\ZSocket.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

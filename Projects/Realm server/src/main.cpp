@@ -40,7 +40,7 @@ int main() {
 	#if defined(WIN32)
 		ZSocket_loadWinsock();
 	#endif
-    
+
 	//HEADER MESSAGE
     std::cout <<
     "/===============================================\\" << std::endl <<
@@ -74,7 +74,7 @@ int main() {
     Database database;
 	database.connect();
 	checkDatabase(database);
- 
+
     //--------- Initiate dispatcher ------------
     Dispatcher dispatcher(database);
     //dispatcher.printServers();

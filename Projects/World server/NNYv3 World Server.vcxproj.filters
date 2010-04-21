@@ -12,9 +12,6 @@
     <Filter Include="Extras">
       <UniqueIdentifier>{8bbae18d-aa25-40b3-b187-840bd1a23037}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes/Library">
-      <UniqueIdentifier>{9876b948-55e0-4a75-8e50-ee1fa7d56a6b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Packet &amp; capsule handlers">
       <UniqueIdentifier>{46009c63-423d-4eec-9d25-17fdf466916b}</UniqueIdentifier>
     </Filter>
@@ -24,19 +21,13 @@
     <Filter Include="Thread handlers">
       <UniqueIdentifier>{d4fcc1a4-a1a5-4533-9ca9-a0222740f9d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{6e2ac0df-8a03-47c5-a8ab-68adda9c2854}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ByteArray.cpp">
-      <Filter>Classes/Library</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ConfigFile.cpp">
-      <Filter>Classes/Library</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ZSocket.cpp">
-      <Filter>Classes/Library</Filter>
     </ClCompile>
     <ClCompile Include="src\realmConnector.cpp">
       <Filter>Realm connector</Filter>
@@ -47,24 +38,21 @@
     <ClCompile Include="src\threadPoolHandler.cpp">
       <Filter>Thread handlers</Filter>
     </ClCompile>
+    <ClCompile Include="..\Common\ByteArray.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ConfigFile.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\ZSocket.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\config.hpp">
-      <Filter>Extras</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ByteArray.h">
-      <Filter>Classes/Library</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ConfigFile.h">
-      <Filter>Classes/Library</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ZSocket.h">
-      <Filter>Classes/Library</Filter>
-    </ClInclude>
-    <ClInclude Include="src\protocol.hpp">
       <Filter>Extras</Filter>
     </ClInclude>
     <ClInclude Include="src\version.hpp">
@@ -93,6 +81,18 @@
     </ClInclude>
     <ClInclude Include="src\threadPoolHandler.h">
       <Filter>Thread handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ByteArray.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ConfigFile.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\protocol.hpp">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\ZSocket.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

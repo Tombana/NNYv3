@@ -5,7 +5,7 @@
 		<Option title="NNYv3 Realm Server" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="Extras\;Sources\;Headers\;Capsule handlers\;" />
+		<Option virtualFolders="Extras\;Sources\;Headers\;Capsule handlers\;Common\;" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin\Debug\NNYv3 Realm Server" prefix_auto="1" extension_auto="1" />
@@ -40,6 +40,7 @@
 			<Add option="-fexceptions" />
 			<Add directory="..\..\Dependencies\pthread\include" />
 			<Add directory="..\..\Dependencies\MySQL\include" />
+			<Add directory="..\Common" />
 		</Compiler>
 		<Linker>
 			<Add library="..\..\Dependencies\winsocks2\lib\libws2_32.a" />
@@ -49,20 +50,26 @@
 		<ExtraCommands>
 			<Add before="$(PROJECT_DIR)\..\..\Tools\Autoversioning\gen.exe" />
 		</ExtraCommands>
+		<Unit filename="..\Common\ByteArray.cpp">
+			<Option virtualFolder="Common\" />
+		</Unit>
+		<Unit filename="..\Common\ByteArray.h">
+			<Option virtualFolder="Common\" />
+		</Unit>
+		<Unit filename="..\Common\ConfigFile.cpp">
+			<Option virtualFolder="Common\" />
+		</Unit>
+		<Unit filename="..\Common\ConfigFile.h">
+			<Option virtualFolder="Common\" />
+		</Unit>
+		<Unit filename="..\Common\ZSocket.cpp">
+			<Option virtualFolder="Common\" />
+		</Unit>
+		<Unit filename="..\Common\ZSocket.h">
+			<Option virtualFolder="Common\" />
+		</Unit>
 		<Unit filename="..\Common\protocol.hpp">
-			<Option virtualFolder="Extras\" />
-		</Unit>
-		<Unit filename="src\ByteArray.cpp">
-			<Option virtualFolder="Sources\" />
-		</Unit>
-		<Unit filename="src\ByteArray.h">
-			<Option virtualFolder="Headers\" />
-		</Unit>
-		<Unit filename="src\ConfigFile.cpp">
-			<Option virtualFolder="Sources\" />
-		</Unit>
-		<Unit filename="src\ConfigFile.h">
-			<Option virtualFolder="Headers\" />
+			<Option virtualFolder="Common\" />
 		</Unit>
 		<Unit filename="src\Database.cpp">
 			<Option virtualFolder="Sources\" />
@@ -74,12 +81,6 @@
 			<Option virtualFolder="Sources\" />
 		</Unit>
 		<Unit filename="src\Dispatcher.h">
-			<Option virtualFolder="Headers\" />
-		</Unit>
-		<Unit filename="src\ZSocket.cpp">
-			<Option virtualFolder="Sources\" />
-		</Unit>
-		<Unit filename="src\ZSocket.h">
 			<Option virtualFolder="Headers\" />
 		</Unit>
 		<Unit filename="src\capsuleHandler.hpp">

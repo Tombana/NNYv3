@@ -14,7 +14,6 @@
 #define CONFIG_SERVER_ID                            g_CONFIG.read<unsigned int>  ("SERVER_ID")
 #define CONFIG_SERVER_PORT                          g_CONFIG.read<unsigned int>  ("SERVER_PORT")
 #define CONFIG_SERVER_KEY                           g_CONFIG.read<std::string>   ("SERVER_KEY")
-#define CONFIG_ZSOCKET_MAX_PENDING_CONNECTION       g_CONFIG.read<unsigned int>  ("ZSOCKET_MAX_PENDING_CONNECTION")
 //Realm configuration
 #define CONFIG_REALM_IP                             g_CONFIG.read<std::string>   ("REALM_IP")
 #define CONFIG_REALM_PORT                           g_CONFIG.read<unsigned int>  ("REALM_PORT")
@@ -28,9 +27,6 @@
 #define CONFIG_THREADPOOL_DEFAULT_WORKER            g_CONFIG.read<unsigned int>  ("THREADPOOL_DEFAULT_WORKER")
 #define CONFIG_THREADPOOL_ADD_WORKER                g_CONFIG.read<unsigned int>  ("THREADPOOL_ADD_WORKER")
 #define CONFIG_THREADPOOL_MAX_WORKER                g_CONFIG.read<unsigned int>  ("THREADPOOL_MAX_WORKER")
-//ZSocket configuration
-#define CONFIG_ZSOCKET_MAX_PENDING_CONNECTION       g_CONFIG.read<unsigned int>  ("ZSOCKET_MAX_PENDING_CONNECTION")
-#define CONFIG_ZSOCKET_READ_BUFFER_SIZE             1024
 
 //Loading configuration
 #include "ConfigFile.h"

@@ -145,9 +145,7 @@ void printStartupMessage() {
     "| \tBuild date: " << BUILD_DATE << std::endl <<
     "|" << std::endl <<
     "| Libraries/classes version: \t\t\t\t" << std::endl <<
-    "| \tServer protocol: v" << PROTOCOL_VERSION << std::endl <<
-    "| \tZSocket: " << ZSOCKET_VERSION << std::endl <<
-    "| \tByteArray: " << BYTEARRAY_VERSION << std::endl <<
+    "| \tServer protocol: v" << NNY_PROTOCOL_VERSION << std::endl <<
     "|" << std::endl <<
     "| Recent modifications:" << std::endl <<
     "|   Memory leak fixed in ZSocket" << std::endl <<
