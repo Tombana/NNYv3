@@ -7,8 +7,8 @@
 #include "config.hpp"
 
 #if defined(WIN32)
-    #include <winsock2.h>
-    #include <windows.h>
+	#include <windows.h>
+    #include <winsock.h>
     #define socklen_t int
 #else
     #include <sys/socket.h>

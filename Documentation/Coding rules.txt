@@ -1,6 +1,6 @@
 === CODING RULES ===
 
-- Full capital words are reserved to #defines
+- Full capitalized words are reserved to #defines
 
 - Some function/variables prefix are reserved:
     mysql_*
@@ -42,6 +42,5 @@
     PCKT_R_* = all packets sent by the realm server
     PCKT_W_* = all packets sent by the world server
     H_* = file headers (protection agaisnt inclusion errors)
-    MYSQL_* = mysql connection infos
     BUILD_* = server version/compilation infos
     CONFIG_* = reserved to configuration vars

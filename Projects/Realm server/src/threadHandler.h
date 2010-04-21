@@ -16,7 +16,7 @@ void *threadHandler(void *ptr);
 * \sa We needs to copy all theses variables locally (in the thread) because what
 we sent is no more than a pointer \b and so the \b real structure will be destroyed at the end of the main() loop.
 */
-typedef struct s_thread_data {
+struct s_thread_data {
     SOCKET           socketID;
     Database        *database;
     Dispatcher      *dispatcher;

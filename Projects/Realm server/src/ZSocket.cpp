@@ -12,7 +12,7 @@ void ZSocket::operator<=(SOCKET &socketID) {
 
 ZSocket::~ZSocket() {
     //In case the guy opened a socket, we must close it when the object get destroyed, so
-    if (m_connected or m_created) socket_close();
+    if (m_connected || m_created) socket_close();
 }
 
 bool ZSocket::socket_create() {

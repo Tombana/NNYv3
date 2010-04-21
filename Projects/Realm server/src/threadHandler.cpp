@@ -153,7 +153,5 @@ void *threadHandler (void *ptr) {
 
     if (threadData.is_a_worldserver) threadData.dispatcher->setOffline(threadData.worldserverID);
 
-    //NO NEED PTHREAD_EXIT OR ANY RETURN!
-    //return 0; //No need return?!
-    //pthread_exit(EXIT_SUCCESS); //Wtf, also no need pthread_exit
+	return NULL;
 }

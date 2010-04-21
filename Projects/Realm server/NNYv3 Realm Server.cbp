@@ -44,7 +44,7 @@
 		<Linker>
 			<Add library="..\..\Dependencies\winsocks2\lib\libws2_32.a" />
 			<Add library="..\..\Dependencies\pthread\lib\libpthreadGCE2.a" />
-			<Add library="..\..\Dependencies\MySQL\lib\libmysqlclient.a" />
+			<Add library="..\..\Dependencies\MySQL\lib\libmysql.lib" />
 		</Linker>
 		<ExtraCommands>
 			<Add before="$(PROJECT_DIR)\..\..\Tools\Autoversioning\gen.exe" />
