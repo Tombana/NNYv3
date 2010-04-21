@@ -1,7 +1,7 @@
 #include "main.h"
 
 //--------------- GLOBAL SECTION -----------------
-//nothing yet o.o
+ConfigFile g_CONFIG("realm.conf");
 
 int main() {
     //DWORD* wohoo[0xFFFF];
@@ -44,7 +44,7 @@ int main() {
     "|\t\t\t\t\t\t|" << std::endl <<
     "| Date: " << BUILD_DATE << "    \t\t|" << std::endl <<
     "| Version: " << BUILD_VERSION << " [Build " << BUILD_NUMBER << "]\t\t\t|" << std::endl <<
-    "| Database supported: v" << DATABASE_SUPPORTED << "\t\t\t|" << std::endl <<
+    "| Database supported: v" << CONFIG_DATABASE_SUPPORTED << "\t\t\t|" << std::endl <<
     "|===============================================|" << std::endl <<
     "| Recent modifications: \t\t\t|" << std::endl <<
     "| + Realm Server is now fully working\t\t|" << std::endl <<
@@ -93,7 +93,7 @@ int main() {
     //--------- Listening server ------------
     std::cout << "[main] Listening on port 6131... ";
     ZSocket socket; //Creating main server socket
-    if (socket.socket_bind(6131)) {
+    if (socket.socket_bind(CONFIG_SERVER_PORT)) {
         std::cout << "OK!" << std::endl << std::endl;
     } else {
         std::cout << "Failed!" << std::endl << "@ERROR: Unable to bind socket on port 6131" << std::endl;
@@ -157,7 +157,7 @@ void checkDatabase(Database &database) {
     database.queryDone();
     //----- Process the new data :)
     std::cout << "[main] Checking database version... ";
-    if (db_version == DATABASE_SUPPORTED) {
+    if (db_version == CONFIG_DATABASE_SUPPORTED) {
         std::cout << "OK!" << std::endl;
     } else {
         std::cout << "Failed!" << std::endl;

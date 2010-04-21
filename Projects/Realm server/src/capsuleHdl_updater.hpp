@@ -30,7 +30,7 @@ case PCKT_C_REVISION:
             packetToSend.addWord(current.port);
         }
         //------------
-        socket.socket_write(packetToSend);
+        socket << packetToSend;
         socket.socket_close();
     //---------------------------------
     }

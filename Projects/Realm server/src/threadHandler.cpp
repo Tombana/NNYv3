@@ -17,7 +17,8 @@ void *threadHandler (void *ptr) {
     //*** PAST THIS POINT VIRTUAL_THREAD_DATA_PTR has been DESTROYED! Dont even think to use it! ***
 
     //Creating new 'client' socket :D
-    ZSocket socket(threadData.socketID);
+    ZSocket socket;
+    socket <= threadData.socketID;
     //Defining some default values
     threadData.is_a_worldserver = false;
     threadData.worldserverID = 0;
@@ -44,7 +45,7 @@ void *threadHandler (void *ptr) {
         packetToSend.addCmd(PCKT_X_DEBUG);
         packetToSend.addString("Yay~! Awsum-server-of-doom says hi :)");
         //Writing
-        socket.socket_write(packetToSend);
+        socket << packetToSend;
         packetToSend.clear();
     //}
 
@@ -55,14 +56,15 @@ void *threadHandler (void *ptr) {
         //+++ this is usually placed whiting a while(true) loop with a socketRead blocking just before +++
 
         //here we have read all bytes from the socket and put it into 'input'
-        ByteArray input = socket.socket_read(1024);
+        ByteArray input;
+        socket >> input;
         //'buffer' is a special ByteArray class to read/write a byte array.
         //This object is unique to all threads and is never destroyed.
         //(well its actually destroyed when the socket disconnect but yeah)
         buffer.append(input); //so we append the new input to the end of the buffer
 
         //!!!!!!!!!!!!!!!!!!
-        if (!socket.isAlive()) break; //socket disconnected
+        if (!socket.isDataReceived()) break; //socket disconnected
         //!!!!!!!!!!!!!!!!!!
 
         //a while() here:
@@ -88,7 +90,7 @@ void *threadHandler (void *ptr) {
                 //but whatever. 1MB is way enough.
                 if (length > 1048576) { //1024 Bytes * 1024 KiloBytes = (1 MB) 1048576 Bytes
                     packetToSend.addCmd(PCKT_R_HACKING_ATTEMPT);
-                    socket.socket_write(packetToSend);
+                    socket << packetToSend;
                     socket.socket_close();
                     std::cerr << "[threadHandler] @ERROR: Length refused!" << std::endl;
                     break;
@@ -102,7 +104,7 @@ void *threadHandler (void *ptr) {
                     //Lets continue the "so waited" code part
                     //Copy the 6+length first bytes from the buffer to 'capsule'.
                     ByteArray capsule;
-                    std::string substring = buffer.getBuffer().substr(6, length);
+                    std::string substring = buffer.getRaw().substr(6, length);
                     capsule.append(substring); //position to 6 and read length bytes
                     //PROCESS THE CAPSULE (switch and stuff)
                     //-----------------------------------------------

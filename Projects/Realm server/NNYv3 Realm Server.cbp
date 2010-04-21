@@ -42,7 +42,7 @@
 			<Add directory="..\..\Dependencies\MySQL\include" />
 		</Compiler>
 		<Linker>
-			<Add library="..\..\Dependencies\winsocks2\libws2_32.a" />
+			<Add library="..\..\Dependencies\winsocks2\lib\libws2_32.a" />
 			<Add library="..\..\Dependencies\pthread\lib\libpthreadGCE2.a" />
 			<Add library="..\..\Dependencies\MySQL\lib\libmysqlclient.a" />
 		</Linker>
@@ -56,6 +56,12 @@
 			<Option virtualFolder="Sources\" />
 		</Unit>
 		<Unit filename="src\ByteArray.h">
+			<Option virtualFolder="Headers\" />
+		</Unit>
+		<Unit filename="src\ConfigFile.cpp">
+			<Option virtualFolder="Sources\" />
+		</Unit>
+		<Unit filename="src\ConfigFile.h">
 			<Option virtualFolder="Headers\" />
 		</Unit>
 		<Unit filename="src\Database.cpp">
