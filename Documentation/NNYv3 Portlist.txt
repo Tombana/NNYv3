@@ -1,13 +1,3 @@
 SERVER 		PORT
 realm  		6131
-realm-web	6132
-----
-word		6141~6150
-word-web	6151~6160
-----
-gateway		6171
-gateway-web	6172
-
-realm[x].nnyv3.zloche.net
-world[x].nnyv3.zloche.net
-gateway.nnyv3.zloche.net
+world		6132

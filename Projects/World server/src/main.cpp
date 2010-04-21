@@ -125,7 +125,9 @@ int main() {
     //===================================
     // [WIN32] Unload winsock
     //===================================
-    ZSocket_unloadWinsock();
+    #if defined(WIN32)
+        ZSocket_unloadWinsock();
+    #endif
 
     //===================================
     // Exit

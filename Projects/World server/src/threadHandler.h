@@ -9,7 +9,7 @@
 void threadHandler(SOCKET &m_socketID);
 
 //s_thread_data is a structure that contains all datas a thread needs to work properly.
-typedef struct s_thread_data {
+struct s_thread_data {
     ZSocket socket;
 };
 

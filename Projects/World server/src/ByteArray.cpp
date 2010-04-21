@@ -132,17 +132,22 @@ void ByteArray::addCmd(WORD hex) {
 void ByteArray::addWord(WORD hex) {
     char buffer[2];
     buffer[0] = (char)(hex %256);
-    buffer[1] = (char)((int)(hex / pow(256,1)) %256);
+    buffer[1] = (char)((int)(hex / _pow(256,1)) %256);
     m_buffer.append(buffer,2);
+}
+
+long double _pow(int base, int exponent) {
+	long double x = base;
+	return pow(x, exponent);
 }
 
 //! This function append a DWORD to the byte array
 void ByteArray::addDword(DWORD hex) {
     char buffer[4];
     buffer[0] = (char)(hex %256);
-    buffer[1] = (char)((int)(hex / pow(256,1)) %256);
-    buffer[2] = (char)((int)(hex / pow(256,2)) %256);
-    buffer[3] = (char)((int)(hex / pow(256,3)) %256);
+    buffer[1] = (char)((int)(hex / _pow(256,1)) %256);
+    buffer[2] = (char)((int)(hex / _pow(256,2)) %256);
+    buffer[3] = (char)((int)(hex / _pow(256,3)) %256);
     m_buffer.append(buffer, 4);
 }
 
@@ -170,9 +175,9 @@ std::string ByteArray::genPacket() {
     int bufferSize = m_buffer.size();
     char buffer[4];
     buffer[0] = (BYTE)((int)bufferSize %256);
-    buffer[1] = (BYTE)((int)(bufferSize / pow(256,1)) %256);
-    buffer[2] = (BYTE)((int)(bufferSize / pow(256,2)) %256);
-    buffer[3] = (BYTE)((int)(bufferSize / pow(256,3)) %256);
+    buffer[1] = (BYTE)((int)(bufferSize / _pow(256,1)) %256);
+    buffer[2] = (BYTE)((int)(bufferSize / _pow(256,2)) %256);
+    buffer[3] = (BYTE)((int)(bufferSize / _pow(256,3)) %256);
     output.append(buffer,4); //packet size
 
     //Packet nbCmd [Byte]
@@ -194,7 +199,7 @@ BYTE ByteArray::readByte() {
 //! Read 2 bytes from the byte array @return WORD
 WORD ByteArray::readWord() {
     WORD val=0;
-    val+=(BYTE)pow(256, 1) * (BYTE)m_buffer[m_seek+1];
+    val+=(BYTE)_pow(256, 1) * (BYTE)m_buffer[m_seek+1];
     val+=(BYTE)m_buffer[m_seek];
     m_seek+=2;
     return val;
@@ -203,9 +208,9 @@ WORD ByteArray::readWord() {
 //! Read 4 bytes from the byte array @return DWORD
 DWORD ByteArray::readDword() {
     DWORD val=0;
-    val+=(BYTE)pow(256, 3) * (BYTE)m_buffer[m_seek+3];
-    val+=(BYTE)pow(256, 2) * (BYTE)m_buffer[m_seek+2];
-    val+=(BYTE)pow(256, 1) * (BYTE)m_buffer[m_seek+1];
+    val+=(BYTE)_pow(256, 3) * (BYTE)m_buffer[m_seek+3];
+    val+=(BYTE)_pow(256, 2) * (BYTE)m_buffer[m_seek+2];
+    val+=(BYTE)_pow(256, 1) * (BYTE)m_buffer[m_seek+1];
     val+=(BYTE)m_buffer[m_seek];
     m_seek+=4;
     return val;

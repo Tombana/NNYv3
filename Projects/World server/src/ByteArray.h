@@ -9,6 +9,8 @@
 
 #define BYTEARRAY_VERSION "1.1"
 
+long double _pow(int base, int exponent);
+
 class ByteArray {
 public:
     //Constructors/destructors

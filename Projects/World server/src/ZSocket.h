@@ -7,8 +7,8 @@
 #include "config.hpp"
 
 #if defined(WIN32)
-    #include <winsock2.h>
-    #include <windows.h>
+	#include <windows.h>
+    #include <winsock.h>
     #define socklen_t int
 #else
     #include <sys/socket.h>
@@ -46,7 +46,7 @@ public:
     bool        socket_connect(const char *host, int port);
     void        operator<<(const char *data);
     void        operator<<(std::string output);
-    void        operator<<(ByteArray::ByteArray &pckt);
+    void        operator<<(ByteArray &pckt);
     void        operator>>(ByteArray &out);
     bool        socket_bind(int port);
     SOCKET      socket_acceptClient();
