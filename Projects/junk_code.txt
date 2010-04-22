@@ -1,7 +1,0 @@
-//signal(SIGINT,leaving); signal(SIGTERM,leaving);
-//signal(SIGILL,leaving); signal(SIGABRT,leaving);
-    
-//CCRC32 ccrc32;
-//std::string test = "Omfg we rules :D";
-//unsigned long hash = ccrc32.FullCRCString(test);
-//std::cout << "Hash CRC32: " << hash << std::endl;

@@ -17,15 +17,11 @@ unsigned int    g_threadPool_counter_job      = 0; //Protected with g_threadPool
 pthread_mutex_t g_realmConnector_mutex        = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
 pthread_cond_t  g_realmConnector_cond         = PTHREAD_COND_INITIALIZER; //Protected with g_realmConnector_mutex
 bool            g_realmConnector_authorized   = false; //Protected with g_realmConnector_mutex
+//pthread_rwlock_t g_name = PTHREAD_RWLOCK_INITIALIZER;
 //-------------------------------------------------
 
 int main() {
-    //=========================================
-    //                TO-DOs
-    //=========================================
-    //TODO (NitriX#): read config from config.ini
-    //TODO (NitriX#): Omg log system! :<
-    //TODO (NitriX#): What with packets hash? CRC32 please...
+    //TODO (NitriX#): We need a log system!
 
     //=========================================
     //            STARTUP MESSAGE
@@ -47,7 +43,7 @@ int main() {
     if (mainsocket.socket_bind(CONFIG_SERVER_PORT)) {
         std::cerr << "OK!" << std::endl;
     } else {
-        std::cerr << "Failed!" << std::endl << "@ERROR: Unable to bind socket on port 6131" << std::endl;
+        std::cerr << "Failed!" << std::endl << "@ERROR: Unable to bind socket on port " << CONFIG_SERVER_PORT << std::endl;
         exit(EXIT_FAILURE);
     }
 
@@ -119,7 +115,8 @@ int main() {
         }
 
         pthread_cond_signal(&g_threadPool_cond); //Wake up a thread by sending this signal on the waiting condition
-
+        pthread_mutex_lock(&g_threadPool_mutex); //Try to acquire the lock (so wait until the thread is done copying the var and released it)
+        pthread_mutex_unlock(&g_threadPool_mutex); //Release the lock
     }
 
     //===================================
