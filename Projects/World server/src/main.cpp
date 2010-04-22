@@ -8,6 +8,8 @@ ConfigFile g_CONFIG(CONFIG_FILENAME);
 // We no need arrays or anything else.
 // Locks are cummulative, all threads can use thoses two same vars then :)
 SOCKET          g_threadStartupData_socketID; //Protected with g_threadPool_mutex
+pthread_mutex_t g_threadPool_callback_mutex   = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
+pthread_cond_t  g_threadPool_callback_cond    = PTHREAD_COND_INITIALIZER; //Protected with g_threadPool_callback_mutex
 pthread_mutex_t g_threadPool_mutex            = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
 pthread_cond_t  g_threadPool_cond             = PTHREAD_COND_INITIALIZER; //Protected with g_threadPool_mutex
 pthread_mutex_t g_threadPool_counter_mutex    = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
@@ -115,8 +117,9 @@ int main() {
         }
 
         pthread_cond_signal(&g_threadPool_cond); //Wake up a thread by sending this signal on the waiting condition
-        pthread_mutex_lock(&g_threadPool_mutex); //Try to acquire the lock (so wait until the thread is done copying the var and released it)
-        pthread_mutex_unlock(&g_threadPool_mutex); //Release the lock
+        pthread_cond_wait(&g_threadPool_callback_cond, &g_threadPool_callback_mutex); //Wait for the thread to copy vars locally
+        //pthread_mutex_lock(&g_threadPool_mutex); //Try to acquire the lock (so wait until the thread really is done
+        //pthread_mutex_unlock(&g_threadPool_mutex); //Release the lock
     }
 
     //===================================

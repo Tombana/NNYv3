@@ -1,6 +1,8 @@
 #include "threadPoolHandler.h"
 
 extern  SOCKET          g_threadStartupData_socketID; //exported from main()
+extern  pthread_mutex_t g_threadPool_callback_mutex; //exported from main()
+extern  pthread_cond_t  g_threadPool_callback_cond; //exported from main()
 extern  pthread_mutex_t g_threadPool_mutex; //exported from main()
 extern  pthread_cond_t  g_threadPool_cond; //exported from main()
 extern  unsigned int    g_threadPool_counter_job; //exported from main()
@@ -29,6 +31,7 @@ void *threadPoolHandler (void *ptr) {
         // Release focus/lock; normal processing from now :)
         //====================================================
         pthread_mutex_unlock(&g_threadPool_mutex);
+        pthread_cond_signal(&g_threadPool_callback_cond); //Tell main() we are done copying
 
         //====================================================
         //                    JOB HERE
