@@ -30,13 +30,6 @@ int main() {
     //=========================================
     printStartupMessage();
 
-    //===================================
-    // [WIN32] Load winsock
-    //===================================
-    #if defined(WIN32)
-        ZSocket_loadWinsock();
-    #endif
-
     //=========================================
     //          START LISTENING PORT
     //=========================================
@@ -121,13 +114,6 @@ int main() {
         //pthread_mutex_lock(&g_threadPool_mutex); //Try to acquire the lock (so wait until the thread really is done
         //pthread_mutex_unlock(&g_threadPool_mutex); //Release the lock
     }
-
-    //===================================
-    // [WIN32] Unload winsock
-    //===================================
-    #if defined(WIN32)
-        ZSocket_unloadWinsock();
-    #endif
 
     //===================================
     // Exit

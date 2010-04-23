@@ -22,11 +22,6 @@
     #define closesocket(s) close(s);
 #endif
 
-#if defined(WIN32)
-    void ZSocket_loadWinsock();
-    void ZSocket_unloadWinsock();
-#endif
-
 #define CONFIG_ZSOCKET_MAX_PENDING_CONNECTION       10
 #define CONFIG_ZSOCKET_READ_BUFFER_SIZE             1024
 
@@ -54,6 +49,12 @@ public:
     bool        isDataReceived();
     bool        checkIsConnected();
     void        socket_close();
+
+#if defined(WIN32)
+protected:
+    void        _loadWinsock();
+    void        _unloadWinsock();
+#endif
 
 private:
     int         m_port; //port number

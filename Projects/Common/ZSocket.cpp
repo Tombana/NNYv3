@@ -3,6 +3,9 @@
 ZSocket::ZSocket() {
     m_created = false; //just to make sure
     m_connected = false; //just to make sure
+    #if defined(WIN32)
+        _loadWinsock();
+    #endif
 }
 
 //Is a socket holder mode, it doesnt create a socket actually, it only sets m_socket.id on the target object.
@@ -13,6 +16,9 @@ void ZSocket::operator<=(SOCKET &socketID) {
 ZSocket::~ZSocket() {
     //In case the guy opened a socket, we must close it when the object get destroyed, so
     if (m_connected || m_created) socket_close();
+    #if defined(WIN32)
+        _unloadWinsock();
+    #endif
 }
 
 bool ZSocket::socket_create() {
@@ -82,7 +88,8 @@ SOCKET ZSocket::getSocketID() {
 }
 
 void ZSocket::operator<<(const char *data) {
-    send(m_socket.id, data, strlen(data), 0);
+    std::string output(data);
+    operator<<(output);
 }
 
 void ZSocket::operator<<(ByteArray &pckt) {
@@ -90,19 +97,17 @@ void ZSocket::operator<<(ByteArray &pckt) {
 }
 
 void ZSocket::operator<<(std::string output) {
-   // send(m_socket.id, output.c_str(), output.size(), 0);
-
-	size_t TotalBytesSend = 0;
+    size_t TotalBytesSend = 0;
 	DWORD BytesSend;
 	while( TotalBytesSend < output.size() ){
 		BytesSend = send(m_socket.id, output.c_str() + TotalBytesSend, output.size() - TotalBytesSend, 0);
 		if( BytesSend == SOCKET_ERROR || BytesSend == 0 ){
-			//Disconnect();
-			return;
+		    std::cerr << "[ZSocket] @ERROR: Failed to send all bytes" << std::endl;
+			socket_close();
+			break;
 		}
 		TotalBytesSend += BytesSend;
 	}
-	return;
 }
 
 void ZSocket::socket_close() {
@@ -155,21 +160,21 @@ bool ZSocket::checkIsConnected() {
 }
 
 #if defined(WIN32)
-    void ZSocket_loadWinsock() {
-        int error=0;
-        //Definition Winsock [WIN32]
-        WSADATA init_win32; // Variable permettant de récupérer la structure d'information sur l'initialisation
-        // Loading Winsock [WIN32]
-        error=WSAStartup(MAKEWORD(2,2),&init_win32);
-        if (error!=0) {
-            std::cerr << "[ZSocket] @ERROR: ZSocket failed to load Winsock: #" << error << std::endl;
-        }
+void ZSocket::_loadWinsock() {
+    int error=0;
+    //Definition Winsock [WIN32]
+    WSADATA init_win32; // Variable permettant de récupérer la structure d'information sur l'initialisation
+    // Loading Winsock [WIN32]
+    error=WSAStartup(MAKEWORD(2,2),&init_win32);
+    if (error!=0) {
+        std::cerr << "[ZSocket] @ERROR: ZSocket failed to load Winsock: #" << error << std::endl;
     }
+}
 
-    void ZSocket_unloadWinsock() {
-        int error=WSACleanup();
-        if (error!=0) {
-            std::cerr << "[ZSocket] @ERROR: ZSocket failed to cleanup WSA out of memory: " << error << std::endl;
-        }
+void ZSocket::_unloadWinsock() {
+    int error=WSACleanup();
+    if (error!=0) {
+        std::cerr << "[ZSocket] @ERROR: ZSocket failed to cleanup WSA out of memory: " << error << std::endl;
     }
+}
 #endif

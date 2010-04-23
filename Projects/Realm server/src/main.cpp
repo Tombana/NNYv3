@@ -37,10 +37,6 @@ int main() {
     //unsigned long hash = ccrc32.FullCRCString(test);
     //std::cout << "Hash CRC32: " << hash << std::endl;
 
-	#if defined(WIN32)
-		ZSocket_loadWinsock();
-	#endif
-
 	//HEADER MESSAGE
     std::cout <<
     "/===============================================\\" << std::endl <<
@@ -147,10 +143,6 @@ int main() {
             std::cout << "[main] @ERROR: pthread: pthread_create() failed!" << std::endl;
         }
     }
-
-	#if defined(WIN32)
-		ZSocket_unloadWinsock();
-	#endif
 
     return 0;
 }
