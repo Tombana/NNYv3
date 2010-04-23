@@ -90,7 +90,19 @@ void ZSocket::operator<<(ByteArray &pckt) {
 }
 
 void ZSocket::operator<<(std::string output) {
-    send(m_socket.id, output.c_str(), output.size(), 0);
+   // send(m_socket.id, output.c_str(), output.size(), 0);
+
+	size_t TotalBytesSend = 0;
+	DWORD BytesSend;
+	while( TotalBytesSend < output.size() ){
+		BytesSend = send(m_socket.id, output.c_str() + TotalBytesSend, output.size() - TotalBytesSend, 0);
+		if( BytesSend == SOCKET_ERROR || BytesSend == 0 ){
+			//Disconnect();
+			return;
+		}
+		TotalBytesSend += BytesSend;
+	}
+	return;
 }
 
 void ZSocket::socket_close() {
