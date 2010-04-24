@@ -23,14 +23,6 @@ bool            g_realmConnector_authorized   = false; //Protected with g_realmC
 //-------------------------------------------------
 
 int main() {
-    ByteArray test;
-    test.addWord(445);
-    std::cerr << test.readWord() << std::endl;
-
-    while (true) {
-    sleep(1);
-    }
-
     //TODO (NitriX#): We need a log system!
     //=========================================
     //            STARTUP MESSAGE
