@@ -23,6 +23,14 @@ bool            g_realmConnector_authorized   = false; //Protected with g_realmC
 //-------------------------------------------------
 
 int main() {
+    ByteArray test;
+    test.addWord(445);
+    std::cerr << test.readWord() << std::endl;
+
+    while (true) {
+    sleep(1);
+    }
+
     //TODO (NitriX#): We need a log system!
     //=========================================
     //            STARTUP MESSAGE
@@ -148,7 +156,7 @@ void createNbThreadWorker(int amount) {
         //Launching thread and send the threadData structure memory address as parameters
         int rc=0;
         rc = pthread_create(&thread, NULL, threadPoolHandler, NULL); //here we launch the thread
-        rc = pthread_detach(thread); //Detach thread so it works on its own
+        rc |= pthread_detach(thread); //Detach thread so it works on its own
         //Checking errors
         if (rc) std::cerr << "[main] @ERROR: pthread: pthread_create() failed!" << std::endl;
     }
@@ -179,7 +187,7 @@ void genVersion() {
         if (!git_hash.empty()) {
             //Your commit doesnt exist, lets add it to the file
             commit++;
-            std::ofstream file("git.conf", std::ios::app);
+            std::ofstream file("version.conf", std::ios::app);
             file << git_hash << " = " << commit << std::endl << "LAST_HASH = " << git_hash << std::endl;
             file.close();
         }
