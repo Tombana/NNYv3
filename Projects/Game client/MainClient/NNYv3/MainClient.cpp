@@ -1,27 +1,19 @@
 #include "MainClient.h"
 
-//	This somehow did not work.
-//	So I just made a specific function for every thread function
-//
-//template <class CLASS, int CLASS::FUNC(void)>
-//void* ClassThreadStarter(void* class_pointer){
-//	return ((CLASS*)class_pointer)->FUNC();
-//}
-
-void* NetworkThreadStarter(void* class_pointer){
-	return ((CMainClient*)class_pointer)->NetworkThread();
-}
-
-
 
 CMainClient::CMainClient(void) :
 	m_state(State_Loading), m_mainsocket(), m_networkthread(),
-	m_networkthread_cond(PTHREAD_COND_INITIALIZER), m_networkthread_mutex(PTHREAD_MUTEX_INITIALIZER)
+	m_networkthread_mutex(PTHREAD_MUTEX_INITIALIZER),
+	m_networkthread_cond(PTHREAD_COND_INITIALIZER)
 {
+	pthread_mutex_init(&m_networkthread_mutex, NULL);
+	pthread_cond_init(&m_networkthread_cond, NULL);
 }
 
 CMainClient::~CMainClient(void)
 {
+	pthread_mutex_destroy(&m_networkthread_mutex);
+	pthread_cond_destroy(&m_networkthread_cond);
 }
 
 int CMainClient::Run(void)
@@ -40,11 +32,18 @@ int CMainClient::Run(void)
 	//Load the network system
 	//==============
 	if(!m_mainsocket.socket_create()) std::cout << "[ERROR] Could not create socket!\n";
-	int rc=0;
-	rc = pthread_create(&m_networkthread, NULL, NetworkThreadStarter, this);
-	rc = pthread_detach(m_networkthread);
-	if (rc) std::cout << "[ERROR] pthread: pthread_create() failed!" << std::endl;
-	
+
+	//==============
+	//Connect to the realm server to retrieve the update list and world server list
+	//==============
+	m_state = State_LoggingInRealm;
+	//Start the network thread and
+	//wait for the it to complete the realm server stuff
+	StartNetworkThread();
+	pthread_mutex_lock(&m_networkthread_mutex);
+	pthread_cond_wait(&m_networkthread_cond, &m_networkthread_mutex);
+	pthread_mutex_unlock(&m_networkthread_mutex);
+
 	//==============
 	//Signal 'Done Loading' to GUI and so on
 	//==============
@@ -59,14 +58,17 @@ int CMainClient::Run(void)
 				m_state = State_Quitting;
 				//TODO: Show unloading screen
 				m_mainsocket.socket_close(); //This should make any receiver thread that is busy receiving quit
-				//Signal all threads waiting on the condition
-				pthread_cond_signal(&m_networkthread_cond);
 				//datafileclass.unload();
 				break;
 			case m_gui.Message_Login:
 				if( m_state != State_LoginScreen ) break;
 				m_state = State_LoggingIn;
-				pthread_cond_signal(&m_networkthread_cond);
+				StartNetworkThread();
+				break;
+			case m_gui.Message_CharSelect:
+				if( m_state != State_CharSelectScreen ) break;
+				m_state = State_SelectingChar;
+				StartNetworkThread();
 				break;
 			case m_gui.Message_NoMessages:
 			default:
@@ -78,35 +80,37 @@ int CMainClient::Run(void)
 	return 0;
 }
 
+int	CMainClient::StartNetworkThread(void)
+{
+	//Wait for the thread to terminate if it was still running
+	pthread_join(m_networkthread, NULL);
+	//Create the new thread
+	if( pthread_create(&m_networkthread, NULL, NetworkThreadStarter, this) ){
+		std::cout << "[ERROR] pthread: pthread_create() failed!" << std::endl;
+		return 0;
+	}
+	return 1;
+}
+
+void* NetworkThreadStarter(void* class_pointer){
+	return ((CMainClient*)class_pointer)->NetworkThread();
+}
+
 void* CMainClient::NetworkThread(void)
 {
-	while( m_state != State_Quitting ){
-		//Wait for the start signal from the other thread
-		//pthread_mutex_lock(&m_networkthread_mutex); //Only one thread using this mutex so no need to lock
-		pthread_cond_wait(&m_networkthread_cond, &m_networkthread_mutex);
-		//pthread_mutex_unlock(&m_networkthread_mutex);
-
-		switch( m_state ){
-			case State_LoggingIn:
-				if( m_mainsocket.isConnected() ) m_mainsocket.socket_close();
-				if(!m_mainsocket.socket_connect("127.0.0.1", 6131)){
-					std::cout << "[ERROR] Could not connect to server!\n";
-					break;
-				}else{
-					//ByteArray data;
-					//m_mainsocket >> data;
-					//parse this
-					
-					//[NitriX] note: I added that file into your folder and changed vars
-					//so it will work properly with your project. All you need now
-					//is to include it:
-					//#include "packetHandler.hpp"
-					//Btw this file will needs quite lot of stuff from Common/ directory.
-				}
-				break;
-			default:
-				break;
-		}
+	switch( m_state ){
+		case State_LoggingInRealm:
+			if( m_mainsocket.isConnected() ) m_mainsocket.socket_close();
+			if(!m_mainsocket.socket_connect("127.0.0.1", 6131)){
+				std::cout << "[ERROR] Could not connect to server!\n";
+			}else{
+				//This will keep looping untill an error occurred or the socket got disconnected
+				#include "packetHandler.hpp"
+			}
+			pthread_cond_signal(&m_networkthread_cond); //Signal the main thread that this thread is done
+			break;
+		default:
+			break;
 	}
 	return 0;
 }

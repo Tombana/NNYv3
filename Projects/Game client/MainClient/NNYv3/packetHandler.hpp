@@ -1,5 +1,5 @@
 ByteArray buffer;
-while (true) {
+while( m_state != State_Quitting ) {
     //===== Here the famous packet parser!
     //+++ so all the code following must be put in the section that receive/process incoming packets +++
     //+++ this is usually placed whiting a while(true) loop with a socketRead blocking just before +++
@@ -19,7 +19,8 @@ while (true) {
     //a while() here:
     //yeah sometimes there's many capsules in a packet so we have to
     //do this loop more than once, but otherwise (and usually) it will simply break().
-    while (true) {
+	bool CloseSocket = false;
+    while( m_state != State_Quitting ) {
     //----------------------------------
         //Set the buffer seek to the begening so we can perform our checks without errors.
         //By errors I mean this is making sure we arnt lost somewhere else in the buffer
@@ -29,19 +30,20 @@ while (true) {
 
         //Now the seek is placed to the begining, so we are supposed to
         //read a "~" (0x7E) byte firstly.
-        if (buffer.readByte() == 0x7E) { //[byte] Packet begining signature
-            DWORD length = buffer.readDword(); //we will need this later on so we know when we are done accumulating data
-            //BYTE nbCmds = buffer.readByte(); //might be usefull for debugging even if its useless now
-            buffer.readByte(); //still we must read it
+        if (buffer.read<BYTE>() == 0x7E) { //[byte] Packet begining signature
+            DWORD length = buffer.read<DWORD>(); //we will need this later on so we know when we are done accumulating data
+            //BYTE nbCmds = buffer.read<BYTE>(); //might be usefull for debugging even if its useless now
+            buffer.read<BYTE>(); //still we must read it
 
             //Is the length too big? We never know, some hackers could send a fake
             //packet to force the server to put 1Go of trash in memory.
             //Lets fix a limit of 1MB, i doubt we will somewhen have a packet that long
             //but whatever. 1MB is way enough.
             if (length > 1048576) { //1024 Bytes * 1024 KiloBytes = (1 MB) 1048576 Bytes
+				ByteArray packetToSend;
                 packetToSend.addCmd(PCKT_R_HACKING_ATTEMPT);
                 m_mainsocket << packetToSend;
-                m_mainsocket.socket_close();
+				CloseSocket = true;
                 #if CONFIG_VERBOSE >= CONFIG_VERBOSE_IMPORTANT
                     std::cerr << "[packetHandler] @ERROR: Length refused!" << std::endl;
                 #endif
@@ -60,7 +62,13 @@ while (true) {
                 capsule.append(substring); //position to 6 and read length bytes
                 //-----------------------------------------------
                 //PROCESS THE CAPSULE (switches and stuff)
-                #include "capsuleHandler.hpp"
+				while (true) { //a loop to parse all CMDs in the capsule
+					switch (capsule.read<WORD>()) {
+						#include "capsuleHdl_login.hpp"			//The login procedure
+						#include "capsuleHdl_default.hpp"       //Include debugs and default cases
+					}
+					if (capsule.eof()) break; //break the loop, no more CMDs
+				}
                 //-----------------------------------------------
                 //Delete the 6+length first bytes from the buffer
                 buffer.erase(0, 6+length); //position to 0 and delete 6+length character
@@ -92,12 +100,14 @@ while (true) {
             //At this point, i hope we arent expecting a new capsule
             //because if its the case, that capsule doesnt starts with 0x7E.
             //Something is definitivelly going wrong.
+			CloseSocket = true;
             #if CONFIG_VERBOSE >= CONFIG_VERBOSE_IMPORTANT
                 std::cerr << "[packetHandler] @ERROR: Packets are corrupted!" << std::endl;
                 std::cerr << "[packetHandler] @ERROR: There is another capsule in this packet, not starting with 0x7E!" << std::endl;
             #endif
-            m_mainsocket.socket_close();
             break;
         }
     }
+	if( CloseSocket ) break;
 }
+m_mainsocket.socket_close();
