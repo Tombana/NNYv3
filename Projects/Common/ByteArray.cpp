@@ -200,6 +200,7 @@ WORD ByteArray::readWord() {
 }
 
 //! Read 4 bytes from the byte array @return DWORD
+// Tombana: This is actually not working at all.
 DWORD ByteArray::readDword() {
     DWORD val=0;
     val+=(BYTE)_pow(256, 3) * (BYTE)m_buffer[m_seek+3];
@@ -209,6 +210,17 @@ DWORD ByteArray::readDword() {
     m_seek+=4;
     return val;
 }
+// Tombana: Use the templated read function!!!!
+//Or use the right operators instead of the _pow stuff.
+//DWORD ByteArray::readDword() {
+//	DWORD val=0;
+//	val |= ( (BYTE)m_buffer[m_seek+3] & 0xff ) << 24;
+//	val |= ( (BYTE)m_buffer[m_seek+2] & 0xff ) << 16;
+//	val |= ( (BYTE)m_buffer[m_seek+1] & 0xff ) << 8;
+//	val |= ( (BYTE)m_buffer[m_seek] & 0xff );
+//	m_seek+=4;
+//	return val;
+//}
 
 //! Read a 'string' from the byte array
 /** Actually it reads a \e _size DWORD, then reads \e _size amount of chars and put them into a std:string
@@ -216,7 +228,7 @@ DWORD ByteArray::readDword() {
 */
 std::string ByteArray::readString() {
     std::string output;
-    unsigned int length = readDword();
+    unsigned int length = read<DWORD>();
     output.append(m_buffer.substr(m_seek, length));
     m_seek+=length;
     return output;

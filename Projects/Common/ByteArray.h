@@ -37,8 +37,21 @@ public:
     BYTE readByte();
     bool readBool();
     WORD readWord();
-    DWORD readDword();
+    DWORD readDword(); //not working
     std::string readString();
+
+	//Tombana: Use this like: packet.read<int>(); and packet.read<DWORD>();
+		template <typename T>
+		T read(){
+			if( (m_seek + sizeof(T)) > m_buffer.size() ) return T(); //This is the same as return 0; but it will also work for when T is a class
+			T val = *reinterpret_cast<T*>((BYTE*)m_buffer.c_str()+m_seek);
+			m_seek += sizeof(T);
+			return val;
+		}
+		//template specialisation: packet.read<std::string>()
+		template <>
+		std::string read(){ return readString(); }
+
     void setSeek(unsigned int newSeek);
     void modSeek(int newSeek);
     //Processing packets
