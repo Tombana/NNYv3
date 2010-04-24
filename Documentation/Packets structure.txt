@@ -3,8 +3,12 @@
 [Dword] Data size
 [Byte] NbCmds
 
+//Test comment by Tombana
+
 === DATA === (variable size)
 /- loop begining
 |	[Short] CmdID
 |	[...] different structures according to CmdID
 \- loop end
+
+//Tombana: 2 different file versions. 2 branches. Will it blend?
