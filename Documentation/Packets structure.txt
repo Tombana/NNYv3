@@ -3,6 +3,8 @@
 [Dword] Data size
 [Byte] NbCmds
 
+//NITRIX WAS HERE :O !
+
 === DATA === (variable size)
 /- loop begining
 |	[Short] CmdID
