@@ -23,6 +23,14 @@ bool            g_realmConnector_authorized   = false; //Protected with g_realmC
 //-------------------------------------------------
 
 int main() {
+    ByteArray test;
+    test.add<BYTE>(0x7E); //byte
+    test.add<DWORD>(strlen("WOHO IT WORKS!")+sizeof(WORD)); //dword
+    test.add<BYTE>(1); //byte
+    test.addCmd(PCKT_X_DEBUG); //word
+    test.addString("WOHO IT WORKS!"); //dword + string
+    test.printHex();
+
     //TODO (NitriX#): We need a log system!
     //=========================================
     //            STARTUP MESSAGE

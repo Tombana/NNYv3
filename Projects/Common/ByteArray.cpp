@@ -185,10 +185,14 @@ void ByteArray::modSeek(int newSeek) {
 
 //! [Debugging] Prints (human-readable) the byte array
 void ByteArray::printHex() {
-    std::cout << "[PrintHex]: (";
-    int size = m_buffer.size();
-    for (int i=0; i<size; i++) {
-        //std:: m_buffer.at(i));
+    std::cerr << "[PrintHex]: (";
+    unsigned int size = m_buffer.size();
+    for (unsigned int i=0; i<size; i++) {
+        if (i == size-1) {
+            printf("%02X", (BYTE) m_buffer.at(i));
+        } else {
+            printf("%02X ", (BYTE) m_buffer.at(i));
+        }
     }
-    std::cout << ")" << std::endl;
+    std::cerr << ")" << std::endl;
 }

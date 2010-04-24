@@ -42,15 +42,9 @@ public:
         m_seek += sizeof(T);
         return val;
     }
-    /*
-    template <>
-    std::string read() {
-        return readString();
-    }
-    */
+
     template <typename T>
     void add(T hex) {
-        std::cerr << "ADD: " << (unsigned int)hex << std::endl;
         m_buffer.append(reinterpret_cast<char*>(&hex), sizeof(T));
     }
 

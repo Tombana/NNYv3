@@ -2,3 +2,7 @@
 /*.suo
 /ipch/
 /*.opensdf
+*.o
+*.exe
+*.depend
+*.layer
