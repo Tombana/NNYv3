@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="..\..\..\Common;..\..\..\..\Dependencies\pthread\include;..\..\..\..\Dependencies\MySQL\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -60,7 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="pthreadVCE2.lib libws2_32.a"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\..\..\..\Dependencies\winsocks2\lib;..\..\..\..\Dependencies\pthread\lib;..\..\..\..\Dependencies\MySQL\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -216,6 +219,22 @@
 				>
 				<File
 					RelativePath="..\..\..\Common\ByteArray.h"
+					>
+				</File>
+				<File
+					RelativePath=".\capsuleHdl_default.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\capsuleHdl_login.hpp"
+					>
+				</File>
+				<File
+					RelativePath=".\packetHandler.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\Common\protocol.hpp"
 					>
 				</File>
 				<File
