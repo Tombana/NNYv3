@@ -2,10 +2,6 @@ Connection with Client/Realm server
 
 <-  PCKT_R_WELCOME
 PCKT_C_VERSION ->
-//NitriX ahaha!! moar moar!
 <- PCKT_R_DOWNLOAD (if needed)
 <- PCKT_R_DOWNLOAD_EOF
-//NitriX BOO!
 <- PCKT_R_CONNECT / SERVER_GONE
-
-//Test comment by Tombana. Let this file collide please.

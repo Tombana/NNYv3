@@ -58,23 +58,16 @@ bool ByteArray::eof() {
     }
 }
 
-//! This function append a BYTE to the byte array
-void ByteArray::addByte(BYTE hex) {
-    char buffer[1];
-    buffer[0] = (char)(hex %256);
-    m_buffer.append(buffer, 1);
-}
-
 //! This function append a DWORD and a const char* to the byte array
 void ByteArray::addString(const char *str) {
     std::string buffer = str;
-    addDword((int)buffer.size());
+    add<DWORD>((int)buffer.size());
     m_buffer.append(buffer);
 }
 
 //! This function append a DWORD and std::string to the byte array
 void ByteArray::addString(std::string str) {
-    addDword((int)str.size());
+    add<DWORD>((int)str.size());
     m_buffer.append(str);
 }
 
@@ -86,7 +79,7 @@ void ByteArray::clear() {
 }
 
 bool ByteArray::readBool() {
-    if (readByte() == 1) {
+    if (read<BYTE>() == 1) {
         return true;
     } else {
         return false;
@@ -95,20 +88,20 @@ bool ByteArray::readBool() {
 
 void ByteArray::addBool(bool cst) {
     if (cst) {
-        addByte(1); //true=1
+        add<BYTE>(1); //true=1
     } else {
-        addByte(0); //false=0
+        add<BYTE>(0); //false=0
     }
 }
 
 //! Return the size of the byte array
 DWORD ByteArray::size() {
-    return m_buffer.size();
+    return (DWORD)m_buffer.size();
 }
 
 //! Wrapper to use the byte array is it really was an array @return BYTE
 BYTE ByteArray::operator[](int i) {
-    return m_buffer[i];
+    return (BYTE)m_buffer[i];
 }
 
 //! This function append a \e WORD to the byte array
@@ -119,30 +112,7 @@ BYTE ByteArray::operator[](int i) {
 */
 void ByteArray::addCmd(WORD hex) {
     m_nbCmd++;
-    addWord(hex);
-}
-
-//! This function append a WORD to the byte array
-void ByteArray::addWord(WORD hex) {
-    char buffer[2];
-    buffer[0] = (char)(hex %256);
-    buffer[1] = (char)((int)(hex / _pow(256,1)) %256);
-    m_buffer.append(buffer,2);
-}
-
-long double _pow(int base, int exponent) {
-	long double x = base;
-	return pow(x, exponent);
-}
-
-//! This function append a DWORD to the byte array
-void ByteArray::addDword(DWORD hex) {
-    char buffer[4];
-    buffer[0] = (char)(hex %256);
-    buffer[1] = (char)((int)(hex / _pow(256,1)) %256);
-    buffer[2] = (char)((int)(hex / _pow(256,2)) %256);
-    buffer[3] = (char)((int)(hex / _pow(256,3)) %256);
-    m_buffer.append(buffer, 4);
+    add<WORD>(hex);
 }
 
 //! [Harmful] This function append a raw std::string to the byte array
@@ -183,33 +153,6 @@ std::string ByteArray::genPacket() {
     return output;
 }
 
-//! Read 1 byte from the byte array @return BYTE
-BYTE ByteArray::readByte() {
-    //This is REALLY optimized, i know its confusing a bit but trust me
-    m_seek+=1;
-    return (BYTE)m_buffer[m_seek-1];
-}
-
-//! Read 2 bytes from the byte array @return WORD
-WORD ByteArray::readWord() {
-    WORD val=0;
-    val+=(BYTE)_pow(256, 1) * (BYTE)m_buffer[m_seek+1];
-    val+=(BYTE)m_buffer[m_seek];
-    m_seek+=2;
-    return val;
-}
-
-//! Read 4 bytes from the byte array @return DWORD
-// Tombana: This is actually not working at all.
-DWORD ByteArray::readDword() {
-    DWORD val=0;
-    val+=(BYTE)_pow(256, 3) * (BYTE)m_buffer[m_seek+3];
-    val+=(BYTE)_pow(256, 2) * (BYTE)m_buffer[m_seek+2];
-    val+=(BYTE)_pow(256, 1) * (BYTE)m_buffer[m_seek+1];
-    val+=(BYTE)m_buffer[m_seek];
-    m_seek+=4;
-    return val;
-}
 // Tombana: Use the templated read function!!!!
 //Or use the right operators instead of the _pow stuff.
 //DWORD ByteArray::readDword() {
@@ -240,16 +183,17 @@ void ByteArray::setSeek(unsigned int newSeek) {
 }
 
 //! Modify sightly the position of the seek in the byte array
+//! Can be negative
 void ByteArray::modSeek(int newSeek) {
     m_seek += newSeek;
-	}
+}
 
 //! [Debugging] Prints (human-readable) the byte array
 void ByteArray::printHex() {
     std::cout << "[PrintHex]: (";
     int size = m_buffer.size();
     for (int i=0; i<size; i++) {
-        printf("%2.2X ", m_buffer.at(i));
+        //std:: m_buffer.at(i));
     }
     std::cout << ")" << std::endl;
 }
