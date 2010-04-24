@@ -6,6 +6,9 @@ echo '-------------------------------'."\n";
 echo 'Retrieving old version infos...'."\n";
 $infos = file_get_contents('src/version.hpp');
 
+$fp = fopen('WOHOO.txt', 'a');
+fclose($fp);
+
 echo 'Cleaning special chars...'."\n";
 $infos = str_replace("\t",'',$infos);
 $infos = str_replace("\r",'',$infos);

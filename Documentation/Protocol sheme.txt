@@ -1,0 +1,7 @@
+Connection with Client/Realm server
+
+<-  PCKT_R_WELCOME
+PCKT_C_VERSION ->
+<- PCKT_R_DOWNLOAD (if needed)
+<- PCKT_R_DOWNLOAD_EOF
+<- PCKT_R_CONNECT / SERVER_GONE

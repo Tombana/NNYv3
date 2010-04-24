@@ -113,9 +113,6 @@
 		<Unit filename="src\threadPoolHandler.h">
 			<Option virtualFolder="Thread handlers\" />
 		</Unit>
-		<Unit filename="src\version.hpp">
-			<Option virtualFolder="Extras\" />
-		</Unit>
 		<Extensions>
 			<code_completion />
 			<debugger />

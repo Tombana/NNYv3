@@ -6,7 +6,6 @@
 #include "config.hpp"
 #include "ZSocket.h"
 #include "pthread.h"
-#include "version.hpp"
 #include "threadHandler.h"
 #include "Dispatcher.h"
 #include "Database.h"

@@ -6,6 +6,7 @@ ZSocket::ZSocket() {
     #if defined(WIN32)
         _loadWinsock();
     #endif
+    m_mutex = PTHREAD_MUTEX_INITIALIZER;
 }
 
 //Is a socket holder mode, it doesnt create a socket actually, it only sets m_socket.id on the target object.
@@ -97,17 +98,19 @@ void ZSocket::operator<<(ByteArray &pckt) {
 }
 
 void ZSocket::operator<<(std::string output) {
-    size_t TotalBytesSend = 0;
-	DWORD BytesSend;
-	while( TotalBytesSend < output.size() ){
-		BytesSend = send(m_socket.id, output.c_str() + TotalBytesSend, output.size() - TotalBytesSend, 0);
-		if( BytesSend == SOCKET_ERROR || BytesSend == 0 ){
-		    std::cerr << "[ZSocket] @ERROR: Failed to send all bytes" << std::endl;
-			socket_close();
-			break;
-		}
-		TotalBytesSend += BytesSend;
-	}
+    pthread_mutex_lock(&m_mutex);
+        size_t TotalBytesSend = 0;
+        DWORD BytesSend;
+        while( TotalBytesSend < output.size() ){
+            BytesSend = send(m_socket.id, output.c_str() + TotalBytesSend, output.size() - TotalBytesSend, 0);
+            if( BytesSend == SOCKET_ERROR || BytesSend == 0 ){
+                std::cerr << "[ZSocket] @ERROR: Failed to send all bytes" << std::endl;
+                socket_close();
+                break;
+            }
+            TotalBytesSend += BytesSend;
+        }
+	pthread_mutex_unlock(&m_mutex);
 }
 
 void ZSocket::socket_close() {

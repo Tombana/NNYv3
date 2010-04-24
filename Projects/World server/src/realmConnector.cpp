@@ -10,14 +10,16 @@ void *realmConnector (void *ptr) {
     while (true) {
         ZSocket realm;
         realm.socket_create();
-        realm.socket_connect(CONFIG_REALM_IP, CONFIG_REALM_PORT);
 
-        ByteArray packetToSend;
-        packetToSend.addCmd(PCKT_W_SYNC_KEY);
-        packetToSend.addDword(CONFIG_SERVER_ID);
-        packetToSend.addString(CONFIG_SERVER_KEY);
-
-        realm << packetToSend;
+        if (realm.socket_connect(CONFIG_REALM_IP, CONFIG_REALM_PORT)) {
+            //---
+            ByteArray packetToSend;
+            packetToSend.addCmd(PCKT_W_SYNC_KEY);
+            packetToSend.addDword(CONFIG_SERVER_ID);
+            packetToSend.addString(CONFIG_SERVER_KEY);
+            //---
+            realm << packetToSend;
+        }
 
         while (true) {
             ByteArray input;

@@ -24,10 +24,10 @@ bool            g_realmConnector_authorized   = false; //Protected with g_realmC
 
 int main() {
     //TODO (NitriX#): We need a log system!
-
     //=========================================
     //            STARTUP MESSAGE
     //=========================================
+    genVersion();
     printStartupMessage();
 
     //=========================================
@@ -46,10 +46,10 @@ int main() {
     //            REALM CONNECTOR
     //=========================================
     std::cerr << "Connecting to the Realm server... ";
-    pthread_t t_realmConnector;
+    pthread_t thread_realmConnector;
     int rc=0;
-    rc = pthread_create(&t_realmConnector, NULL, realmConnector, NULL); //here we launch the thread
-    rc = pthread_detach(t_realmConnector); //Detach thread so it works on its own
+    rc = pthread_create(&thread_realmConnector, NULL, realmConnector, NULL); //here we launch the thread
+    rc = pthread_detach(thread_realmConnector); //Detach thread so it works on its own
     #if DEBUG_VERBOSE >= DEBUG_VERBOSE_IMPORTANT
         if (rc) std::cerr << "[main] @ERROR: pthread: pthread_create() failed! (Realm connector)" << std::endl;
     #endif
@@ -104,7 +104,7 @@ int main() {
                 //TODO (NitriX#): We reached the thread limit!
                 std::cerr << "We reached the maximum thread limit!" << std::endl;
                 while (true) {
-                    sleep(1);
+                    sleep(1); //infine pause
                 }
             }
         }
@@ -125,20 +125,14 @@ void printStartupMessage() {
     std::cerr <<
     "/-----" << std::endl <<
     "| ~ NNYv3 World Server ~" << std::endl <<
-    "| \t" << BUILD_VERSION << " [Build " << BUILD_NUMBER << "]" << std::endl <<
-    "|" << std::endl <<
-    "| Server details: \t\t\t\t" << std::endl <<
-    "| \tBuild date: " << BUILD_DATE << std::endl <<
+    "| " << BUILD_TIME << " [Build " << BUILD_NUMBER << "]" << std::endl <<
+    "| " << std::endl <<
+    "| Compiled from Git sources:" << std::endl <<
+    "|   Commit " << GIT_COMMIT_HASH << std::endl <<
+    "|   Human-readable revision is " << GIT_COMMIT_NUMBER << std::endl <<
     "|" << std::endl <<
     "| Libraries/classes version: \t\t\t\t" << std::endl <<
-    "| \tServer protocol: v" << NNY_PROTOCOL_VERSION << std::endl <<
-    "|" << std::endl <<
-    "| Recent modifications:" << std::endl <<
-    "|   Memory leak fixed in ZSocket" << std::endl <<
-    "|   Added configuration file support" << std::endl <<
-    "|   Connect to the realm server to get online" << std::endl <<
-    "|   ThreadPool implemented" << std::endl <<
-    "|   Forked & very edited from Realm sources" << std::endl <<
+    "|   Server protocol: v" << NNY_PROTOCOL_VERSION << std::endl <<
     "\\-----" << std::endl;
 }
 
@@ -161,4 +155,51 @@ void createNbThreadWorker(int amount) {
     #if CONFIG_VERBOSE >= CONFIG_VERBOSE_DEBUGGING
         std::cerr << "[main] " << amount << " thread worker has been created!" << std::endl;
     #endif
+}
+
+void genVersion() {
+    //----------------------
+    // Retrieve git hash
+    //----------------------
+    std::string git_hash;
+    std::ifstream git("../.git/refs/heads/master", std::ios::in);
+    if(git) {
+        git >> git_hash;
+        git.close();
+    }
+    //----------------------
+    // Compare with config
+    //----------------------
+    ConfigFile git_conf("version.conf");
+    unsigned int commit;
+    if (git_conf.keyExists(git_hash)) {
+        commit = git_conf.read<unsigned int>(git_hash);
+    } else {
+        commit = git_conf.read<unsigned int>(git_conf.read<std::string>("LAST_HASH"));
+        if (!git_hash.empty()) {
+            //Your commit doesnt exist, lets add it to the file
+            commit++;
+            std::ofstream file("git.conf", std::ios::app);
+            file << git_hash << " = " << commit << std::endl << "LAST_HASH = " << git_hash << std::endl;
+            file.close();
+        }
+    }
+
+    time_t rawtime;
+    struct tm * timeinfo;
+    time ( &rawtime );
+    timeinfo = localtime ( &rawtime );
+    std::string time_string = asctime (timeinfo);
+
+    std::ofstream file("version.conf", std::ios::app);
+    if (file) {
+        file << "BUILD_TIME = " << time_string;
+        file << "BUILD_NUMBER = " << git_conf.read<unsigned int>("BUILD_NUMBER")+1 << std::endl;
+        file.close();
+    }
+
+    g_CONFIG.add<unsigned int>("BUILD_NUMBER",git_conf.read<unsigned int>("BUILD_NUMBER")+1);
+    g_CONFIG.add<std::string>("BUILD_TIME",time_string);
+    g_CONFIG.add<unsigned int>("GIT_COMMIT_NUMBER",commit);
+    g_CONFIG.add<std::string>("GIT_COMMIT_HASH",git_conf.read<std::string>("LAST_HASH"));
 }

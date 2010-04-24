@@ -31,7 +31,8 @@ while (true) {
         //read a "~" (0x7E) byte firstly.
         if (buffer.readByte() == 0x7E) { //[byte] Packet begining signature
             DWORD length = buffer.readDword(); //we will need this later on so we know when we are done accumulating data
-            BYTE nbCmds = buffer.readByte(); //might be usefull for debugging even if its useless now
+            //BYTE nbCmds = buffer.readByte(); //might be usefull for debugging even if its useless now
+            buffer.readByte(); //still we must read it
 
             //Is the length too big? We never know, some hackers could send a fake
             //packet to force the server to put 1Go of trash in memory.

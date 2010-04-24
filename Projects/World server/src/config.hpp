@@ -10,6 +10,11 @@
 //              WHAT YOU ARE DOING
 //=================================================
 
+//Version configuration (generated from main())
+#define BUILD_TIME                                  g_CONFIG.read<std::string>   ("BUILD_TIME")
+#define BUILD_NUMBER                                g_CONFIG.read<unsigned int>  ("BUILD_NUMBER")
+#define GIT_COMMIT_HASH                             g_CONFIG.read<std::string>   ("GIT_COMMIT_HASH")
+#define GIT_COMMIT_NUMBER                           g_CONFIG.read<unsigned int>  ("GIT_COMMIT_NUMBER")
 //Server configuration
 #define CONFIG_SERVER_ID                            g_CONFIG.read<unsigned int>  ("SERVER_ID")
 #define CONFIG_SERVER_PORT                          g_CONFIG.read<unsigned int>  ("SERVER_PORT")
@@ -19,7 +24,7 @@
 #define CONFIG_REALM_PORT                           g_CONFIG.read<unsigned int>  ("REALM_PORT")
 #define CONFIG_REALMCONNECTOR_RETRY                 g_CONFIG.read<unsigned int>  ("REALMCONNECTOR_RETRY")
 #define CONFIG_REALMCONNECTOR_RETRY_SLEEP           g_CONFIG.read<unsigned int>  ("REALMCONNECTOR_RETRY_SLEEP")
-//Console error mode
+//Console error mode (static)
 #define CONFIG_VERBOSE_NOTHING                      0
 #define CONFIG_VERBOSE_IMPORTANT                    1
 #define CONFIG_VERBOSE_DEBUGGING                    2
@@ -40,9 +45,10 @@ typedef unsigned long  DWORD; //4 bytes
 //Debugging purpose, use: sleep(x)
 #ifdef WIN32
     #include <windows.h>
-    #define sleep(x) Sleep(x * 1000)
+    #define sleep(x) Sleep(x)
 #else
     #include <unistd.h>
+    #define sleep(x) usleep(x)
 #endif
 
 #endif

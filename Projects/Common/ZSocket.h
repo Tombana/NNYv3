@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string.h>
+#include "pthread.h"
 #include "ByteArray.h"
 
 #if defined(WIN32)
@@ -57,12 +58,13 @@ protected:
 #endif
 
 private:
-    int         m_port; //port number
-    std::string m_host; //hostname or ip
-    s_socket    m_socket; //socket info
-    bool        m_created; //Works!
-    bool        m_connected; //Not quite sure yet
-    bool        m_dataReceived;
+    int              m_port; //port number
+    std::string      m_host; //hostname or ip
+    s_socket         m_socket; //socket info
+    bool             m_created; //Works!
+    bool             m_connected; //Not quite sure yet
+    bool             m_dataReceived;
+    pthread_mutex_t  m_mutex;
 };
 
 #endif

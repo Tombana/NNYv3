@@ -42,8 +42,6 @@ int main() {
     "/===============================================\\" << std::endl <<
     "|         ~ NNYv3 Realm Server ~" << "\t\t|" << std::endl <<
     "|\t\t\t\t\t\t|" << std::endl <<
-    "| Date: " << BUILD_DATE << "    \t\t|" << std::endl <<
-    "| Version: " << BUILD_VERSION << " [Build " << BUILD_NUMBER << "]\t\t\t|" << std::endl <<
     "| Database supported: v" << CONFIG_DATABASE_SUPPORTED << "\t\t\t|" << std::endl <<
     "|===============================================|" << std::endl <<
     "| Recent modifications: \t\t\t|" << std::endl <<

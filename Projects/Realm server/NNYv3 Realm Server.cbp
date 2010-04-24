@@ -47,9 +47,6 @@
 			<Add library="..\..\Dependencies\pthread\lib\libpthreadGCE2.a" />
 			<Add library="..\..\Dependencies\MySQL\lib\libmysql.lib" />
 		</Linker>
-		<ExtraCommands>
-			<Add before="$(PROJECT_DIR)\..\..\Tools\Autoversioning\gen.exe" />
-		</ExtraCommands>
 		<Unit filename="..\Common\ByteArray.cpp">
 			<Option virtualFolder="Common\" />
 		</Unit>
@@ -109,9 +106,6 @@
 		</Unit>
 		<Unit filename="src\threadHandler.h">
 			<Option virtualFolder="Headers\" />
-		</Unit>
-		<Unit filename="src\version.hpp">
-			<Option virtualFolder="Extras\" />
 		</Unit>
 		<Extensions>
 			<code_completion />

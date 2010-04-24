@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NNYv3 Realm Server", "NNYv3 Realm Server.vcxproj", "{56C370C2-4E6D-BE97-FA75-9198D87B6F40}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NNYv3 Realm Server", "NNYv3 Realm Server.vcxproj", "{FF614359-3811-87E3-DA6B-A4C03BEF1E79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{56C370C2-4E6D-BE97-FA75-9198D87B6F40}.Debug|Win32.ActiveCfg = Debug|Win32
-		{56C370C2-4E6D-BE97-FA75-9198D87B6F40}.Debug|Win32.Build.0 = Debug|Win32
-		{56C370C2-4E6D-BE97-FA75-9198D87B6F40}.Release|Win32.ActiveCfg = Release|Win32
-		{56C370C2-4E6D-BE97-FA75-9198D87B6F40}.Release|Win32.Build.0 = Release|Win32
+		{FF614359-3811-87E3-DA6B-A4C03BEF1E79}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FF614359-3811-87E3-DA6B-A4C03BEF1E79}.Debug|Win32.Build.0 = Debug|Win32
+		{FF614359-3811-87E3-DA6B-A4C03BEF1E79}.Release|Win32.ActiveCfg = Release|Win32
+		{FF614359-3811-87E3-DA6B-A4C03BEF1E79}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
