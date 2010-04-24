@@ -6,14 +6,14 @@ while (true) {
 
     //here we have read all bytes from the socket and put it into 'input'
     ByteArray input;
-    threadData.socket >> input;
+    m_mainsocket >> input;
     //'buffer' is a special ByteArray class to read/write a byte array.
     //This object is unique to all threads and is never destroyed.
     //(well its actually destroyed when the socket disconnect but yeah)
     buffer.append(input); //so we append the new input to the end of the buffer
 
     //!!!!!!!!!!!!!!!!!!
-    if (!threadData.socket.isDataReceived()) break; //if more than 0 bytes has been read
+    if (!m_mainsocket.isDataReceived()) break; //if more than 0 bytes has been read
     //!!!!!!!!!!!!!!!!!!
 
     //a while() here:
@@ -40,8 +40,8 @@ while (true) {
             //but whatever. 1MB is way enough.
             if (length > 1048576) { //1024 Bytes * 1024 KiloBytes = (1 MB) 1048576 Bytes
                 packetToSend.addCmd(PCKT_R_HACKING_ATTEMPT);
-                threadData.socket << packetToSend;
-                threadData.socket.socket_close();
+                m_mainsocket << packetToSend;
+                m_mainsocket.socket_close();
                 #if CONFIG_VERBOSE >= CONFIG_VERBOSE_IMPORTANT
                     std::cerr << "[packetHandler] @ERROR: Length refused!" << std::endl;
                 #endif
@@ -96,7 +96,7 @@ while (true) {
                 std::cerr << "[packetHandler] @ERROR: Packets are corrupted!" << std::endl;
                 std::cerr << "[packetHandler] @ERROR: There is another capsule in this packet, not starting with 0x7E!" << std::endl;
             #endif
-            threadData.socket.socket_close();
+            m_mainsocket.socket_close();
             break;
         }
     }

@@ -39,11 +39,12 @@ int CMainClient::Run(void)
 	//==============
 	//Load the network system
 	//==============
-	if( m_mainsocket.socket_create() == false ) std::cout << "[ERROR] Could not create socket!\n";
-	pthread_create(&m_networkthread, NULL, NetworkThreadStarter, this);
-	pthread_detach(m_networkthread);
-	//TODO: check for errors creating the thread
-
+	if(!m_mainsocket.socket_create()) std::cout << "[ERROR] Could not create socket!\n";
+	int rc=0;
+	rc = pthread_create(&m_networkthread, NULL, NetworkThreadStarter, this);
+	rc = pthread_detach(m_networkthread);
+	if (rc) std::cout << "[ERROR] pthread: pthread_create() failed!" << std::endl;
+	
 	//==============
 	//Signal 'Done Loading' to GUI and so on
 	//==============
@@ -58,7 +59,7 @@ int CMainClient::Run(void)
 				m_state = State_Quitting;
 				//TODO: Show unloading screen
 				m_mainsocket.socket_close(); //This should make any receiver thread that is busy receiving quit
-				//Signal all threads
+				//Signal all threads waiting on the condition
 				pthread_cond_signal(&m_networkthread_cond);
 				//datafileclass.unload();
 				break;
@@ -88,13 +89,19 @@ void* CMainClient::NetworkThread(void)
 		switch( m_state ){
 			case State_LoggingIn:
 				if( m_mainsocket.isConnected() ) m_mainsocket.socket_close();
-				if( m_mainsocket.socket_connect("127.0.0.1", 6131) == false ){
+				if(!m_mainsocket.socket_connect("127.0.0.1", 6131)){
 					std::cout << "[ERROR] Could not connect to server!\n";
 					break;
 				}else{
-					ByteArray data;
-					m_mainsocket >> data;
+					//ByteArray data;
+					//m_mainsocket >> data;
 					//parse this
+					
+					//[NitriX] note: I added that file into your folder and changed vars
+					//so it will work properly with your project. All you need now
+					//is to include it:
+					//#include "packetHandler.hpp"
+					//Btw this file will needs quite lot of stuff from Common/ directory.
 				}
 				break;
 			default:
