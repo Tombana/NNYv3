@@ -41,8 +41,8 @@ private:
 	int			StartNetworkThread(void); //Call this from the main thread
 	void*		NetworkThread(void); //The network thread
 	friend		void* NetworkThreadStarter(void* class_pointer); //Helper function to give the created thread the right class pointer
-	//pthread_mutex_t	m_networkthread_mutex;
-	//pthread_cond_t	m_networkthread_cond, m_networkthread_cond_response;
+	pthread_mutex_t	m_networkthread_mutex;
+	pthread_cond_t	m_networkthread_cond;
 
 	CGUI		m_gui;
 };
