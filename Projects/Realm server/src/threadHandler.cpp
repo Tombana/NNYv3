@@ -80,9 +80,9 @@ void *threadHandler (void *ptr) {
 
             //Now the seek is placed to the begining, so we are supposed to
             //read a "~" (0x7E) byte firstly.
-            if (buffer.readByte() == 0x7E) { //[byte] Packet begining signature
-                DWORD length = buffer.readDword(); //we will need this later on so we know when we are done accumulating data
-                BYTE nbCmds = buffer.readByte(); //might be usefull for debugging even if its useless now
+            if (buffer.read<BYTE>() == 0x7E) { //[byte] Packet begining signature
+                DWORD length = buffer.read<DWORD>(); //we will need this later on so we know when we are done accumulating data
+                BYTE nbCmds = buffer.read<BYTE>(); //might be usefull for debugging even if its useless now
 
                 //Is the length too big? We never know, some hackers could send a fake
                 //packet to force the server to put 1Go of trash in memory.

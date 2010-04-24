@@ -47,9 +47,6 @@
 			<Add library="..\..\Dependencies\pthread\lib\libpthreadGCE2.a" />
 			<Add library="..\..\Dependencies\MySQL\lib\libmysql.lib" />
 		</Linker>
-		<ExtraCommands>
-			<Add before="$(PROJECT_DIR)\..\..\Tools\Autoversioning\gen.exe" />
-		</ExtraCommands>
 		<Unit filename="..\Common\ByteArray.cpp">
 			<Option virtualFolder="Common\" />
 		</Unit>

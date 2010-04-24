@@ -15,7 +15,7 @@ void *realmConnector (void *ptr) {
             //---
             ByteArray packetToSend;
             packetToSend.addCmd(PCKT_W_SYNC_KEY);
-            packetToSend.addDword(CONFIG_SERVER_ID);
+            packetToSend.add<DWORD>(CONFIG_SERVER_ID);
             packetToSend.addString(CONFIG_SERVER_KEY);
             //---
             realm << packetToSend;
@@ -32,7 +32,7 @@ void *realmConnector (void *ptr) {
             input.modSeek(6); //Optimization
 
             while (true) { //a loop to parse all CMDs in the capsule
-                switch (input.readWord()) {
+                switch (input.read<WORD>()) {
                 //=====================================
                 case PCKT_X_DEBUG:
                     input.readString();

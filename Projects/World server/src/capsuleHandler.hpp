@@ -1,5 +1,5 @@
 while (true) { //a loop to parse all CMDs in the capsule
-    switch (capsule.readWord()) {
+    switch (capsule.read<WORD>()) {
         #include "capsuleHdl_updater.hpp"       //Packets for the 'updater' system
         #include "capsuleHdl_sync.hpp"          //Communications/synchronizing with worldservers
         #include "capsuleHdl_default.hpp"       //Include debugs and default cases

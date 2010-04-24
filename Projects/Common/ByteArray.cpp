@@ -136,16 +136,11 @@ std::string ByteArray::genPacket() {
     std::string output = "~";
 
     //Packet size [DWORD]
-    int bufferSize = m_buffer.size();
-    char buffer[4];
-    buffer[0] = (BYTE)((int)bufferSize %256);
-    buffer[1] = (BYTE)((int)(bufferSize / _pow(256,1)) %256);
-    buffer[2] = (BYTE)((int)(bufferSize / _pow(256,2)) %256);
-    buffer[3] = (BYTE)((int)(bufferSize / _pow(256,3)) %256);
-    output.append(buffer,4); //packet size
+    DWORD size = m_buffer.size();
+    output.append(reinterpret_cast<char*>(&size), sizeof(DWORD));
 
     //Packet nbCmd [Byte]
-    output += (BYTE)((int)m_nbCmd %256);
+    output.append(reinterpret_cast<char*>(&m_nbCmd), sizeof(BYTE));
 
     //Packet content
     output.append(m_buffer);

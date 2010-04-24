@@ -3,7 +3,7 @@
 //=====================================
 case PCKT_C_REVISION:
     { //brakets here relates to "jumping over the initialization" (ISO C++ '03 6.7/3)
-    DWORD clientRevision = capsule.readDword();
+    DWORD clientRevision = capsule.read<DWORD>();
     std::cout << "[capsuleHandler] -- PCKT_C_REVISION --" << std::endl;
     std::cout << "[capsuleHandler] Client revision: " << clientRevision << std::endl;
     //---------------------------------
@@ -14,7 +14,7 @@ case PCKT_C_REVISION:
         ByteArray packetToSend;
         while (rows = db_ptr->fetch_row(result)) {
             packetToSend.addCmd(PCKT_R_DOWNLOAD);
-            packetToSend.addDword(atoi(rows[0]));
+            packetToSend.add<DWORD>(atoi(rows[0]));
             packetToSend.addString(rows[1]);
             packetToSend.addString(rows[2]);
         }
@@ -27,7 +27,7 @@ case PCKT_C_REVISION:
         } else {
             packetToSend.addCmd(PCKT_R_CONNECT);
             packetToSend.addString(current.ipv4);
-            packetToSend.addWord(current.port);
+            packetToSend.add<WORD>(current.port);
         }
         //------------
         socket << packetToSend;
