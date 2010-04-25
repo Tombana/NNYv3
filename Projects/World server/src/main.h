@@ -8,6 +8,8 @@
 #include "config.hpp"
 #include "threadPoolHandler.h"
 #include "realmConnector.h"
+#include <map>
+#include "global_models.hpp"
 
 int main();
 void printStartupMessage();

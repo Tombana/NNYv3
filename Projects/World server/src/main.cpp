@@ -19,15 +19,32 @@ unsigned int    g_threadPool_counter_job      = 0; //Protected with g_threadPool
 pthread_mutex_t g_realmConnector_mutex        = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
 pthread_cond_t  g_realmConnector_cond         = PTHREAD_COND_INITIALIZER; //Protected with g_realmConnector_mutex
 bool            g_realmConnector_authorized   = false; //Protected with g_realmConnector_mutex
+// == MAP GRID ==
+pthread_mutex_t g_mapGrid_mutex               = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
+MapGrid         g_mapGrid; //Protected with g_mapGrid_mutex
+
 //pthread_rwlock_t g_name = PTHREAD_RWLOCK_INITIALIZER;
 //-------------------------------------------------
 
 int main() {
+    //TODO (NitriX#): We are testing mapGrid here too
+    /*
+    s_mapGrid_coord nano1(1,2);
+    s_mapGrid_coord nano2(3,345);
+    s_mapGrid_coord nano3(9,345);
+    g_mapGrid.insert(MapGrid::value_type(nano1,101));
+    g_mapGrid.insert(MapGrid::value_type(nano2,102));
+    g_mapGrid.insert(MapGrid::value_type(nano3,103));
+    std::cerr << "Size: " << g_mapGrid.size() << std::endl;
+    std::cerr << "Output: " << g_mapGrid[nano7] << std::endl;
+    */
+
     //TODO (NitriX#): We need a log system!
     //=========================================
     //            STARTUP MESSAGE
     //=========================================
-    genVersion();
+    //TODO (NitriX#): AutoVersioning disabled for the moment
+    //genVersion();
     printStartupMessage();
 
     //=========================================
@@ -125,11 +142,11 @@ void printStartupMessage() {
     std::cerr <<
     "/-----" << std::endl <<
     "| ~ NNYv3 World Server ~" << std::endl <<
-    "| " << BUILD_TIME << " [Build " << BUILD_NUMBER << "]" << std::endl <<
-    "| " << std::endl <<
-    "| Compiled from Git sources:" << std::endl <<
-    "|   Commit " << GIT_COMMIT_HASH << std::endl <<
-    "|   Human-readable revision is " << GIT_COMMIT_NUMBER << std::endl <<
+    //"| " << BUILD_TIME << " [Build " << BUILD_NUMBER << "]" << std::endl <<
+    //"| " << std::endl <<
+    //"| Compiled from Git sources:" << std::endl <<
+    //"|   Commit " << GIT_COMMIT_HASH << std::endl <<
+    //"|   Human-readable revision is " << GIT_COMMIT_NUMBER << std::endl <<
     "|" << std::endl <<
     "| Libraries/classes version: \t\t\t\t" << std::endl <<
     "|   Server protocol: v" << NNY_PROTOCOL_VERSION << std::endl <<

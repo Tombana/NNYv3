@@ -5,6 +5,7 @@
 #include "pthread.h"
 #include "ByteArray.h"
 #include "config.hpp"
+#include "global_models.hpp"
 
 void threadHandler(SOCKET &m_socketID);
 

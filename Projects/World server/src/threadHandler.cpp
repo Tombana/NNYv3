@@ -1,10 +1,17 @@
 #include "threadHandler.h"
 
+extern MapGrid g_mapGrid;
+
 void threadHandler (SOCKET &m_socketID) {
     //====================================
     //       LITTLE CONSOLE PRINT
     //====================================
     std::cerr << "[threadHandler] Is now handling this client" << std::endl;
+
+    //TODO (NitriX#): We are testing mapGrid here
+    //s_mapGrid_coord nano_test(21,782268);
+    //g_mapGrid.insert(MapGrid::value_type(nano_test,666));
+    //std::cerr << "Wohoo!: " << g_mapGrid[nano_test] << std::endl;
 
     //====================================
     // INITIALIZING THREAD VARS & SOCKET
