@@ -44,5 +44,10 @@ private:
 	pthread_mutex_t	m_networkthread_mutex;
 	pthread_cond_t	m_networkthread_cond;
 
+	DWORD		m_Revision;
+
+	std::string	m_WorldIP;
+	WORD		m_WorldPort;
+
 	CGUI		m_gui;
 };

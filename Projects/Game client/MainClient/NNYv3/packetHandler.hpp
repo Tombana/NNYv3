@@ -64,7 +64,7 @@ while( m_state != State_Quitting ) {
                 //PROCESS THE CAPSULE (switches and stuff)
 				while (true) { //a loop to parse all CMDs in the capsule
 					switch (capsule.read<WORD>()) {
-						#include "capsuleHdl_login.hpp"			//The login procedure
+						#include "capsuleHdl_realm.hpp"			//The login procedure
 						#include "capsuleHdl_default.hpp"       //Include debugs and default cases
 					}
 					if (capsule.eof()) break; //break the loop, no more CMDs

@@ -4,7 +4,8 @@
 CMainClient::CMainClient(void) :
 	m_state(State_Loading), m_mainsocket(), m_networkthread(),
 	m_networkthread_mutex(PTHREAD_MUTEX_INITIALIZER),
-	m_networkthread_cond(PTHREAD_COND_INITIALIZER)
+	m_networkthread_cond(PTHREAD_COND_INITIALIZER),
+	m_Revision(0), m_WorldIP(), m_WorldPort(0)
 {
 	pthread_mutex_init(&m_networkthread_mutex, NULL);
 	pthread_cond_init(&m_networkthread_cond, NULL);
@@ -98,19 +99,33 @@ void* NetworkThreadStarter(void* class_pointer){
 
 void* CMainClient::NetworkThread(void)
 {
+	//Disconnect the socket if it was still connected
+	if( m_mainsocket.isConnected() ) m_mainsocket.socket_close();
+	//Choose what we have to connect to
 	switch( m_state ){
 		case State_LoggingInRealm:
-			if( m_mainsocket.isConnected() ) m_mainsocket.socket_close();
 			if(!m_mainsocket.socket_connect("127.0.0.1", 6131)){
 				std::cout << "[ERROR] Could not connect to server!\n";
-			}else{
-				//This will keep looping untill an error occurred or the socket got disconnected
-				#include "packetHandler.hpp"
 			}
-			pthread_cond_signal(&m_networkthread_cond); //Signal the main thread that this thread is done
+			break;
+		case State_LoggingIn:
+			if( m_WorldIP.empty() || m_WorldPort == 0 ){
+				std::cout << "[ERROR] No world server specified!\n";
+			}else{
+				if(!m_mainsocket.socket_connect(m_WorldIP, m_WorldPort)){
+					std::cout << "[ERROR] Could not connect to world server!\n";
+				}
+			}
 			break;
 		default:
 			break;
 	}
+	//Start the loop that receives all packets
+	if( m_mainsocket.isConnected() ){
+		//This will keep looping untill an error occurred or the socket got disconnected
+		#include "packetHandler.hpp"
+	}
+	//Disconnected. Signal the main thread
+	pthread_cond_signal(&m_networkthread_cond); //Signal the main thread that this thread is done
 	return 0;
 }

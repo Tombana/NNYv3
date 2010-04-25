@@ -7,7 +7,7 @@ case PCKT_R_WELCOME:
 	//Send version packet
 	ByteArray packetToSend;
 	packetToSend.addCmd(PCKT_C_REVISION);
-	packetToSend.addDword(0);
+	packetToSend.add<DWORD>(m_Revision);
 	m_mainsocket << packetToSend;
 	}
     break;
@@ -35,9 +35,9 @@ case PCKT_R_DOWNLOAD_EOF:
 //=====================================
 case PCKT_R_CONNECT:
 	{
-	std::string IP(capsule.readString());
-	WORD Port = capsule.read<WORD>();
-	std::cout << "[capsuleHandler] We can connect to " << IP.c_str() << ":" << Port << std::endl;
+	m_WorldIP = capsule.readString();
+	m_WorldPort = capsule.read<WORD>();
+	std::cout << "[capsuleHandler] We can connect to " << m_WorldIP.c_str() << ":" << m_WorldPort << std::endl;
 	m_state = State_LoginScreen;
 	}
 	break;
