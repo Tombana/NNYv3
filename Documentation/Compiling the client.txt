@@ -1,0 +1,14 @@
+
+The 3D library:
+
+You will need the Ogre3D SDK.
+
+Download it from:
+http://www.ogre3d.org/download/sdk
+
+Attention!
+Do not choose the newest version because it is not precompiled.
+Choose the previous release instead: OGRE 1.6.5 SDK for Visual C++ .Net 2008 (9.0)
+
+Guide for installing the SDK:
+http://www.ogre3d.org/wiki/index.php/Installing_the_Ogre_SDK_on_Windows
