@@ -19,26 +19,13 @@ unsigned int    g_threadPool_counter_job      = 0; //Protected with g_threadPool
 pthread_mutex_t g_realmConnector_mutex        = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
 pthread_cond_t  g_realmConnector_cond         = PTHREAD_COND_INITIALIZER; //Protected with g_realmConnector_mutex
 bool            g_realmConnector_authorized   = false; //Protected with g_realmConnector_mutex
-// == MAP GRID ==
-pthread_mutex_t g_mapGrid_mutex               = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
-MapGrid         g_mapGrid; //Protected with g_mapGrid_mutex
+// == GRID [NAMESPACE] ==
+grid::WorldMaps g_worldMaps; //No need mutex protection here
 
 //pthread_rwlock_t g_name = PTHREAD_RWLOCK_INITIALIZER;
 //-------------------------------------------------
 
 int main() {
-    //TODO (NitriX#): We are testing mapGrid here too
-    /*
-    s_mapGrid_coord nano1(1,2);
-    s_mapGrid_coord nano2(3,345);
-    s_mapGrid_coord nano3(9,345);
-    g_mapGrid.insert(MapGrid::value_type(nano1,101));
-    g_mapGrid.insert(MapGrid::value_type(nano2,102));
-    g_mapGrid.insert(MapGrid::value_type(nano3,103));
-    std::cerr << "Size: " << g_mapGrid.size() << std::endl;
-    std::cerr << "Output: " << g_mapGrid[nano7] << std::endl;
-    */
-
     //TODO (NitriX#): We need a log system!
     //=========================================
     //            STARTUP MESSAGE
@@ -48,16 +35,11 @@ int main() {
     printStartupMessage();
 
     //=========================================
-    //          START LISTENING PORT
+    //         CREATING MAP GRID
     //=========================================
-    std::cerr << "Listening on port " << CONFIG_SERVER_PORT << "... ";
-    ZSocket mainsocket; //Creating main server socket
-    if (mainsocket.socket_bind(CONFIG_SERVER_PORT)) {
-        std::cerr << "OK!" << std::endl;
-    } else {
-        std::cerr << "Failed!" << std::endl << "@ERROR: Unable to bind socket on port " << CONFIG_SERVER_PORT << std::endl;
-        exit(EXIT_FAILURE);
-    }
+    std::cerr << "Creating map grid... ";
+    grid::createMap(1);
+    std::cerr << "OK!" << std::endl;
 
     //=========================================
     //            REALM CONNECTOR
@@ -78,6 +60,19 @@ int main() {
             std::cerr << "Failed!" << std::endl;
     }
     pthread_mutex_unlock(&g_realmConnector_mutex);
+
+    //=========================================
+    //          START LISTENING PORT
+    //=========================================
+    std::cerr << "Listening on port " << CONFIG_SERVER_PORT << "... ";
+    ZSocket mainsocket; //Creating main server socket
+    if (mainsocket.socket_bind(CONFIG_SERVER_PORT)) {
+        std::cerr << "OK!" << std::endl;
+    } else {
+        std::cerr << "Failed!" << std::endl << "@ERROR: Unable to bind socket on port " << CONFIG_SERVER_PORT << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
 
     //=========================================
     //          CREATING THREADPOOL

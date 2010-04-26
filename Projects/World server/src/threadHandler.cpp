@@ -1,6 +1,6 @@
 #include "threadHandler.h"
 
-extern MapGrid g_mapGrid;
+extern grid::WorldMaps g_worldMaps;
 
 void threadHandler (SOCKET &m_socketID) {
     //====================================
@@ -8,16 +8,17 @@ void threadHandler (SOCKET &m_socketID) {
     //====================================
     std::cerr << "[threadHandler] Is now handling this client" << std::endl;
 
-    //TODO (NitriX#): We are testing mapGrid here
-    //s_mapGrid_coord nano_test(21,782268);
-    //g_mapGrid.insert(MapGrid::value_type(nano_test,666));
-    //std::cerr << "Wohoo!: " << g_mapGrid[nano_test] << std::endl;
-
     //====================================
     // INITIALIZING THREAD VARS & SOCKET
     //====================================
     s_thread_data threadData;
     threadData.socket <= m_socketID; //push our socketID to the socket object :)
+
+    //====================================
+    //  TESTING WORLD MAPS / GRID SYSTEM
+    //   User is on map 1 and grid [3,5]
+    //====================================
+    grid::addLeaf(1,3,5,&threadData);
 
     //====================================
     //       SERVER WELCOME PACKET

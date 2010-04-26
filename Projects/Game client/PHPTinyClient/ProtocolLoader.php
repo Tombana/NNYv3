@@ -12,5 +12,5 @@ foreach ($lines as $key=>$value) {
 	}
 }
 
-echo 'Protocol loaded: v'.PROTOCOL_VERSION."\n";
+echo 'Protocol loaded: v'.NNY_PROTOCOL_VERSION."\n";
 ?>

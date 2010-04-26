@@ -5,7 +5,7 @@
 		<Option title="NNYv3 World Server" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="Extras\;Sources\;Headers\;Packet &amp; capsule handlers\;Thread handlers\;Realm connector\;Common\;" />
+		<Option virtualFolders="Extras\;Sources\;Headers\;Packet &amp; capsule handlers\;Thread handlers\;Realm connector\;Common\;Grid system\;" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin\Debug\NNYv3 World Server" prefix_auto="1" extension_auto="1" />
@@ -83,6 +83,12 @@
 		<Unit filename="src\config.hpp">
 			<Option virtualFolder="Extras\" />
 		</Unit>
+		<Unit filename="src\grid.cpp">
+			<Option virtualFolder="Grid system\" />
+		</Unit>
+		<Unit filename="src\grid.h">
+			<Option virtualFolder="Grid system\" />
+		</Unit>
 		<Unit filename="src\main.cpp">
 			<Option virtualFolder="Sources\" />
 		</Unit>
@@ -97,6 +103,9 @@
 		</Unit>
 		<Unit filename="src\realmConnector.h">
 			<Option virtualFolder="Realm connector\" />
+		</Unit>
+		<Unit filename="src\sharedModels.hpp">
+			<Option virtualFolder="Extras\" />
 		</Unit>
 		<Unit filename="src\threadHandler.cpp">
 			<Option virtualFolder="Thread handlers\" />
