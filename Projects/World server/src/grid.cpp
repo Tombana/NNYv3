@@ -30,11 +30,21 @@ namespace grid {
         //STD doc: if <box> does not match the key of any element in the container,
         //the function inserts a new element <s_gridLeaf> with that key and
         //returns a reference to its mapped value.
-        //-----
         //So here we create an empty leaf if there's none yet
         g_worldMaps[mapID].grid[box];
 
-        //[...] more code here
+        //Go to the end of the linked list
+        s_gridLeaf *ptr = &g_worldMaps[mapID].grid[box];
+        while (ptr->next != NULL) {
+            std::cerr << "Iterating..." << std::endl;
+            ptr = ptr->next;
+        }
+
+        //Create a new leaf
+        s_gridLeaf *newLeaf = new s_gridLeaf;
+        newLeaf->next = NULL;
+        //append it
+        ptr->next = newLeaf;
 
         //Release map mutex
         pthread_mutex_unlock(&g_worldMaps[mapID].mutex);
