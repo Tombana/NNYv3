@@ -59,6 +59,9 @@
 		<Unit filename="..\Common\ConfigFile.h">
 			<Option virtualFolder="Common\" />
 		</Unit>
+		<Unit filename="..\Common\HashTable.hpp">
+			<Option virtualFolder="Common\" />
+		</Unit>
 		<Unit filename="..\Common\ZSocket.cpp">
 			<Option virtualFolder="Common\" />
 		</Unit>
