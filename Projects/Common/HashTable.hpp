@@ -1,6 +1,9 @@
 #ifndef H_HASHTABLE
 #define H_HASHTABLE
 
+#include <iostream>
+#include <cstdlib> //NULL is defined here
+
 //This hash table uses at the moment: "separate chaining"
 //----------
 // Another solution I had implemented (then removed) is "coalesced hashing/chaining".
@@ -35,15 +38,15 @@ class HashTable {
 		 HashTable();
 		~HashTable();
 
-        void            insert(unsigned int key, T value);
+        void            insert(unsigned int key, T &value);
         void            remove(unsigned int key);
-        unsigned short  loadFactor();
+        float           loadFactor();
         void            flush();
-        T               operator[](unsigned int key);
+        bool            exists(unsigned int key);
+        T&              operator[](unsigned int key);
 
 	protected:
         unsigned int hash(unsigned int key);
-        //unsigned int rehash(unsigned int key);
 
 	private:
         s_node       *m_table[HASHTABLE_PRIME];
@@ -52,8 +55,9 @@ class HashTable {
 
 template <class T>
 HashTable<T>::HashTable() {
-    for (unsigned int i=0; i<HASHTABLE_PRIME; i++)
+    for (unsigned int i=0; i<HASHTABLE_PRIME; i++) {
         m_table[i] = NULL;
+    }
     m_entries = 0;
 }
 
@@ -71,7 +75,6 @@ void HashTable<T>::flush() {
             while (ptr->next != NULL) {
                 ptr_last = ptr;
                 ptr = ptr->next;
-                //----
                 delete ptr_last;
                 m_entries--;
             }
@@ -83,18 +86,39 @@ void HashTable<T>::flush() {
 }
 
 template <class T>
-T HashTable<T>::operator[](unsigned int key) {
+bool HashTable<T>::exists(unsigned int key) {
     unsigned int index = hash(key);
     s_node *ptr = m_table[index];
-    while (ptr->key != key) {
-        ptr = ptr->next;
+    if (ptr != NULL) {
+        while (ptr->key != key) {
+            ptr = ptr->next;
+            if (ptr == NULL) return false;
+        }
+        if (ptr->key == key) return true;
     }
-    return ptr->value;
+    return false;
 }
 
 template <class T>
-unsigned short HashTable<T>::loadFactor() {
-    return round((float)m_entries/HASHTABLE_PRIME * 100);
+T& HashTable<T>::operator[](unsigned int key) {
+    unsigned int index = hash(key);
+    s_node *ptr = m_table[index];
+    if (ptr != NULL) {
+        while (ptr->key != key) {
+            ptr = ptr->next;
+            if (ptr == NULL) break;
+        }
+    }
+    if (ptr == NULL) {
+        std::cerr << "[HashTable] @ERROR: Crash! This key doesn't exist in the array!" << std::endl;
+    } else {
+        return ptr->value;
+    }
+}
+
+template <class T>
+float HashTable<T>::loadFactor() {
+    return (float)m_entries/HASHTABLE_PRIME;
 }
 
 template <class T>
@@ -122,7 +146,7 @@ void HashTable<T>::remove(unsigned int key) {
 }
 
 template <class T>
-void HashTable<T>::insert(unsigned int key, T value) {
+void HashTable<T>::insert(unsigned int key, T &value) {
     //Use hash function to generate table index
     unsigned int index = hash(key);
 

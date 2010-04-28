@@ -1,7 +1,5 @@
 #include "threadHandler.h"
 
-extern grid::WorldMaps g_worldMaps;
-
 void threadHandler (SOCKET &m_socketID) {
     //====================================
     //       LITTLE CONSOLE PRINT
@@ -13,12 +11,6 @@ void threadHandler (SOCKET &m_socketID) {
     //====================================
     s_thread_data threadData;
     threadData.socket <= m_socketID; //push our socketID to the socket object :)
-
-    //====================================
-    //  TESTING WORLD MAPS / GRID SYSTEM
-    //   User is on map 1 and grid [3,5]
-    //====================================
-    grid::addLeaf(1,3,5,&threadData);
 
     //====================================
     //       SERVER WELCOME PACKET

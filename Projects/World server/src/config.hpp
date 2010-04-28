@@ -2,7 +2,6 @@
 #define H_CONFIG
 
 //Settings
-#define CONFIG_VERBOSE   2
 #define CONFIG_FILENAME  "world.conf"
 
 //=================================================

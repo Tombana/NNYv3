@@ -71,6 +71,12 @@
 		<Unit filename="..\Common\protocol.hpp">
 			<Option virtualFolder="Common\" />
 		</Unit>
+		<Unit filename="src\Grid.cpp">
+			<Option virtualFolder="Grid system\" />
+		</Unit>
+		<Unit filename="src\Grid.h">
+			<Option virtualFolder="Grid system\" />
+		</Unit>
 		<Unit filename="src\capsuleHandler.hpp">
 			<Option virtualFolder="Packet &amp; capsule handlers\" />
 		</Unit>
@@ -85,12 +91,6 @@
 		</Unit>
 		<Unit filename="src\config.hpp">
 			<Option virtualFolder="Extras\" />
-		</Unit>
-		<Unit filename="src\grid.cpp">
-			<Option virtualFolder="Grid system\" />
-		</Unit>
-		<Unit filename="src\grid.h">
-			<Option virtualFolder="Grid system\" />
 		</Unit>
 		<Unit filename="src\main.cpp">
 			<Option virtualFolder="Sources\" />

@@ -19,8 +19,8 @@ unsigned int    g_threadPool_counter_job      = 0; //Protected with g_threadPool
 pthread_mutex_t g_realmConnector_mutex        = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
 pthread_cond_t  g_realmConnector_cond         = PTHREAD_COND_INITIALIZER; //Protected with g_realmConnector_mutex
 bool            g_realmConnector_authorized   = false; //Protected with g_realmConnector_mutex
-// == GRID [NAMESPACE] ==
-grid::WorldMaps g_worldMaps; //No need mutex protection here
+// == GRID ==
+Grid            g_grid; //Grid class is thread-safe
 
 //pthread_rwlock_t g_name = PTHREAD_RWLOCK_INITIALIZER;
 //-------------------------------------------------
@@ -38,7 +38,10 @@ int main() {
     //         CREATING MAP GRID
     //=========================================
     std::cerr << "Creating map grid... ";
-    grid::createMap(1);
+    g_grid.createMap(1);
+    s_thread_data *data = new s_thread_data;
+    g_grid.subscribe(1,1,1,data);
+    g_grid.unsubscribe(1,1,1,data);
     std::cerr << "OK!" << std::endl;
 
     //=========================================
@@ -49,9 +52,7 @@ int main() {
     int rc=0;
     rc = pthread_create(&thread_realmConnector, NULL, realmConnector, NULL); //here we launch the thread
     rc = pthread_detach(thread_realmConnector); //Detach thread so it works on its own
-    #if DEBUG_VERBOSE >= DEBUG_VERBOSE_IMPORTANT
-        if (rc) std::cerr << "[main] @ERROR: pthread: pthread_create() failed! (Realm connector)" << std::endl;
-    #endif
+    if (rc) std::cerr << "[main] @ERROR: pthread: pthread_create() failed! (Realm connector)" << std::endl;
     pthread_mutex_lock(&g_realmConnector_mutex);
     pthread_cond_wait(&g_realmConnector_cond, &g_realmConnector_mutex);
     if (g_realmConnector_authorized) {
@@ -121,6 +122,7 @@ int main() {
             }
         }
 
+        //TODO: what if threads are created but none is running here? To investigate
         pthread_cond_signal(&g_threadPool_cond); //Wake up a thread by sending this signal on the waiting condition
         pthread_cond_wait(&g_threadPool_callback_cond, &g_threadPool_callback_mutex); //Wait for the thread to copy vars locally
         //pthread_mutex_lock(&g_threadPool_mutex); //Try to acquire the lock (so wait until the thread really is done

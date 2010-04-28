@@ -9,7 +9,7 @@
 #include "threadPoolHandler.h"
 #include "realmConnector.h"
 #include "sharedModels.hpp"
-#include "grid.h"
+#include "Grid.h"
 
 int main();
 void printStartupMessage();

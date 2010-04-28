@@ -29,9 +29,7 @@ bool ZSocket::socket_create() {
     // Creating socket
     m_socket.id = socket(AF_INET,SOCK_STREAM,0);
     if (m_socket.id==INVALID_SOCKET) {
-        #if CONFIG_VERBOSE >= CONFIG_VERBOSE_IMPORTANT
-            std::cerr << "[ZSocket] @ERROR: ZSock failed to create socket" << std::endl;
-        #endif
+        std::cerr << "[ZSocket] @ERROR: ZSock failed to create socket" << std::endl;
         succeeded = false;
     }
     //Return
