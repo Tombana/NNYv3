@@ -10,8 +10,8 @@ Initialization:
 
 As your character move:
 	- You unsubscribe from useless cells
-	- You subscribe to your now cell
-	- You also subscribe to cells of interest (mostly 8 cells around you)
+	- You subscribe to your new cell
+	- You also subscribe to cells of interest (mostly 8 nearby cells around you)
 
 When you subscribe to the cell that is YOURS:
 	- You must update your grid handle
@@ -26,7 +26,7 @@ Exemple code initialization:
 	//Create a default map #1
 	grid.createMap(1);
 
-Exemple code usage (in threads):
+Exemple code usage (with threads):
 
 	//Create an handle and store it (needs your threadData array)
     	Grid::Handle hdl = grid.createHandle(threadData);
@@ -53,4 +53,4 @@ NOTE2: Never subsribe twice to the same cell.
 
 NOTE3: I suggest you to unsubscribe only when you will move from old cells to new ones. Otherwise it's kind of pointless: you will loose your handle.
 
-NOTE3: To re-use the handle, you must set another value to it. (Do it like I did for cell 5x5 before). Remember doing it at the same time as your are subscribing. [REMEMBER to NEVER subscribe twice to a cell even if you need to set your handle; if you somewhat needs to, then you're already doing something wrong at this point, check your code's logic]
+NOTE3: As mentioned before, to re-use the handle, you must set another value to it. (Do it like I did for cell 5x5 before). Do it at the same time as your are subscribing to the cell... [REMEMBER to NEVER subscribe twice to a cell even if you need to set your handle; if you somewhat needs to, then you're already doing something wrong at this point, check your code twice]
