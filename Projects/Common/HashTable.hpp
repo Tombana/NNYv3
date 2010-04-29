@@ -38,7 +38,7 @@ class HashTable {
 		 HashTable();
 		~HashTable();
 
-        void            insert(unsigned int key, T &value);
+        void            insert(unsigned int key, T& value);
         void            remove(unsigned int key);
         float           loadFactor();
         void            flush();
@@ -110,7 +110,7 @@ T& HashTable<T>::operator[](unsigned int key) {
         }
     }
     if (ptr == NULL) {
-        std::cerr << "[HashTable] @ERROR: Crash! This key doesn't exist in the array!" << std::endl;
+        std::cerr << "[HashTable] @ERROR: Crash! This key " << key << " doesn't exist in the array!" << std::endl;
     } else {
         return ptr->value;
     }
@@ -146,7 +146,7 @@ void HashTable<T>::remove(unsigned int key) {
 }
 
 template <class T>
-void HashTable<T>::insert(unsigned int key, T &value) {
+void HashTable<T>::insert(unsigned int key, T& value) {
     //Use hash function to generate table index
     unsigned int index = hash(key);
 

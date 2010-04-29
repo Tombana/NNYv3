@@ -83,12 +83,6 @@
 		<Unit filename="src\capsuleHdl_default.hpp">
 			<Option virtualFolder="Packet &amp; capsule handlers\" />
 		</Unit>
-		<Unit filename="src\capsuleHdl_sync.hpp">
-			<Option virtualFolder="Packet &amp; capsule handlers\" />
-		</Unit>
-		<Unit filename="src\capsuleHdl_updater.hpp">
-			<Option virtualFolder="Packet &amp; capsule handlers\" />
-		</Unit>
 		<Unit filename="src\config.hpp">
 			<Option virtualFolder="Extras\" />
 		</Unit>

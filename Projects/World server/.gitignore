@@ -1,7 +1,7 @@
-/*.sdf
-/*.suo
 /ipch/
 /*.opensdf
+*.sdf
+*.suo
 *.o
 *.exe
 *.depend

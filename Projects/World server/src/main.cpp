@@ -39,9 +39,6 @@ int main() {
     //=========================================
     std::cerr << "Creating map grid... ";
     g_grid.createMap(1);
-    s_thread_data *data = new s_thread_data;
-    g_grid.subscribe(1,1,1,data);
-    g_grid.unsubscribe(1,1,1,data);
     std::cerr << "OK!" << std::endl;
 
     //=========================================

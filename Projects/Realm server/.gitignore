@@ -1,2 +1,3 @@
-/*.sdf
+*.sdf
+*.suo
 /ipch/

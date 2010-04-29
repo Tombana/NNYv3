@@ -24,6 +24,9 @@
     <Filter Include="Common">
       <UniqueIdentifier>{6e2ac0df-8a03-47c5-a8ab-68adda9c2854}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Grid system">
+      <UniqueIdentifier>{93199b62-8b26-48b5-952b-216407aae223}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -47,6 +50,9 @@
     <ClCompile Include="..\Common\ZSocket.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="src\Grid.cpp">
+      <Filter>Grid system</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\main.h">
@@ -59,12 +65,6 @@
       <Filter>Extras</Filter>
     </ClInclude>
     <ClInclude Include="src\capsuleHandler.hpp">
-      <Filter>Packet &amp; capsule handlers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\capsuleHdl_updater.hpp">
-      <Filter>Packet &amp; capsule handlers</Filter>
-    </ClInclude>
-    <ClInclude Include="src\capsuleHdl_sync.hpp">
       <Filter>Packet &amp; capsule handlers</Filter>
     </ClInclude>
     <ClInclude Include="src\capsuleHdl_default.hpp">
@@ -93,6 +93,12 @@
     </ClInclude>
     <ClInclude Include="..\Common\ZSocket.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\HashTable.hpp">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Grid.h">
+      <Filter>Grid system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
