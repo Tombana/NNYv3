@@ -8,6 +8,8 @@
 #include "config.hpp"
 #include "threadPoolHandler.h"
 #include "realmConnector.h"
+#include "sharedModels.hpp"
+#include "Grid.h"
 
 int main();
 void printStartupMessage();

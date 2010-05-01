@@ -43,10 +43,8 @@ void *threadPoolHandler (void *ptr) {
         //====================================================
         pthread_mutex_lock(&g_threadPool_counter_mutex);
         g_threadPool_counter_job--;
-        #if CONFIG_VERBOSE >= CONFIG_VERBOSE_DEBUGGING
             std::cerr << "[threadPoolHandler] " << g_threadPool_counter_job << " active jobs in " <<
             g_threadPool_counter_thread << " threads." << std::endl;
-        #endif
         pthread_mutex_unlock(&g_threadPool_counter_mutex);
         //TODO (NitriX#): Should the thread be terminated now?
         //ALGORYTM HERE, WOHOO!

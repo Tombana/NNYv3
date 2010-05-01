@@ -2,7 +2,6 @@
 #define H_CONFIG
 
 //Settings
-#define CONFIG_VERBOSE   2
 #define CONFIG_FILENAME  "world.conf"
 
 //=================================================
@@ -36,19 +35,5 @@
 //Loading configuration
 #include "ConfigFile.h"
 extern ConfigFile g_CONFIG;
-
-//Easier typedefs
-typedef unsigned char  BYTE;  //1 byte
-typedef unsigned short WORD;  //2 bytes
-typedef unsigned long  DWORD; //4 bytes
-
-//Debugging purpose, use: sleep(x)
-#ifdef WIN32
-    #include <windows.h>
-    #define sleep(x) Sleep(x)
-#else
-    #include <unistd.h>
-    #define sleep(x) usleep(x)
-#endif
 
 #endif

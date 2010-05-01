@@ -1,5 +1,7 @@
 #include "threadHandler.h"
 
+extern Grid g_grid;
+
 void threadHandler (SOCKET &m_socketID) {
     //====================================
     //       LITTLE CONSOLE PRINT
@@ -11,6 +13,9 @@ void threadHandler (SOCKET &m_socketID) {
     //====================================
     s_thread_data threadData;
     threadData.socket <= m_socketID; //push our socketID to the socket object :)
+
+    //Create an handle and store it
+    Grid::Handle grid_hdl = g_grid.createHandle(threadData);
 
     //====================================
     //       SERVER WELCOME PACKET

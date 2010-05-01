@@ -1,0 +1,56 @@
+Definitions:
+	- "own/current cell" refers to the cell in the grid your character is
+	- "nearby cells" refers to all other cells around your own cell.
+
+=========================
+
+Initialization:
+	- You create the Grid object
+	- Then create a default map
+
+As your character move:
+	- You unsubscribe from useless cells
+	- You subscribe to your new cell
+	- You also subscribe to cells of interest (mostly 8 nearby cells around you)
+
+When you subscribe to the cell that is YOURS:
+	- You must update your grid handle
+
+=========================
+
+Exemple code initialization:
+
+	//Initialize the grid
+	Grid grid;
+
+	//Create a default map #1
+	grid.createMap(1);
+
+Exemple code usage (with threads):
+
+	//Create an handle and store it (needs your threadData array)
+    	Grid::Handle hdl = grid.createHandle(threadData);
+
+    	//Subscribe to nearby cells of interest
+    	grid.subscribe(hdl, 1,32,6); //<handle>, <map>,<x>,<y>
+    	grid.subscribe(hdl, 1,25,9); //<handle>, <map>,<x>,<y>
+    	grid.subscribe(hdl, 1,13,7); //<handle>, <map>,<x>,<y>
+    	
+	//Subscribe to our own cell & update the handle so we can use send() later
+	hdl = grid.subscribe(hdl, 1,5,5); //<handle>, <map>,<x>,<y>
+    	
+	//PROFIT! Send packet to everyone subscribed to your "current cell"
+ 	ByteArray packetToSend;
+   	packetToSend.addString("Sample string");
+    	grid.send(hdl, packet);
+
+	//Unsubscribe & reset the handle
+	grid.unsubscribe(hdl, 1,5,5); //<handle>, <map>,<x>,<y>
+
+NOTE: At this point send() wont work anymore because we unsubscribe from the cell our handle were referring to.
+
+NOTE2: Never subsribe twice to the same cell.
+
+NOTE3: I suggest you to unsubscribe only when you will move from old cells to new ones. Otherwise it's kind of pointless: you will loose your handle.
+
+NOTE3: As mentioned before, to re-use the handle, you must set another value to it. (Do it like I did for cell 5x5 before). Do it at the same time as your are subscribing to the cell... [REMEMBER to NEVER subscribe twice to a cell even if you need to set your handle; if you somewhat needs to, then you're already doing something wrong at this point, check your code twice]
