@@ -1,10 +1,10 @@
 #pragma once
 
-class CGuiMain
+class CUIMain
 {
 public:
-	CGuiMain(void);
-	~CGuiMain(void);
+	CUIMain(void);
+	~CUIMain(void);
 
 	//Called form main thread: To launch the whole GUI
 	int StartThread(void);

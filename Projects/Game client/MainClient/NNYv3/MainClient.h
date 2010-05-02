@@ -1,7 +1,7 @@
 #pragma once
 
 #include <list>
-#include "GuiMain.h"
+#include "UIMain.h"
 #include "ZSocket.h"
 #include "pthread.h"
 #include "protocol.hpp"
@@ -65,7 +65,7 @@ private:
 	//============
 	// Gui related
 	//============
-	CGuiMain	m_gui;
+	CUIMain	m_gui;
 
 	//When other threads notify this thread the notification will be put in this vector
 	std::list<int>	m_MessageQueue;
