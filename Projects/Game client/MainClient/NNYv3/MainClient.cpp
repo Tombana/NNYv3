@@ -1,5 +1,5 @@
 #include "MainClient.h"
-
+#include <iostream>
 
 CMainClient::CMainClient(void) :
 	m_state(State_Loading), m_mainsocket(), m_networkthread(),
@@ -22,9 +22,9 @@ CMainClient::~CMainClient(void)
 int CMainClient::Run(void)
 {
 	//==============
-	//Load the GUI and display the loading screen
+	//Load the UI and display the loading screen
 	//==============
-	m_gui.StartThread();
+	m_gui.StartUI();
 
 	//==============
 	//Load the data files

@@ -197,14 +197,14 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="GUI"
+				Name="UI"
 				>
 				<File
 					RelativePath=".\GUI.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\GuiMain.cpp"
+					RelativePath=".\UIMain.cpp"
 					>
 				</File>
 			</Filter>
@@ -247,14 +247,14 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="GUI"
+				Name="UI"
 				>
 				<File
 					RelativePath=".\GUI.h"
 					>
 				</File>
 				<File
-					RelativePath=".\GuiMain.h"
+					RelativePath=".\UIMain.h"
 					>
 				</File>
 			</Filter>
