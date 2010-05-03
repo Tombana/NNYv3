@@ -61,9 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="pthreadVCE2.lib libws2_32.a"
+				AdditionalDependencies="pthreadVCE2.lib ws2_32.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\Dependencies\winsocks2\lib;..\..\..\..\Dependencies\pthread\lib;..\..\..\..\Dependencies\MySQL\lib"
+				AdditionalLibraryDirectories="..\..\..\..\Dependencies\pthread\lib;..\..\..\..\Dependencies\MySQL\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -136,9 +136,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="pthreadVCE2.lib libws2_32.a"
+				AdditionalDependencies="pthreadVCE2.lib ws2_32.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\Dependencies\winsocks2\lib;..\..\..\..\Dependencies\pthread\lib;..\..\..\..\Dependencies\MySQL\lib"
+				AdditionalLibraryDirectories="..\..\..\..\Dependencies\pthread\lib;..\..\..\..\Dependencies\MySQL\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
