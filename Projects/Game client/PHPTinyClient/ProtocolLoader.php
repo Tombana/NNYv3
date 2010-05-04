@@ -12,5 +12,6 @@ foreach ($lines as $key=>$value) {
 	}
 }
 
-echo 'Protocol loaded: v'.NNY_PROTOCOL_VERSION."\n";
+//Here hexdec() fix a bug i forgot and doesn't worth fixing
+echo 'Protocol loaded: v'.hexdec(NNY_PROTOCOL_VERSION)."\n";
 ?>

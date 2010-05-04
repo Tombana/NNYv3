@@ -4,11 +4,11 @@ $REMOTE_IP = '127.0.0.1';
 $REMOTE_PORT = 6131;
 $PROTOCOL_HPP_FILE = '../../Common/protocol.hpp';
 $REVISION = 0;
-$SERVERID = 1;
-$SYNC_KEY = 'SDFXqjs7nX'; 
 $VERBOSE = False;
+$USERNAME = 'DemoUser';
+$PASSWORD = 'DemoPasswd';
 /////////////////////////////////////////////////////
-echo 'PHPTinyClient v1.0.8'."\n";
+echo 'PHPTinyClient v1.0.9'."\n";
 include('ByteArray.php');
 include('ProtocolLoader.php'); //Load protocol #defines
 
@@ -82,6 +82,7 @@ echo '@ERROR: Connection closed by the remote host'."\n";
 }
 }
 }else{
+$SOCKET = &$clients[$i]['SOCKET'];
 $BUFFER = &$clients[$i]['BUFFER'];
 //========================================================================
 if ($VERBOSE) echo '[Recv '.$clients[$i]['UID'].'] : '.$input."\n";
@@ -150,12 +151,19 @@ while (true) {
 						break;
 					case PCKT_W_WELCOME:
 						echo '[capsuleHandler] World server welcome packet'."\n";
+						$BA->addCmd(PCKT_C_AUTH);
+						$BA->addString($USERNAME);
+						$BA->addString(md5($PASSWORD));
+						$BA->addDword($RECONNECT_TOKEN);
+						socket_write($SOCKET, $BA->getPacket());
+						$BA->clear();
 						break;
 					case PCKT_R_CONNECT:
 						$RECONNECT = true;
 						$RECONNECT_IP = $CAPSULE->readString();
 						$RECONNECT_PORT = $CAPSULE->readWord();
-						echo '[capsuleHandler] Connect to server on '.$RECONNECT_IP.':'.$RECONNECT_PORT."\n";
+						$RECONNECT_TOKEN = $CAPSULE->readDword();
+						echo '[capsuleHandler] Connect to server '.$RECONNECT_IP.' on port '.$RECONNECT_PORT.' with token '.$RECONNECT_TOKEN."\n";
 						break;
 					case PCKT_R_SYNC_KEY_ACK:
 						if ($CAPSULE->readByte()) {
@@ -177,7 +185,7 @@ while (true) {
 						echo '[capsuleHandler] Debug message: '.$CAPSULE->readString()."\n";
 						break;
 					default:
-						$CAPSULE->modSeek(-1);
+						$CAPSULE->modSeek(-2);
 						echo '[capsuleHandler] Unknow packet cmdID '.$CAPSULE->readWord().'! STOP!'."\n";
 						$CAPSULE->setSeek($CAPSULE->size()); //GoTo EOF
 						break;

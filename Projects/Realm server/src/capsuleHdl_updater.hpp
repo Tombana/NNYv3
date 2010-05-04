@@ -26,8 +26,10 @@ case PCKT_C_REVISION:
             packetToSend.addCmd(PCKT_R_SERVER_GONE);
         } else {
             packetToSend.addCmd(PCKT_R_CONNECT);
-            packetToSend.addString(current.ipv4);
-            packetToSend.add<WORD>(current.port);
+            packetToSend.addString(current.ipv4); //ip
+            packetToSend.add<WORD>(current.port); //port
+            srand(time(NULL));
+            packetToSend.add<DWORD>(rand()); //token
         }
         //------------
         socket << packetToSend;

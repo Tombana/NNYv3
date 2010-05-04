@@ -1,0 +1,45 @@
+NNYv3 0.2   (??? ??? 2010)
+
+ NNYv3 0.2 - adds further improvements to the server core
+ as well as to the majority of game classes.
+
+ ==== Server Features ====
+
+ ==== Client Features ====
+
+ ==== Optimisation ====
+ 
+ ==== Portability ====
+  
+ ==== Statistics ====
+ * Fixed Bugs: ??? tickets and many bugs reported at forum resolved
+ * Total number of changes: ??? revisions (??? commits)
+
+ ---------------------------------------------------
+ 
+NNYv3 0.1   (03 May 2010)
+ 
+ MaNGOS 0.1 - basic core that we will add further improvements.
+
+ ==== Protocol Features ====
+ * Added: PCKT_C_AUTH
+ * Modified: PCKT_R_CONNECT, new parameter "token" has been added.
+ 
+ ==== Server Features ====
+ * Added: A token implementation, the token is obtained from the Realm server and must be given to the World server in PCKT_C_AUTH packet.
+ * Added: In-Game packet; Authentification support (so capsuleHdl_auth has been added to the project).
+ * Modified: capsuleHdl_default now prints what [WORD] is erroneous if the 'switch case' cannot handle the said capsule.
+ * Modified: Typos & language error in the documentation.
+ * Added: Some basic packets but nothing "in-game" yet sadly.
+ * Added: Grid class that makes a big use of the HashTable and LinkedLists; also could be improved I think.
+ * Added: HashTable class for the upcoming Grid class; it looks sufficient but it really could be improved.
+ * Added: Thread pooling so the server response's time is way better and we avoid re-allocating memory. 
+ * Modified: Templated ByteArray and working like a charm so far; big thanks Tombana.
+ 
+ ==== Client Features ====
+ * Modified: I updated my own testing client (PHPTinyClient) so it now works with our most recent version.
+ 
+ ==== Portability ====
+ * Removed: Even if the server is meant to be developed under Windows and run on a Linux machine, the Makefiles still aren't working at the moment.
+ * Added: ZSocket portable class to handle packets on both linux & windows.
+ 

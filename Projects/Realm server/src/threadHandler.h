@@ -7,6 +7,7 @@
 #include "Database.h"
 #include "Dispatcher.h"
 #include "config.hpp"
+#include <time.h>
 
 void *threadHandler(void *ptr);
 

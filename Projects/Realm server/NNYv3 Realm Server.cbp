@@ -81,7 +81,7 @@
 			<Option virtualFolder="Headers\" />
 		</Unit>
 		<Unit filename="src\capsuleHandler.hpp">
-			<Option virtualFolder="Extras\" />
+			<Option virtualFolder="Capsule handlers\" />
 		</Unit>
 		<Unit filename="src\capsuleHdl_default.hpp">
 			<Option virtualFolder="Capsule handlers\" />

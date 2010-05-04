@@ -93,6 +93,7 @@
     <ClInclude Include="..\Common\protocol.hpp" />
     <ClInclude Include="..\Common\ZSocket.h" />
     <ClInclude Include="src\capsuleHandler.hpp" />
+    <ClInclude Include="src\capsuleHdl_auth.hpp" />
     <ClInclude Include="src\capsuleHdl_default.hpp" />
     <ClInclude Include="src\config.hpp" />
     <ClInclude Include="src\Grid.h" />

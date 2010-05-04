@@ -1,6 +1,6 @@
-//Next available PCKT code is         0x000C //PCKT Code 12
+//Next available PCKT code is         0x000D //PCKT Code 13
 
-#define NNY_PROTOCOL_VERSION    27
+#define NNY_PROTOCOL_VERSION    28
 
 /*****************************
         [X] Multi-directional
@@ -16,6 +16,11 @@
 #define PCKT_C_REVISION     0x0002 //PCKT Code 2
 //Info: Send your revision to the realm server
 //Params: [DWORD]Client version
+#define PCKT_C_AUTH         0x000C //PCKT Code 12
+//Info: Authentication to the world server
+//Params: [String]Username (will be lowercased by the server)
+//Params: [String]Password (can be hashed with md5+salt or whatever)
+//Params: [Int]Token
 
 /*****************************
         [R]ealm server
@@ -39,7 +44,8 @@
 #define PCKT_R_CONNECT      0x0005 //PCKT Code 5
 //Info: Tell the client to connect to the specified worldserver
 //Params: [String]ipv4
-//Params: [WORD]port
+//Params: [Word]port
+//Params: [Dword]token
 #define PCKT_R_SYNC_KEY_ACK 0x0007 //PCKT Code 7
 //Info: Tell the server if its authorized or not
 //Params: [Bool] True=Success / False=Failure

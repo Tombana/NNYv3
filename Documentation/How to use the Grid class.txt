@@ -28,7 +28,7 @@ Exemple code initialization:
 
 Exemple code usage (with threads):
 
-	//Create an handle and store it (needs your threadData array)
+	//Create an handle and store it (you will needs your threadData structure as argument)
     	Grid::Handle hdl = grid.createHandle(threadData);
 
     	//Subscribe to nearby cells of interest
@@ -49,8 +49,8 @@ Exemple code usage (with threads):
 
 NOTE: At this point send() wont work anymore because we unsubscribe from the cell our handle were referring to.
 
-NOTE2: Never subsribe twice to the same cell.
+NOTE2: REMEMBER to NEVER subscribe twice to a cell even if you need to set your handle in a ugly way or whatever; if you somewhen needs to, then you're already doing something wrong at this point, please check your code.
 
 NOTE3: I suggest you to unsubscribe only when you will move from old cells to new ones. Otherwise it's kind of pointless: you will loose your handle.
 
-NOTE3: As mentioned before, to re-use the handle, you must set another value to it. (Do it like I did for cell 5x5 before). Do it at the same time as your are subscribing to the cell... [REMEMBER to NEVER subscribe twice to a cell even if you need to set your handle; if you somewhat needs to, then you're already doing something wrong at this point, check your code twice]
+NOTE3: As mentioned before, to re-use the handle, you must set another value to it. The only way for that is to do it at the same time as your are subscribing to your new cell.

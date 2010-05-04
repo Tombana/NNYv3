@@ -9,8 +9,7 @@ case PCKT_X_DEBUG:
 // DEFAULT
 //=====================================
 default:
-    //capsule.modSeek(-2);
-    std::cerr << "[capsuleHandler] Unknow packet! STOP!" << std::endl;
-    //std::cerr << "[capsuleHandler] Unknow packet cmdID " << capsule.readWord() << "! STOP!" << std::endl;
+    capsule.modSeek(-2);
+    std::cerr << "[capsuleHandler] Unknow packet cmdID " << capsule.read<WORD>() << "! STOP!" << std::endl;
     capsule.setSeek(capsule.size()); //Goto EOF so it breaks to loop
     break;
