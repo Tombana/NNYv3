@@ -1,6 +1,7 @@
 #pragma once
 
-#include "GUI.h"
+#include <list>
+#include "UIMain.h"
 #include "ZSocket.h"
 #include "pthread.h"
 #include "protocol.hpp"
@@ -20,6 +21,16 @@ public:
 	~CMainClient(void);
 	int Run(void);
 
+	//When other threads (mainly GUI thread) want to notify the main thread of something
+	//they call this function
+	int SendNotify(int MessageID);
+
+	//Message constants
+	static const int	Message_Quit		=	100;
+	static const int	Message_Previous	=	101;
+	static const int	Message_Login		=	1000;
+	static const int	Message_RealmSelect	=	1001;
+	static const int	Message_CharSelect	=	1002;
 private:
 	//The current state of the client
 	enum{ State_Loading = 0,
@@ -35,7 +46,9 @@ private:
 		State_Playing}
 				m_state;
 
-	//Network related
+	//============
+	// Network related
+	//============
 	ZSocket		m_mainsocket;
 	pthread_t	m_networkthread;
 	int			StartNetworkThread(void); //Call this from the main thread
@@ -49,5 +62,12 @@ private:
 	std::string	m_WorldIP;
 	WORD		m_WorldPort;
 
-	CGUI		m_gui;
+	//============
+	// Gui related
+	//============
+	CUIMain	m_gui;
+
+	//When other threads notify this thread the notification will be put in this vector
+	std::list<int>	m_MessageQueue;
+	pthread_mutex_t	m_message_mutex;
 };

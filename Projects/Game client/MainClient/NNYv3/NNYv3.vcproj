@@ -61,9 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="pthreadVCE2.lib libws2_32.a"
+				AdditionalDependencies="pthreadVCE2.lib ws2_32.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\Dependencies\winsocks2\lib;..\..\..\..\Dependencies\pthread\lib;..\..\..\..\Dependencies\MySQL\lib"
+				AdditionalLibraryDirectories="..\..\..\..\Dependencies\pthread\lib;..\..\..\..\Dependencies\MySQL\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -136,9 +136,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="pthreadVCE2.lib libws2_32.a"
+				AdditionalDependencies="pthreadVCE2.lib ws2_32.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\Dependencies\winsocks2\lib;..\..\..\..\Dependencies\pthread\lib;..\..\..\..\Dependencies\MySQL\lib"
+				AdditionalLibraryDirectories="..\..\..\..\Dependencies\pthread\lib;..\..\..\..\Dependencies\MySQL\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -177,10 +177,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\GUI.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
@@ -200,16 +196,24 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="UI"
+				>
+				<File
+					RelativePath=".\GUI.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\UIMain.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\GUI.h"
-				>
-			</File>
 			<File
 				RelativePath=".\MainClient.h"
 				>
@@ -239,6 +243,18 @@
 				</File>
 				<File
 					RelativePath="..\..\..\Common\ZSocket.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="UI"
+				>
+				<File
+					RelativePath=".\GUI.h"
+					>
+				</File>
+				<File
+					RelativePath=".\UIMain.h"
 					>
 				</File>
 			</Filter>

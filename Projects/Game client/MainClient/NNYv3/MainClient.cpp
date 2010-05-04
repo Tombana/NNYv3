@@ -1,14 +1,16 @@
 #include "MainClient.h"
-
+#include <iostream>
 
 CMainClient::CMainClient(void) :
 	m_state(State_Loading), m_mainsocket(), m_networkthread(),
 	m_networkthread_mutex(PTHREAD_MUTEX_INITIALIZER),
 	m_networkthread_cond(PTHREAD_COND_INITIALIZER),
-	m_Revision(0), m_WorldIP(), m_WorldPort(0)
+	m_Revision(0), m_WorldIP(), m_WorldPort(0),
+	m_gui(), m_MessageQueue(), m_message_mutex(PTHREAD_MUTEX_INITIALIZER)
 {
 	pthread_mutex_init(&m_networkthread_mutex, NULL);
 	pthread_cond_init(&m_networkthread_cond, NULL);
+	pthread_mutex_init(&m_message_mutex, NULL);
 }
 
 CMainClient::~CMainClient(void)
@@ -20,9 +22,9 @@ CMainClient::~CMainClient(void)
 int CMainClient::Run(void)
 {
 	//==============
-	//Load the GUI and display the loading screen
+	//Load the UI and display the loading screen
 	//==============
-	m_gui.StartThread();
+	m_gui.StartUI();
 
 	//==============
 	//Load the data files
@@ -49,36 +51,50 @@ int CMainClient::Run(void)
 	//Signal 'Done Loading' to GUI and so on
 	//==============
 	m_state = State_LoginScreen;
-	m_gui.SendNotify();
+	m_gui.SendNotify(m_gui.Message_DoneLoading);
 
 	while( m_state != State_Quitting ){
 		sleep(50);
-		int GuiAction = m_gui.PeekForMessage();
-		switch( GuiAction ){
-			case m_gui.Message_Quit:
-				m_state = State_Quitting;
-				//TODO: Show unloading screen
-				m_mainsocket.socket_close(); //This should make any receiver thread that is busy receiving quit
-				//datafileclass.unload();
-				break;
-			case m_gui.Message_Login:
-				if( m_state != State_LoginScreen ) break;
-				m_state = State_LoggingIn;
-				StartNetworkThread();
-				break;
-			case m_gui.Message_CharSelect:
-				if( m_state != State_CharSelectScreen ) break;
-				m_state = State_SelectingChar;
-				StartNetworkThread();
-				break;
-			case m_gui.Message_NoMessages:
-			default:
-				break;
+		if( m_MessageQueue.size() ){ //If there are messages from other threads to process
+			pthread_mutex_lock(&m_message_mutex);
+			int GuiAction = m_MessageQueue.front(); //Get the message from the queue
+			m_MessageQueue.pop_front(); //Remove the message from the queue
+			pthread_mutex_unlock(&m_message_mutex);
+			switch( GuiAction ){
+				case Message_Quit:
+					m_state = State_Quitting;
+					//TODO: Show unloading screen
+					m_mainsocket.socket_close(); //This should make any receiver thread that is busy receiving quit
+					//datafileclass.unload();
+					break;
+				case Message_Login:
+					if( m_state != State_LoginScreen ) break;
+					m_state = State_LoggingIn;
+					StartNetworkThread();
+					break;
+				case Message_CharSelect:
+					if( m_state != State_CharSelectScreen ) break;
+					m_state = State_SelectingChar;
+					StartNetworkThread();
+					break;
+				default:
+					break;
+			}
 		}
 		//TODO: Do other actions that need to be peformed every now and then.
 	}
 
 	return 0;
+}
+
+int CMainClient::SendNotify(int MessageID)
+{
+	if( MessageID ){
+		pthread_mutex_lock(&m_message_mutex);
+		m_MessageQueue.push_back(MessageID);
+		pthread_mutex_unlock(&m_message_mutex);
+	}
+	return 1;
 }
 
 int	CMainClient::StartNetworkThread(void)
