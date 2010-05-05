@@ -2,7 +2,8 @@
 
 Database::Database() {
     m_sql_result = NULL;
-    m_mutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_init(&m_mutex, NULL);
+    //m_mutex = PTHREAD_MUTEX_INITIALIZER;
     my_bool reconnect = 0;
 	m_mysql = mysql_init(NULL);
     mysql_options(m_mysql, MYSQL_OPT_RECONNECT, &reconnect);

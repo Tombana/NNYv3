@@ -5,7 +5,11 @@
 #include <vector>
 #include "config.hpp"
 #include "ZSocket.h"
-#include "pthread.h"
+#if defined(WIN32)
+    #include "pthread.h"
+#else
+    #include <pthread.h>
+#endif
 #include "threadHandler.h"
 #include "Dispatcher.h"
 #include "Database.h"

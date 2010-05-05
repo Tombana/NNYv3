@@ -4,7 +4,8 @@
 //           CONSTRUCTOR
 //===================================
 Grid::Grid() {
-    m_x_maps = PTHREAD_MUTEX_INITIALIZER;
+  pthread_mutex_init(&m_x_maps, NULL);
+  //m_x_maps = PTHREAD_MUTEX_INITIALIZER;
 }
 
 //===================================
@@ -20,7 +21,8 @@ Grid::~Grid() {
 void Grid::createMap(unsigned int mapID) {
     //Create an empty map structure
     s_map map;
-    map.mutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_init(&map.mutex, NULL);
+    //map.mutex = PTHREAD_MUTEX_INITIALIZER;
     //Lock the whole big table because we are adding a map
     pthread_mutex_lock(&m_x_maps);
         //Insert the map we created to the table
@@ -36,7 +38,8 @@ void Grid::createMap(unsigned int mapID) {
 void Grid::_createGrid(unsigned int mapID, unsigned int gridID) {
     //Create a cell (that holds the linkedlist and a mutex)
     s_cell cell;
-    cell.mutex = PTHREAD_MUTEX_INITIALIZER; //is the mutex
+    pthread_mutex_init(&cell.mutex, NULL);
+    //cell.mutex = PTHREAD_MUTEX_INITIALIZER; //is the mutex
     cell.head  = NULL; //is the linked list head
     m_maps[mapID].grid.insert(gridID, cell);
 }

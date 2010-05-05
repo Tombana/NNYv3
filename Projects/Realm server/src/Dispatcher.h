@@ -27,7 +27,7 @@ private:
     } s_worldserver;
 
 public:
-    Dispatcher::Dispatcher(Database &database);
+    Dispatcher(Database &database);
     ~Dispatcher();
     //void pickNextAvailableServer(bool tryToConnectEvenIfNotOnline=false);
     s_current_worldserver pickupCurrent();
@@ -51,11 +51,19 @@ private:
     pthread_mutex_t              m_v_x_worldservers;
 };
 
+#ifndef WIN32
+    #include <stdlib.h> //atoi();
+#endif
+
 //Console color
 #if defined(WIN32)
     #define COLOR_GREEN     10
     #define COLOR_RED       12
     #define COLOR_DEFAULT   7
+#else
+    #define COLOR_GREEN     32
+    #define COLOR_RED       31
+    #define COLOR_DEFAULT   0
 #endif
 
 void printColor(std::string &str, BYTE color);

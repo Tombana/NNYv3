@@ -7,7 +7,8 @@ objects instead of a multiplexer. */
 //##            Constructor
 //################################################
 Dispatcher::Dispatcher(Database &database): m_database(database) {
-    m_v_x_worldservers = PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_init(&m_v_x_worldservers, NULL);
+    //m_v_x_worldservers = PTHREAD_MUTEX_INITIALIZER;
     _getDBWorldserverList();
     //_getDBDefaultWorldserver();
     m_currentWorldserverIndex = 0;
@@ -156,7 +157,6 @@ void printColor(std::string &str, BYTE color) {
 }
 
 void printColor(const char *str, BYTE color) {
-//TODO (NitriX#): printColor must also work for linux please
     #if defined(WIN32)
         HANDLE hConsole;
         hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -164,6 +164,6 @@ void printColor(const char *str, BYTE color) {
         std::cout << str;
         SetConsoleTextAttribute(hConsole, COLOR_DEFAULT);
     #else
-        std::cout << str;
+        std::cout << "\033[" << color << "m" << str << "\033[" << COLOR_DEFAULT << "m";
     #endif
 }

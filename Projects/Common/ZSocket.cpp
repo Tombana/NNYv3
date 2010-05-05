@@ -7,6 +7,7 @@ ZSocket::ZSocket() {
         _loadWinsock();
     #endif
     m_mutex = PTHREAD_MUTEX_INITIALIZER;
+    std::cerr << "DEBUG: " << SOCKET_ERROR << std::endl;
 }
 
 //Is a socket holder mode, it doesnt create a socket actually, it only sets m_socket.id on the target object.

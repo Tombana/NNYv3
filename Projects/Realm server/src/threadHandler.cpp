@@ -142,7 +142,8 @@ void *threadHandler (void *ptr) {
                 //Something is definitivelly going wrong.
                 std::cerr << "[threadHandler] @ERROR: Packets are corrupted!" << std::endl;
                 std::cerr << "[threadHandler] @ERROR: There is another capsule in this packet, not starting with 0x7E!" << std::endl;
-                //TODO (NitriX#): threadHandler, packets corrupted! Drop the guy & log
+                socket.socket_close();
+		break;
             }
         }
 
