@@ -3,7 +3,11 @@
 
 #include <iostream>
 #include <string.h>
-#include "pthread.h"
+#if defined(WIN32)
+     #include "pthread.h"
+#else
+     #include <pthread.h>
+#endif
 #include "ByteArray.h"
 
 #if defined(WIN32)

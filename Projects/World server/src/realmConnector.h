@@ -4,7 +4,11 @@
 #include <iostream>
 #include "ZSocket.h"
 #include "config.hpp"
-#include "pthread.h"
+#if defined(WIN32)
+     #include "pthread.h"
+#else
+     #include <pthread.h>
+#endif
 
 void *realmConnector(void *ptr);
 
