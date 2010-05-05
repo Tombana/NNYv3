@@ -3,11 +3,11 @@
 ZSocket::ZSocket() {
     m_created = false; //just to make sure
     m_connected = false; //just to make sure
+    pthread_mutex_init(&m_mutex, NULL);
+    //m_mutex = PTHREAD_MUTEX_INITIALIZER;
     #if defined(WIN32)
         _loadWinsock();
     #endif
-    m_mutex = PTHREAD_MUTEX_INITIALIZER;
-    std::cerr << "DEBUG: " << SOCKET_ERROR << std::endl;
 }
 
 //Is a socket holder mode, it doesnt create a socket actually, it only sets m_socket.id on the target object.

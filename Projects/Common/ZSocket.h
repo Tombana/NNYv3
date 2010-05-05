@@ -20,6 +20,7 @@
     #define SOCKADDR_IN    struct sockaddr_in
     #define SOCKADDR       struct sockaddr
     #define INVALID_SOCKET -1
+    #define SOCKET_ERROR   -1
     #define closesocket(s) close(s);
 #endif
 
