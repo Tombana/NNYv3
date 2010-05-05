@@ -9,7 +9,12 @@ NNYv3 0.2   (??? ??? 2010)
 
  ==== Optimisation ====
  
+ ==== Protocol Features ====
+ * Removed: PCKT_C_AUTH, parameter "token" has been removed.
+ * Removed: PCKT_R_CONNECT, parameter "token" has been removed.
+ 
  ==== Portability ====
+ * Added: Linux support is now back with working Makefiles
   
  ==== Statistics ====
  * Fixed Bugs: ??? tickets and many bugs reported at forum resolved
@@ -19,7 +24,7 @@ NNYv3 0.2   (??? ??? 2010)
  
 NNYv3 0.1   (03 May 2010)
  
- MaNGOS 0.1 - basic core that we will add further improvements.
+ NNYv3 0.1 - basic core that we will add further improvements.
 
  ==== Protocol Features ====
  * Added: PCKT_C_AUTH

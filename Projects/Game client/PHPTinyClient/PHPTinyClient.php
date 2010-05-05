@@ -154,7 +154,6 @@ while (true) {
 						$BA->addCmd(PCKT_C_AUTH);
 						$BA->addString($USERNAME);
 						$BA->addString(md5($PASSWORD));
-						$BA->addDword($RECONNECT_TOKEN);
 						socket_write($SOCKET, $BA->getPacket());
 						$BA->clear();
 						break;
@@ -162,8 +161,7 @@ while (true) {
 						$RECONNECT = true;
 						$RECONNECT_IP = $CAPSULE->readString();
 						$RECONNECT_PORT = $CAPSULE->readWord();
-						$RECONNECT_TOKEN = $CAPSULE->readDword();
-						echo '[capsuleHandler] Connect to server '.$RECONNECT_IP.' on port '.$RECONNECT_PORT.' with token '.$RECONNECT_TOKEN."\n";
+						echo '[capsuleHandler] Connect to server '.$RECONNECT_IP.' on port '.$RECONNECT_PORT."\n";
 						break;
 					case PCKT_R_SYNC_KEY_ACK:
 						if ($CAPSULE->readByte()) {

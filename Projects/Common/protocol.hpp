@@ -1,6 +1,6 @@
 //Next available PCKT code is         0x000D //PCKT Code 13
 
-#define NNY_PROTOCOL_VERSION    28
+#define NNY_PROTOCOL_VERSION    29
 
 /*****************************
         [X] Multi-directional
@@ -20,7 +20,6 @@
 //Info: Authentication to the world server
 //Params: [String]Username (will be lowercased by the server)
 //Params: [String]Password (can be hashed with md5+salt or whatever)
-//Params: [Int]Token
 
 /*****************************
         [R]ealm server
@@ -45,7 +44,6 @@
 //Info: Tell the client to connect to the specified worldserver
 //Params: [String]ipv4
 //Params: [Word]port
-//Params: [Dword]token
 #define PCKT_R_SYNC_KEY_ACK 0x0007 //PCKT Code 7
 //Info: Tell the server if its authorized or not
 //Params: [Bool] True=Success / False=Failure

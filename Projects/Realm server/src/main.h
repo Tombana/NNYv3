@@ -3,8 +3,8 @@
 
 #include <iostream>
 #include <vector>
-#include "config.hpp"
 #include "ZSocket.h"
+#include "config.hpp"
 #if defined(WIN32)
     #include "pthread.h"
 #else

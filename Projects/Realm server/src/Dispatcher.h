@@ -4,8 +4,8 @@
 #include <iostream>
 #include <vector>
 #include "pthread.h"
-#include "config.hpp"
 #include "ZSocket.h"
+#include "config.hpp"
 #include "mysql.h"
 #include "Database.h"
 
