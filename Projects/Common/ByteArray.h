@@ -11,8 +11,6 @@ typedef unsigned char  BYTE;  // 1byte
 typedef unsigned short WORD;  // 2bytes
 typedef unsigned long  DWORD; //4bytes
 
-long double _pow(int base, int exponent);
-
 class ByteArray {
 public:
     //Constructors/destructors
@@ -34,9 +32,9 @@ public:
     bool readBool();
     std::string readString();
 
-	//Tombana: Use this like: packet.read<int>(); and packet.read<DWORD>();
+    //Tombana: Use this like: packet.read<int>(); and packet.read<DWORD>();
     template <typename T>
-    T read(){
+    T ByteArray::read(){
         if((m_seek + sizeof(T)) > m_buffer.size()) return T(); //This is the same as return 0; but it will also work for when T is a class
         T val = *reinterpret_cast<T*>((BYTE*)m_buffer.c_str()+m_seek);
         m_seek += sizeof(T);

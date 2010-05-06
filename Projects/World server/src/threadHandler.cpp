@@ -1,6 +1,7 @@
 #include "threadHandler.h"
 
-extern Grid g_grid;
+extern Grid     g_grid;
+extern Database g_database;
 
 void threadHandler (SOCKET &m_socketID) {
     //====================================

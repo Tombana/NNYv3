@@ -17,8 +17,8 @@ case PCKT_R_WELCOME:
 case PCKT_R_DOWNLOAD:
 	{
 	DWORD Revision = capsule.read<DWORD>();
-	std::string URL(capsule.read<std::string>());
-	std::string Path(capsule.read<std::string>());
+	std::string URL(capsule.readString());
+	std::string Path(capsule.readString());
 	std::cout << "[capsuleHandler] We need to download a file. Revision: " << Revision << std::endl;
 	std::cout << "[capsuleHandler] URL: " << URL.c_str() << std::endl;
 	std::cout << "[capsuleHandler] Path: " << Path.c_str() << std::endl;

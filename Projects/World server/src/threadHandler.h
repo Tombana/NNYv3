@@ -10,6 +10,7 @@
 #include "ByteArray.h"
 #include "config.hpp"
 #include "sharedModels.hpp"
+#include "Database.h"
 
 //=============================
 //       THREAD DATA

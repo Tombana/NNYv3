@@ -20,5 +20,15 @@ int main();
 void printStartupMessage();
 void createNbThreadWorker(int amount);
 void genVersion();
+void checkDatabaseVersion();
+
+#ifdef WIN32
+    #include <windows.h>
+    #define sleep(x) Sleep(x)
+#else
+    #include <unistd.h>
+    #define sleep(x) usleep(x)
+#endif
+void pause();
 
 #endif

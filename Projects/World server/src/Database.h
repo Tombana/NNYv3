@@ -14,18 +14,20 @@
 #define DB_USE_RESULT   false
 #define DB_STORE_RESULT true
 
-#define DB_RESULT       MYSQL_RES*
+#define DB_RESULT       MYSQL_RES
 #define DB_ROW          MYSQL_ROW
+
+#include <cstdlib> //atoi();
 
 class Database
 {
 	public:
 		Database();
 		~Database();
-		bool             connect(const char *server, const char *username, const char *password);
+		bool             connect(const char *server, const char *username, const char *password, const char *database);
 		MYSQL_RES*       query(bool store_result, std::string &obj);
 		MYSQL_RES*       query(bool store_result, const char *toSend);
-		MYSQL_ROW        fetch_row(DB_RESULT result);
+		MYSQL_ROW        fetch_row(MYSQL_RES *result);
 		void             queryDone();
 		void             close();
 		std::string      intToStr(int number);
@@ -35,5 +37,7 @@ class Database
         MYSQL           *m_mysql;
         pthread_mutex_t  m_mutex;
 };
+
+std::string alphaNumOnly(std::string strToConvert);
 
 #endif

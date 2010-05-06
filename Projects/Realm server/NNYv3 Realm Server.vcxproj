@@ -57,7 +57,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>..\..\Dependencies\MySQL\lib;..\..\Dependencies\winsocks2\lib;..\..\Dependencies\pthread\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libmysql.lib;pthreadVCE2.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libmysql.lib;pthreadVCE2.lib;libws2_32.a;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <CustomBuildStep>
       <Command>
@@ -79,7 +79,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\Dependencies\MySQL\lib;..\..\Dependencies\winsocks2\lib;..\..\Dependencies\pthread\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libmysql.lib;pthreadVCE2.lib;libws2_32.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libmysql.lib;pthreadVCE2.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

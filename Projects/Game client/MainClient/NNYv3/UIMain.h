@@ -75,7 +75,7 @@ private:
 	Ogre::RenderWindow	*mWindow;
 	CInputHandler		*mInputHandler;
 	// CEGUI related
-	CGUIHandler			mGUIHandler;
+	CGUIHandler			*mGUIHandler;
 #ifdef OLD_CEGUI
 	CEGUI::OgreCEGUIRenderer	*mGUIRenderer;
 #else
@@ -83,14 +83,10 @@ private:
 #endif
 	CEGUI::System			*mGUISystem;
 	CEGUI::WindowManager	*mWindowManager;
-	CEGUI::Window			*mRootWindow;
 
 	//This will be called every frame
 	bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 
 	int			SetupOgre(void);
 	int			CleanupOgre(void);
-
-	int			DisplayLoginScreen(void);
-
 };

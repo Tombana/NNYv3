@@ -99,32 +99,11 @@ int CUIMain::SetupOgre(void)
 		CEGUI::MouseCursor::getSingleton().setImage(mGUISystem->getDefaultMouseCursor());
 		mGUISystem->setDefaultFont("BlueHighway-12");
 #endif
-		//All windows have a parent/child structure.
-		//Its common to name windows as follows: NNYv3/TabCtrl/Page2/ObjectTypeList
-		//Create the root window (fullscreen)
+
 		mWindowManager = CEGUI::WindowManager::getSingletonPtr();
-		mRootWindow = mWindowManager->createWindow("DefaultWindow", "NNYv3");
+		mGUIHandler = new CGUIHandler(mWindowManager);
+		mGUIHandler->Setup();
 
-		//Create the quit button
-		CEGUI::Window *btnQuit = mWindowManager->createWindow("TaharezLook/Button", "NNYv3/QuitButton");
-		btnQuit->setText("Quit");
-		//CEGUI::UDim - Taken from tutorial:
-		//When setting the size you must create a UDim object to tell it what size it should be.
-		//The first parameter is the relative size of the object in relation to its parent.
-		//The second parameter is the absolute size of the object (in pixels).
-		//The important thing to realize is that you are only supposed to set one of the two parameters to UDim.
-		//The other parameter must be 0. So in this case we have made a button which is 15% as wide as its parent and 5% as tall.
-		//If we wanted to specify that it should be 20 pixels by 5 pixels,
-		//we would do that by setting the second parameter in both of the UDim calls to be 20 and 5 respectively.
-		btnQuit->setSize(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
-		btnQuit->setPosition(CEGUI::UVector2(CEGUI::UDim(0.85, 0), CEGUI::UDim(0,0)));
-
-		//Set the function that handles the quit button
-		btnQuit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::QuitBtnClick, &mGUIHandler));
-
-		mRootWindow->addChildWindow(btnQuit);
-
-		mGUISystem->setGUISheet(mRootWindow);
 	}catch( CEGUI::Exception& e ){
 		std::cerr << "[ERROR] Exception in CEGUI:\n" << e.getMessage() << std::endl;
 	}
@@ -150,6 +129,8 @@ int CUIMain::CleanupOgre(void)
 	mInputHandler = 0;
 
 	//Clean up CEGUI
+	if( mGUIHandler ) delete mGUIHandler;
+	mGUIHandler = 0;
 #ifdef OLD_CEGUI
 	if(mGUISystem) delete mGUISystem;
 	if(mGUIRenderer) delete mGUIRenderer;

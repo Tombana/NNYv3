@@ -12,23 +12,17 @@ Database::Database() {
 Database::~Database() {
 }
 
-bool Database::connect(const char *server, const char *username, const char *password) {
-    std::cout << "[Database] Connecting to MySQL server... ";
-    if (mysql_real_connect(m_mysql,server,username,password,0,NULL,0)) {
-        std::cout << "OK!" << std::endl;
-        return true;
-    } else {
-        std::cout << "Failed!" << std::endl << "@ERROR: MySQL: " << mysql_error(m_mysql) << std::endl;
-        return false;
-    }
+bool Database::connect(const char *server, const char *username, const char *password, const char *database) {
+    return mysql_real_connect(m_mysql,server,username,password,database,0,NULL,0);
 }
 
 void Database::close() {
     mysql_close(m_mysql);
-    std::cout << "[Database] Connection closed!" << std::endl;
 }
 
 MYSQL_RES* Database::query(bool store_result, const char *toSend) {
+    //TODO: Save the query if it cannot be performed
+
     //----- Init
     int sql_error = 0;
     //----- Lock mutex
@@ -49,7 +43,7 @@ MYSQL_RES* Database::query(bool store_result, const char *toSend) {
     return m_sql_result;
 }
 
-DB_RESULT Database::query(bool store_result, std::string &obj) {
+MYSQL_RES* Database::query(bool store_result, std::string &obj) {
     return query(store_result, obj.c_str());
 }
 
@@ -60,7 +54,7 @@ void Database::queryDone() {
     pthread_mutex_unlock(&m_mutex);
 }
 
-DB_ROW Database::fetch_row(DB_RESULT result) {
+MYSQL_ROW Database::fetch_row(MYSQL_RES *result) {
     return mysql_fetch_row(result);
 }
 
@@ -68,4 +62,13 @@ std::string Database::intToStr(int number) {
    std::stringstream ss;//create a stringstream
    ss << number;//add number to the stream
    return ss.str();//return a string with the contents of the stream
+}
+
+std::string alphaNumOnly(std::string strToConvert) {
+	std::string strConverted; //strToConvert with only alpha-numeric characters.
+	for (unsigned int i=0; i<strToConvert.length();i++) {
+        if (isalnum(strToConvert[i])) //If current character is alpha-numeric
+            strConverted += strToConvert[i]; //Add the character to strConverted
+    }
+    return strConverted;
 }

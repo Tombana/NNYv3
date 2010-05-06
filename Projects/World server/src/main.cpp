@@ -62,6 +62,19 @@ int main() {
     pthread_mutex_unlock(&g_realmConnector_mutex);
 
     //=========================================
+    //            MYSQL DATABASE
+    //=========================================
+    std::cerr << "Connecting to MySQL database... ";
+    if (g_database.connect(CONFIG_MYSQL_SERVER, CONFIG_MYSQL_USERNAME, CONFIG_MYSQL_PASSWORD, CONFIG_MYSQL_DATABASE)) {
+        std::cerr << "OK!" << std::endl;
+        checkDatabaseVersion();
+    } else {
+        std::cerr << "Failed!" << std::endl;
+        std::cerr << "@ERROR: Unable to connect to the MySQL database! Please check world.conf file!" << std::endl;
+        pause();
+    }
+
+    //=========================================
     //          START LISTENING PORT
     //=========================================
     std::cerr << "Listening on port " << CONFIG_SERVER_PORT << "... ";
@@ -215,4 +228,30 @@ void genVersion() {
     g_CONFIG.add<std::string>("BUILD_TIME",time_string);
     g_CONFIG.add<unsigned int>("GIT_COMMIT_NUMBER",commit);
     g_CONFIG.add<std::string>("GIT_COMMIT_HASH",git_conf.read<std::string>("LAST_HASH"));
+}
+
+void pause() {
+    while(true) {
+        sleep(5000); //5 seconds pause
+    }
+}
+
+void checkDatabaseVersion() {
+    //----- Execute the query
+    DB_RESULT *result = g_database.query(DB_USE_RESULT, "SELECT db_version FROM config");
+    DB_ROW     rows   = g_database.fetch_row(result);
+    //----- Do stuff we wants with rows[]
+    unsigned int db_version = atoi(rows[0]);
+    //----- Free ressources as soon as possible
+    g_database.queryDone();
+    //----- Process the new data :)
+    std::cout << "[main] Checking database version... ";
+    if (db_version == CONFIG_DATABASE_SUPPORTED) {
+        std::cout << "OK!" << std::endl;
+    } else {
+        std::cout << "Failed!" << std::endl;
+        std::cout << "@ERROR: Your current database version is not supported!" << std::endl;
+        std::cout << "@ERROR: Please install a clean 'fulldb' or run 'updates' from SQL folder." << std::endl;
+        exit(EXIT_FAILURE);
+    }
 }

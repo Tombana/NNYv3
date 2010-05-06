@@ -8,7 +8,7 @@
 #include "protocol.hpp"
 
 #ifdef WIN32
-    #include <windows.h>
+    #include <winbase.h>
     #define sleep(x) Sleep(x)
 #else
     #include <unistd.h>
@@ -64,6 +64,9 @@ private:
 	friend		void* NetworkThreadStarter(void* class_pointer); //Helper function to give the created thread the right class pointer
 	pthread_mutex_t	m_networkthread_mutex;
 	pthread_cond_t	m_networkthread_cond;
+
+	//The packet handler
+	void		HandlePackets(void);
 
 	DWORD		m_Revision;
 

@@ -150,7 +150,7 @@ void* CMainClient::NetworkThread(void)
 	//Start the loop that receives all packets
 	if( m_mainsocket.isConnected() ){
 		//This will keep looping untill an error occurred or the socket got disconnected
-		#include "packetHandler.hpp"
+		HandlePackets();
 	}
 	//Disconnected. Signal the main thread
 	pthread_cond_signal(&m_networkthread_cond); //Signal the main thread that this thread is done

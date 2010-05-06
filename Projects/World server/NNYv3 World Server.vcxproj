@@ -54,8 +54,8 @@
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>..\..\Dependencies\pthread\lib;..\..\Dependencies\MySQL\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libmysql.lib;pthreadVCE2.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\Dependencies\winsocks2\lib;..\..\Dependencies\pthread\lib;..\..\Dependencies\MySQL\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libmysql.lib;pthreadVCE2.lib;libws2_32.a;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -73,7 +73,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\..\Dependencies\winsocks2\lib;..\..\Dependencies\pthread\lib;..\..\Dependencies\MySQL\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libmysql.lib;pthreadVCE2.lib;libws2_32.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libmysql.lib;pthreadVCE2.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -93,7 +93,6 @@
     <ClInclude Include="..\Common\protocol.hpp" />
     <ClInclude Include="..\Common\ZSocket.h" />
     <ClInclude Include="src\capsuleHandler.hpp" />
-    <ClInclude Include="src\capsuleHdl_auth.hpp" />
     <ClInclude Include="src\capsuleHdl_default.hpp" />
     <ClInclude Include="src\config.hpp" />
     <ClInclude Include="src\Grid.h" />

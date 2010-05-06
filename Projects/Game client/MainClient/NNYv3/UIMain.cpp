@@ -8,7 +8,7 @@ CUIMain* CUIMain::mSingleton = 0;
 CUIMain::CUIMain(void) :
 	Started(false), m_uithread(), m_MessageQueue(), m_message_mutex(PTHREAD_MUTEX_INITIALIZER),
 	mRoot(0), mCamera(0), mSceneMgr(0), mWindow(0),
-	mInputHandler(0), mGUIHandler(), mGUIRenderer(0), mGUISystem(0), mWindowManager(0), mRootWindow(0)
+	mInputHandler(0), mGUIHandler(0), mGUIRenderer(0), mGUISystem(0), mWindowManager(0)
 {
 	if( mSingleton == 0 ) mSingleton = this;
 }
@@ -69,25 +69,18 @@ void* CUIMain::UIThread(void)
 	}catch( Ogre::Exception& e ) {
 		std::cerr << "[ERROR] An exception has occurred while loading Ogre: \n" << e.what() << std::endl;
     }
-	if( !Success ){
-		Started = false;
-		return 0;
+	if( Success ){
+		//Setup physics
+
+		//Setup sound
+
+		//Start the rendering loop
+		mRoot->startRendering();
+		//The rendering has ended: the user quit the window or an error occured
 	}
-	//Show the loading screen
-	//DisplayLoadingScreen();
-
-	//Setup physics
-
-	//Setup sound
-
-	//Start the rendering loop
-	mRoot->startRendering();
-	//The rendering has ended: the user quit the window or an error occured
 
 	//Clean up
 	CleanupOgre();
-
-	std::cout << "------------------GUI THREAD DONE!\n";
 
 	return 0;
 }
@@ -105,22 +98,11 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 				ContinueRendering = false;
 				break;
 			case Message_DisplayLogin:
-				DisplayLoginScreen();
+				mGUIHandler->DisplayLoginScreen();
 				break;
 			default:
 				break;
 		}
 	}
 	return ContinueRendering;
-}
-
-int	CUIMain::DisplayLoginScreen(void)
-{
-	//Load the window layout from file
-	CEGUI::Window *LoginWindow = mWindowManager->loadWindowLayout("loginscreen.layout");
-	//Subscribe the handler
-	CEGUI::Window *LoginButton = mWindowManager->getWindow("LoginWindow/ButtonLogin");
-	LoginButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::LoginBtnClick, &mGUIHandler));
-	mRootWindow->addChildWindow(LoginWindow);
-	return 1;
 }

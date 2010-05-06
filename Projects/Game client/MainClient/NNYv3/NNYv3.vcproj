@@ -192,6 +192,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\packetHandler.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\Common\ZSocket.cpp"
 					>
 				</File>
@@ -246,7 +250,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\packetHandler.hpp"
+					RelativePath=".\capsuleHdl_worldlogin.hpp"
 					>
 				</File>
 				<File

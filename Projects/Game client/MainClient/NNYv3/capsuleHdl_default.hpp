@@ -3,7 +3,7 @@
 //=====================================
 case PCKT_X_DEBUG:
     std::cout << "[capsuleHandler] -- PCKT_X_DEBUG --" << std::endl;
-	std::cout << "[capsuleHandler] Debug text: " << capsule.read<std::string>().c_str() << std::endl;
+	std::cout << "[capsuleHandler] Debug text: " << capsule.readString().c_str() << std::endl;
     break;
 //=====================================
 // DEFAULT

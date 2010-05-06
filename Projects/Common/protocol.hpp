@@ -1,6 +1,6 @@
-//Next available PCKT code is         0x000D //PCKT Code 13
+//Next available PCKT code is         0x000E //PCKT Code 14
 
-#define NNY_PROTOCOL_VERSION    29
+#define NNY_PROTOCOL_VERSION    30
 
 /*****************************
         [X] Multi-directional
@@ -63,3 +63,13 @@
 #define PCKT_W_WELCOME      0x000B //PCKT Code 11
 //Info: Server signature sent by the world server to every sockets
 //Params: [None]
+
+#define PCKT_C_AUTH_ACK     0x000D //PCKT Code 13
+//Info: Authentication to the world server
+//Params: [ACK] TRUE / NOT_FOUND
+
+/*****************************
+       [ACK] ACK codes
+*****************************/
+#define ACK_FALSE 0
+#define ACK_TRUE  1
