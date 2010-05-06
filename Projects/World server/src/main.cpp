@@ -19,8 +19,10 @@ unsigned int    g_threadPool_counter_job      = 0; //Protected with g_threadPool
 pthread_mutex_t g_realmConnector_mutex        = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
 pthread_cond_t  g_realmConnector_cond         = PTHREAD_COND_INITIALIZER; //Protected with g_realmConnector_mutex
 bool            g_realmConnector_authorized   = false; //Protected with g_realmConnector_mutex
-// == GRID ==
-Grid            g_grid; //Grid class is thread-safe
+// == Grid class requirement ==
+Grid            g_grid; //Grid object is thread-safe
+// == Database class requirement ==
+Database        g_database; //Database object is thread-safe
 
 //pthread_rwlock_t g_name = PTHREAD_RWLOCK_INITIALIZER;
 //-------------------------------------------------

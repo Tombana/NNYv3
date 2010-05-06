@@ -14,6 +14,7 @@
 #include "realmConnector.h"
 #include "sharedModels.hpp"
 #include "Grid.h"
+#include "Database.h"
 
 int main();
 void printStartupMessage();
