@@ -1,6 +1,8 @@
 #include "MainClient.h"
 #include <iostream>
 
+CMainClient* CMainClient::mSingleton = 0;
+
 CMainClient::CMainClient(void) :
 	m_state(State_Loading), m_mainsocket(), m_networkthread(),
 	m_networkthread_mutex(PTHREAD_MUTEX_INITIALIZER),
@@ -11,12 +13,14 @@ CMainClient::CMainClient(void) :
 	pthread_mutex_init(&m_networkthread_mutex, NULL);
 	pthread_cond_init(&m_networkthread_cond, NULL);
 	pthread_mutex_init(&m_message_mutex, NULL);
+	if( mSingleton == 0 ) mSingleton = this;
 }
 
 CMainClient::~CMainClient(void)
 {
 	pthread_mutex_destroy(&m_networkthread_mutex);
 	pthread_cond_destroy(&m_networkthread_cond);
+	if( mSingleton == this ) mSingleton = 0;
 }
 
 int CMainClient::Run(void)
@@ -24,7 +28,7 @@ int CMainClient::Run(void)
 	//==============
 	//Load the UI and display the loading screen
 	//==============
-	m_gui.StartUI();
+	if( !m_gui.StartUI() ) return 0;
 
 	//==============
 	//Load the data files
@@ -55,6 +59,9 @@ int CMainClient::Run(void)
 
 	while( m_state != State_Quitting ){
 		sleep(50);
+		//When the gui wants to notify this thread the message will get into the list.
+		//Examples: the user pressed close
+		//
 		if( m_MessageQueue.size() ){ //If there are messages from other threads to process
 			pthread_mutex_lock(&m_message_mutex);
 			int GuiAction = m_MessageQueue.front(); //Get the message from the queue
@@ -65,7 +72,6 @@ int CMainClient::Run(void)
 					m_state = State_Quitting;
 					//TODO: Show unloading screen
 					m_mainsocket.socket_close(); //This should make any receiver thread that is busy receiving quit
-					//datafileclass.unload();
 					break;
 				case Message_Login:
 					if( m_state != State_LoginScreen ) break;
@@ -84,6 +90,10 @@ int CMainClient::Run(void)
 		//TODO: Do other actions that need to be peformed every now and then.
 	}
 
+	//datafileclass.unload();
+
+	m_gui.SendNotify(m_gui.Message_Quit);
+	m_gui.WaitForExit();
 	return 0;
 }
 

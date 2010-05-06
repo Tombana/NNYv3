@@ -1,7 +1,8 @@
 #pragma once
 
-#include <list>
 #include "UIMain.h"
+
+#include <list>
 #include "ZSocket.h"
 #include "pthread.h"
 #include "protocol.hpp"
@@ -19,6 +20,10 @@ class CMainClient
 public:
 	CMainClient(void);
 	~CMainClient(void);
+
+	static CMainClient& getSingleton(){ return *mSingleton; }
+	static CMainClient* getSingletonPtr(){ return mSingleton; }
+
 	int Run(void);
 
 	//When other threads (mainly GUI thread) want to notify the main thread of something
@@ -26,12 +31,15 @@ public:
 	int SendNotify(int MessageID);
 
 	//Message constants
-	static const int	Message_Quit		=	100;
+	static const int	Message_Quit		=	100;	//The user pressed close. This does not neccesarily mean that the client should close immediately. There can be a confirmation or something like that.
 	static const int	Message_Previous	=	101;
 	static const int	Message_Login		=	1000;
 	static const int	Message_RealmSelect	=	1001;
 	static const int	Message_CharSelect	=	1002;
 private:
+	//Singleton
+	static CMainClient	*mSingleton;
+
 	//The current state of the client
 	enum{ State_Loading = 0,
 		State_Quitting,
@@ -65,7 +73,7 @@ private:
 	//============
 	// Gui related
 	//============
-	CUIMain	m_gui;
+	CUIMain		m_gui;
 
 	//When other threads notify this thread the notification will be put in this vector
 	std::list<int>	m_MessageQueue;

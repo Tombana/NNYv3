@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\Common;..\..\..\..\Dependencies\pthread\include;..\..\..\..\Dependencies\MySQL\include"
+				AdditionalIncludeDirectories="..\..\..\Common;..\..\..\..\Dependencies\pthread\include;..\..\..\..\Dependencies\MySQL\include;..\include;$(OGRE_HOME)\include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,9 +61,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="pthreadVCE2.lib ws2_32.lib"
+				AdditionalDependencies="pthreadVCE2.lib ws2_32.lib OgreMain_d.lib OIS_d.lib CEGUIBase_d.lib OgreGUIRenderer_d.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\Dependencies\pthread\lib;..\..\..\..\Dependencies\MySQL\lib"
+				AdditionalLibraryDirectories="..\..\..\..\Dependencies\pthread\lib;..\..\..\..\Dependencies\MySQL\lib;$(OGRE_HOME)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -117,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\..\..\Common;..\..\..\..\Dependencies\pthread\include;..\..\..\..\Dependencies\MySQL\include"
+				AdditionalIncludeDirectories="..\..\..\Common;..\..\..\..\Dependencies\pthread\include;..\..\..\..\Dependencies\MySQL\include;..\include;$(OGRE_HOME)\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -136,9 +136,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="pthreadVCE2.lib ws2_32.lib"
+				AdditionalDependencies="pthreadVCE2.lib ws2_32.lib OgreMain.lib OIS.lib CEGUIBase.lib OgreGUIRenderer.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\Dependencies\pthread\lib;..\..\..\..\Dependencies\MySQL\lib"
+				AdditionalLibraryDirectories="..\..\..\..\Dependencies\pthread\lib;..\..\..\..\Dependencies\MySQL\lib;$(OGRE_HOME)\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -200,11 +200,23 @@
 				Name="UI"
 				>
 				<File
-					RelativePath=".\GUI.cpp"
+					RelativePath=".\GUIHandler.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\InputHandler.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\OgreSetup.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\UIMain.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\WindowListener.cpp"
 					>
 				</File>
 			</Filter>
@@ -250,7 +262,15 @@
 				Name="UI"
 				>
 				<File
-					RelativePath=".\GUI.h"
+					RelativePath=".\GUIHandler.h"
+					>
+				</File>
+				<File
+					RelativePath=".\InputHandler.h"
+					>
+				</File>
+				<File
+					RelativePath=".\OgreCEGUIRenderer.h"
 					>
 				</File>
 				<File
