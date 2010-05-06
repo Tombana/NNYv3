@@ -12,12 +12,7 @@ public:
 	CInputHandler(Ogre::RenderWindow *window, CEGUI::System *guisystem = 0);
 	~CInputHandler(void);
 	
-	bool frameRenderingQueued(const Ogre::FrameEvent& evt)
-    {
-		mKeyboard->capture();
-		mMouse->capture();
-		return true;
-    }
+	bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 
     // KeyListener
     virtual bool keyPressed(const OIS::KeyEvent &arg);

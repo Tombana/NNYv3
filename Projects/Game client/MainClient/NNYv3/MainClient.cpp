@@ -55,7 +55,7 @@ int CMainClient::Run(void)
 	//Signal 'Done Loading' to GUI and so on
 	//==============
 	m_state = State_LoginScreen;
-	m_gui.SendNotify(m_gui.Message_DoneLoading);
+	m_gui.SendNotify(m_gui.Message_DisplayLogin);
 
 	while( m_state != State_Quitting ){
 		sleep(50);
@@ -142,6 +142,7 @@ void* CMainClient::NetworkThread(void)
 					std::cout << "[ERROR] Could not connect to world server!\n";
 				}
 			}
+			if( !m_mainsocket.isConnected() ) m_state = State_LoginScreen;
 			break;
 		default:
 			break;

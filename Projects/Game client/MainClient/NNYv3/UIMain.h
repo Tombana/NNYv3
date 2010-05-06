@@ -32,7 +32,7 @@
 #include <CEGUI/RendererModules/Ogre/CEGUIOgreRenderer.h>
 #endif
 
-class CUIMain
+class CUIMain : public Ogre::FrameListener
 {
 public:
 	CUIMain(void);
@@ -49,7 +49,7 @@ public:
 
 	//Message constants
 	static const int	Message_Quit		=	100;
-	static const int	Message_DoneLoading	=	101;
+	static const int	Message_DisplayLogin=	101;
 
 private:
 	//Singleton
@@ -84,6 +84,9 @@ private:
 	CEGUI::System			*mGUISystem;
 	CEGUI::WindowManager	*mWindowManager;
 	CEGUI::Window			*mRootWindow;
+
+	//This will be called every frame
+	bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 
 	int			SetupOgre(void);
 	int			CleanupOgre(void);

@@ -9,4 +9,5 @@ public:
 	~CGUIHandler(void);
 
 	bool QuitBtnClick(const CEGUI::EventArgs &e);
+	bool LoginBtnClick(const CEGUI::EventArgs &e);
 };

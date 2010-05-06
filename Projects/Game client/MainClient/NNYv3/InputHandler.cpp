@@ -34,6 +34,13 @@ CInputHandler::~CInputHandler(void)
 	windowClosed(mWindow);
 }
 
+bool CInputHandler::frameRenderingQueued(const Ogre::FrameEvent& evt)
+{
+	mKeyboard->capture();
+	mMouse->capture();
+	return true;
+}
+
 bool CInputHandler::keyPressed(const OIS::KeyEvent &arg)
 {
 	if( mGUISystem ){

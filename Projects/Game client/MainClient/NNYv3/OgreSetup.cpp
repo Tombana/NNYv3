@@ -134,6 +134,7 @@ int CUIMain::SetupOgre(void)
 	//=================
 	mInputHandler = new CInputHandler(mWindow, mGUISystem);
 	mRoot->addFrameListener(mInputHandler);
+	mRoot->addFrameListener(this);
 
 	return 1;
 }
@@ -141,7 +142,10 @@ int CUIMain::SetupOgre(void)
 int CUIMain::CleanupOgre(void)
 {
 	//Clean up the input system
-	if(mRoot && mInputHandler) mRoot->removeFrameListener(mInputHandler);
+	if( mRoot ){
+		mRoot->removeFrameListener(this);
+		if( mInputHandler) mRoot->removeFrameListener(mInputHandler);
+	}
 	if(mInputHandler) delete mInputHandler;
 	mInputHandler = 0;
 

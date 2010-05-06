@@ -48,12 +48,9 @@ int CUIMain::WaitForExit(void)
 int CUIMain::SendNotify(int MessageID)
 {
 	if( MessageID ){
-		if( MessageID == Message_Quit ) if( mRoot ) mRoot->queueEndRendering();
-		else{
-			pthread_mutex_lock(&m_message_mutex);
-			m_MessageQueue.push_back(MessageID);
-			pthread_mutex_unlock(&m_message_mutex);
-		}
+		pthread_mutex_lock(&m_message_mutex);
+		m_MessageQueue.push_back(MessageID);
+		pthread_mutex_unlock(&m_message_mutex);
 	}
 	return 0;
 }
@@ -95,13 +92,35 @@ void* CUIMain::UIThread(void)
 	return 0;
 }
 
+bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
+{
+	bool ContinueRendering = true;
+	if( m_MessageQueue.size() ){ //If there are messages from other threads to process
+		pthread_mutex_lock(&m_message_mutex);
+		int Message = m_MessageQueue.front(); //Get the message from the queue
+		m_MessageQueue.pop_front(); //Remove the message from the queue
+		pthread_mutex_unlock(&m_message_mutex);
+		switch(Message){
+			case Message_Quit:
+				ContinueRendering = false;
+				break;
+			case Message_DisplayLogin:
+				DisplayLoginScreen();
+				break;
+			default:
+				break;
+		}
+	}
+	return ContinueRendering;
+}
+
 int	CUIMain::DisplayLoginScreen(void)
 {
 	//Load the window layout from file
 	CEGUI::Window *LoginWindow = mWindowManager->loadWindowLayout("loginscreen.layout");
 	//Subscribe the handler
-	//mWindowManager->getWindow("OgreGuiDemo/TabCtrl/Page1/QuitButton")->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&GuiApplication::handleQuit, this));
-
+	CEGUI::Window *LoginButton = mWindowManager->getWindow("LoginWindow/ButtonLogin");
+	LoginButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::LoginBtnClick, &mGUIHandler));
 	mRootWindow->addChildWindow(LoginWindow);
 	return 1;
 }
