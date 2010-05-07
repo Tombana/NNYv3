@@ -30,7 +30,11 @@ PCKT_C_AUTH ->
 in any case be considered as their final version. It's just some
 ideas I had on how we could implement things; nothing's sure yet
 and I really am open to suggestions or improvements if it can makes
-the engine better. ~NitriX) 
+the engine better. ~NitriX)
+
+(Tombana: For the movement/deplacement packets: what about just one PCKT_C_MOVEMENT and
+then the next byte/word can specify what type of movement, like jump/wasd/turn and so on.
+So kind a like a subcommand.)
 
 //---- [soon] Character list -----
 PCKT_C_GETCHARLIST
