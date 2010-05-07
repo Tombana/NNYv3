@@ -192,6 +192,18 @@
 					>
 				</File>
 				<File
+					RelativePath=".\capsuleHdl_default.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\capsuleHdl_realm.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\capsuleHdl_worldlogin.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\packetHandler.cpp"
 					>
 				</File>
@@ -239,18 +251,6 @@
 				>
 				<File
 					RelativePath="..\..\..\Common\ByteArray.h"
-					>
-				</File>
-				<File
-					RelativePath=".\capsuleHdl_default.hpp"
-					>
-				</File>
-				<File
-					RelativePath=".\capsuleHdl_realm.hpp"
-					>
-				</File>
-				<File
-					RelativePath=".\capsuleHdl_worldlogin.hpp"
 					>
 				</File>
 				<File

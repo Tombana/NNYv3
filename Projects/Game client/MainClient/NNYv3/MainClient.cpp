@@ -66,10 +66,10 @@ int CMainClient::Run(void)
 		//
 		if( m_MessageQueue.size() ){ //If there are messages from other threads to process
 			pthread_mutex_lock(&m_message_mutex);
-			int GuiAction = m_MessageQueue.front(); //Get the message from the queue
+			int MessageID = m_MessageQueue.front(); //Get the message from the queue
 			m_MessageQueue.pop_front(); //Remove the message from the queue
 			pthread_mutex_unlock(&m_message_mutex);
-			switch( GuiAction ){
+			switch( MessageID ){
 				case Message_Quit:
 					m_state = State_Quitting;
 					//TODO: Show unloading screen

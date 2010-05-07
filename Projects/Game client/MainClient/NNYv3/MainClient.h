@@ -6,7 +6,6 @@
 #include <vector>
 #include "ZSocket.h"
 #include "pthread.h"
-#include "protocol.hpp"
 
 #ifdef WIN32
     #include <winbase.h>
@@ -69,8 +68,12 @@ private:
 	//List of ips of realm servers
 	std::vector<std::string> m_RealmServers;
 
-	//The packet handler
-	void		HandlePackets(void);
+	//The main packet handler
+	void HandlePackets(void);
+	//The capsule handlers. They return true if they processed the packet
+	bool HandleRealm(WORD Cmd, ByteArray& capsule);
+	bool HandleWorldLogin(WORD Cmd, ByteArray& capsule);
+	bool HandleDefault(WORD Cmd, ByteArray& capsule);
 
 	DWORD		m_Revision;
 

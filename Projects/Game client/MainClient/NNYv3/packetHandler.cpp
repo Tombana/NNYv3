@@ -1,4 +1,5 @@
 #include "MainClient.h"
+#include "protocol.hpp"
 #include <iostream>
 
 void CMainClient::HandlePackets(void)
@@ -68,11 +69,12 @@ void CMainClient::HandlePackets(void)
 					//-----------------------------------------------
 					//PROCESS THE CAPSULE (switches and stuff)
 					while (true) { //a loop to parse all CMDs in the capsule
-						switch (capsule.read<WORD>()) {
-							#include "capsuleHdl_realm.hpp"			//The realm server procedure
-							#include "capsuleHdl_worldlogin.hpp"	//The world server login
-							#include "capsuleHdl_default.hpp"       //Include debugs and default cases
-						}
+						WORD Cmd = capsule.read<WORD>();
+						bool Handled = false;
+						if( !Handled ) Handled = HandleRealm(Cmd, capsule);
+						if( !Handled ) Handled = HandleWorldLogin(Cmd, capsule);
+						if( !Handled ) Handled = HandleDefault(Cmd, capsule);
+						if( !Handled ) break;
 						if (capsule.eof()) break; //break the loop, no more CMDs
 					}
 					//-----------------------------------------------
