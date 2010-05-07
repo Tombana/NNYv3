@@ -1,4 +1,4 @@
-NNYv3 0.2   (??? ??? 2010)
+NNYv3 0.2   (07 May 2010)
 
  NNYv3 0.2 - adds further improvements to the server core
  as well as to the majority of game classes.
@@ -10,6 +10,7 @@ NNYv3 0.2   (??? ??? 2010)
  * Added: Database class for handling the MySQL connection
  
  ==== Client Features ====
+ * Added: Login screen's working & it connects to servers
 
  ==== Optimisation ====
  * Removed: Commented unused vars in threadHandler
