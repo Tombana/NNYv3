@@ -1,4 +1,20 @@
-NNYv3 0.2   (07 May 2010)
+NNYv3 0.3   (?? ??? 2010)
+
+ NNYv3 0.3 - ??
+
+ ==== Server Features ====
+
+ ==== Client Features ====
+
+ ==== Optimisation ====
+ 
+ ==== Protocol Features ====
+ 
+ ==== Portability ====
+
+ ---------------------------------------------------
+ 
+ NNYv3 0.2   (07 May 2010)
 
  NNYv3 0.2 - adds further improvements to the server core
  as well as to the majority of game classes.
@@ -23,10 +39,6 @@ NNYv3 0.2   (07 May 2010)
  
  ==== Portability ====
  * Added: Linux support is now back with working Makefiles
-  
- ==== Statistics ====
- * Fixed Bugs: ??? tickets and many bugs reported at forum resolved
- * Total number of changes: ??? revisions (??? commits)
 
  ---------------------------------------------------
  
