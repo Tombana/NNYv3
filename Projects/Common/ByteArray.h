@@ -27,7 +27,7 @@ public:
     void addString(const char *str);
     //Reading packets
     bool readBool();
-    BYTE readAck();
+    ACK  readAck();
     std::string readString();
 
     //Tombana: Use this like: packet.read<int>(); and packet.read<DWORD>();

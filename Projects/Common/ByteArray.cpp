@@ -63,7 +63,7 @@ void ByteArray::addAck(ACK ack) {
     add<BYTE>(ack);
 }
 
-BYTE ByteArray::readAck() {
+ACK ByteArray::readAck() {
     return read<BYTE>();
 }
 
