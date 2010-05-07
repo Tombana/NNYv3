@@ -3,6 +3,7 @@
 #include "UIMain.h"
 
 #include <list>
+#include <vector>
 #include "ZSocket.h"
 #include "pthread.h"
 #include "protocol.hpp"
@@ -64,6 +65,9 @@ private:
 	friend		void* NetworkThreadStarter(void* class_pointer); //Helper function to give the created thread the right class pointer
 	pthread_mutex_t	m_networkthread_mutex;
 	pthread_cond_t	m_networkthread_cond;
+
+	//List of ips of realm servers
+	std::vector<std::string> m_RealmServers;
 
 	//The packet handler
 	void		HandlePackets(void);

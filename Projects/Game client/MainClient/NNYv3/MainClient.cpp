@@ -7,9 +7,11 @@ CMainClient::CMainClient(void) :
 	m_state(State_Loading), m_mainsocket(), m_networkthread(),
 	m_networkthread_mutex(PTHREAD_MUTEX_INITIALIZER),
 	m_networkthread_cond(PTHREAD_COND_INITIALIZER),
-	m_Revision(0), m_WorldIP(), m_WorldPort(0),
+	m_RealmServers(),m_Revision(0), m_WorldIP(), m_WorldPort(0),
 	m_gui(), m_MessageQueue(), m_message_mutex(PTHREAD_MUTEX_INITIALIZER)
 {
+	m_RealmServers.push_back("127.0.0.1");
+	m_RealmServers.push_back("ceres.dlinkddns.com");
 	pthread_mutex_init(&m_networkthread_mutex, NULL);
 	pthread_cond_init(&m_networkthread_cond, NULL);
 	pthread_mutex_init(&m_message_mutex, NULL);
@@ -130,9 +132,12 @@ void* CMainClient::NetworkThread(void)
 	//Choose what we have to connect to
 	switch( m_state ){
 		case State_LoggingInRealm:
-			if(!m_mainsocket.socket_connect("127.0.0.1", 6131)){
-				std::cout << "[ERROR] Could not connect to server!\n";
+			for( std::vector<std::string>::iterator server = m_RealmServers.begin(); server != m_RealmServers.end(); ++server ){
+				if(m_mainsocket.socket_connect(*server, 6131)){
+					break;
+				}
 			}
+			if( !m_mainsocket.isConnected() ) std::cout << "[ERROR] Could not connect to a realm server.\n";
 			break;
 		case State_LoggingIn:
 			if( m_WorldIP.empty() || m_WorldPort == 0 ){
