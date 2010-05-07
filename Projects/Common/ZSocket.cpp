@@ -99,7 +99,7 @@ void ZSocket::operator<<(ByteArray &pckt) {
 void ZSocket::operator<<(std::string output) {
     pthread_mutex_lock(&m_mutex);
         size_t TotalBytesSend = 0;
-        DWORD BytesSend;
+        int BytesSend;
         while( TotalBytesSend < output.size() ){
             BytesSend = send(m_socket.id, output.c_str() + TotalBytesSend, output.size() - TotalBytesSend, 0);
             if( BytesSend == SOCKET_ERROR || BytesSend == 0 ){

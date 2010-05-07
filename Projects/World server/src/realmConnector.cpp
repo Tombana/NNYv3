@@ -5,7 +5,7 @@ extern pthread_cond_t  g_realmConnector_cond; //Protected with g_realmConnector_
 extern bool            g_realmConnector_authorized; //Protected with g_realmConnector_mutex
 
 void *realmConnector (void *ptr) {
-    int error = 0;
+    unsigned int error = 0;
 
     while (true) {
         ZSocket realm;

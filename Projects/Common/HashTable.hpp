@@ -110,7 +110,8 @@ T& HashTable<T>::operator[](unsigned int key) {
         }
     }
     if (ptr == NULL) {
-        std::cerr << "[HashTable] @ERROR: Crash! This key " << key << " doesn't exist in the array!" << std::endl;
+        std::cerr << "[HashTable] @ERROR: Crash! The key " << key << " doesn't exist in the array!" << std::endl;
+        exit(EXIT_FAILURE);
     } else {
         return ptr->value;
     }

@@ -16,7 +16,7 @@ void threadHandler (SOCKET &m_socketID) {
     threadData.socket <= m_socketID; //push our socketID to the socket object :)
 
     //Create an handle and store it
-    Grid::Handle grid_hdl = g_grid.createHandle(threadData);
+    //Grid::Handle grid_hdl = g_grid.createHandle(threadData);
 
     //====================================
     //       SERVER WELCOME PACKET
