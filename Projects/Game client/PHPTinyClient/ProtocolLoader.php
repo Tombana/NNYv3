@@ -11,7 +11,4 @@ foreach ($lines as $key=>$value) {
 		define($params[0], hexdec(str_replace('0X','',$params[1])));
 	}
 }
-
-//Here hexdec() fix a bug i forgot and doesn't worth fixing
-echo 'Protocol loaded: v'.hexdec(NNY_PROTOCOL_VERSION)."\n";
 ?>
