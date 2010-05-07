@@ -5,32 +5,6 @@
 #include "GUIHandler.h"
 #include <Ogre.h>
 
-//=================================
-//Tombana: this is my own define.
-//(It does not have any effect in the CEGUI header files)
-//I found multiple tutorials with CEGUI
-//and some used the newest version of CEGUI
-//and some used older versions.
-//Since the SDK comes with an older version
-//I will just use the old version because otherwise
-//you have to install the CEGUI SDK seperately and so on.
-//If you use a newer version of CEGUI then comment out the define.
-//For the new CEGUI you have to link with
-//CEGUIBase_d.lib and CEGUIOgreRenderer_d.lib
-//(remove _d for release mode libs)
-//For the old CEGUI you have to link with
-//CEGUIBase_d.lib OgreGUIRenderer_d.lib
-//(remove _d for release mode libs)
-#define OLD_CEGUI
-//=================================
-
-#ifdef OLD_CEGUI
-#include <CEGUI/CEGUI.h>
-#include "OgreCEGUIRenderer.h"
-#else
-#include <CEGUI/CEGUI.h>
-#include <CEGUI/RendererModules/Ogre/CEGUIOgreRenderer.h>
-#endif
 
 class CUIMain : public Ogre::FrameListener
 {
@@ -76,17 +50,10 @@ private:
 	CInputHandler		*mInputHandler;
 	// CEGUI related
 	CGUIHandler			*mGUIHandler;
-#ifdef OLD_CEGUI
-	CEGUI::OgreCEGUIRenderer	*mGUIRenderer;
-#else
-	CEGUI::OgreRenderer			*mGUIRenderer;
-#endif
-	CEGUI::System			*mGUISystem;
-	CEGUI::WindowManager	*mWindowManager;
 
 	//This will be called every frame
 	bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 
-	int			SetupOgre(void);
-	int			CleanupOgre(void);
+	int SetupOgre(void);
+	int CleanupOgre(void);
 };

@@ -77,36 +77,7 @@ int CUIMain::SetupOgre(void)
 	//=================
 	// Set up the CEGUI system
 	//=================
-	try{
-#ifdef OLD_CEGUI
-		mGUIRenderer = new CEGUI::OgreCEGUIRenderer(mWindow, Ogre::RENDER_QUEUE_OVERLAY, false, 3000, mSceneMgr);
-		mGUISystem = new CEGUI::System(mGUIRenderer);
-#else
-		mGUIRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
-		mGUISystem = CEGUI::System::getSingletonPtr();
-#endif
-		
-		CEGUI::Logger::getSingleton().setLoggingLevel(CEGUI::Informative);
-
-#ifdef OLD_CEGUI
-		CEGUI::SchemeManager::getSingleton().loadScheme((CEGUI::utf8*)"TaharezLookSkin.scheme");
-		mGUISystem->setDefaultMouseCursor((CEGUI::utf8*)"TaharezLook", (CEGUI::utf8*)"MouseArrow");
-		CEGUI::MouseCursor::getSingleton().setImage(mGUISystem->getDefaultMouseCursor());
-		mGUISystem->setDefaultFont((CEGUI::utf8*)"BlueHighway-12");
-#else
-		CEGUI::SchemeManager::getSingleton().create("TaharezLook.scheme");
-		mGUISystem->setDefaultMouseCursor("TaharezLook", "MouseArrow");
-		CEGUI::MouseCursor::getSingleton().setImage(mGUISystem->getDefaultMouseCursor());
-		mGUISystem->setDefaultFont("BlueHighway-12");
-#endif
-
-		mWindowManager = CEGUI::WindowManager::getSingletonPtr();
-		mGUIHandler = new CGUIHandler(mWindowManager);
-		mGUIHandler->Setup();
-
-	}catch( CEGUI::Exception& e ){
-		std::cerr << "[ERROR] Exception in CEGUI:\n" << e.getMessage() << std::endl;
-	}
+	mGUIHandler = new CGUIHandler();
 
 	//=================
 	// Create the input handler
@@ -131,14 +102,6 @@ int CUIMain::CleanupOgre(void)
 	//Clean up CEGUI
 	if( mGUIHandler ) delete mGUIHandler;
 	mGUIHandler = 0;
-#ifdef OLD_CEGUI
-	if(mGUISystem) delete mGUISystem;
-	if(mGUIRenderer) delete mGUIRenderer;
-#else
-	CEGUI::OgreRenderer::destroySystem();
-#endif
-	mGUISystem = 0;
-	mGUIRenderer = 0;
 
 	//Clean up the main Ogre system
 	//Deleting the root object will also clean up all other created classes
