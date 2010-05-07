@@ -71,7 +71,7 @@ int main() {
     } else {
         std::cerr << "Failed!" << std::endl;
         std::cerr << "@ERROR: Unable to connect to the MySQL database! Please check world.conf file!" << std::endl;
-        pause();
+        pauseServer();
     }
 
     //=========================================
@@ -128,7 +128,7 @@ int main() {
             } else {
                 //TODO (NitriX#): We reached the thread limit!
                 std::cerr << "We reached the maximum thread limit!" << std::endl;
-                pause();
+                pauseServer();
             }
         }
 
@@ -228,7 +228,7 @@ void genVersion() {
     g_CONFIG.add<std::string>("GIT_COMMIT_HASH",git_conf.read<std::string>("LAST_HASH"));
 }
 
-void pause() {
+void pauseServer() {
     while(true) {
         sleep(5000); //5 seconds pause
     }

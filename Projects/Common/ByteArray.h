@@ -32,7 +32,7 @@ public:
 
     //Tombana: Use this like: packet.read<int>(); and packet.read<DWORD>();
     template <typename T>
-    T ByteArray::read(){
+    T read(){
         if((m_seek + sizeof(T)) > m_buffer.size()) return T(); //This is the same as return 0; but it will also work for when T is a class
         T val = *reinterpret_cast<T*>((BYTE*)m_buffer.c_str()+m_seek);
         m_seek += sizeof(T);

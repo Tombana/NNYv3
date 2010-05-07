@@ -29,6 +29,6 @@ void checkDatabaseVersion();
     #include <unistd.h>
     #define sleep(x) usleep(x)
 #endif
-void pause();
+void pauseServer();
 
 #endif
