@@ -1,6 +1,6 @@
 LINK = -Wall -I../Common -lpthread -I/usr/include/mysql -lmysqlclient
 COMMONS = ../Common/ByteArray.o ../Common/ZSocket.o ../Common/ConfigFile.o
-SRCS =  src/Grid.o src/realmConnector.o src/threadHandler.o src/threadPoolHandler.o src/main.o
+SRCS =  src/Grid.o src/realmConnector.o src/threadHandler.o src/threadPoolHandler.o src/main.o src/Database.o
 
 all : $(COMMONS) $(SRCS)
 	g++ $(LINK) -o nnyv3_world $(COMMONS) $(SRCS)
@@ -36,3 +36,7 @@ src/Grid.o : src/Grid.cpp \
 src/threadHandler.o : 	src/threadHandler.cpp \
 			src/threadHandler.h
 		g++ $(LINK) -c src/threadHandler.cpp -o src/threadHandler.o
+
+src/Database.o : src/Database.cpp \
+			src/Database.h
+		g++ $(LINK) -c src/Database.cpp -o src/Database.o
