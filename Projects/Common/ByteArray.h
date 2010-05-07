@@ -5,11 +5,7 @@
 #include <string.h>
 #include <math.h>
 #include "protocol.hpp"
-
-//Specific typedefs
-typedef unsigned char  BYTE;  // 1byte
-typedef unsigned short WORD;  // 2bytes
-typedef unsigned long  DWORD; //4bytes
+#include "sharedModels.hpp"
 
 class ByteArray {
 public:
@@ -25,11 +21,13 @@ public:
     void erase(int pos, int nb);
     //Creating packets
     void addCmd(WORD hex);
+    void addAck(ACK ack);
     void addBool(bool cst);
     void addString(std::string str);
     void addString(const char *str);
     //Reading packets
     bool readBool();
+    BYTE readAck();
     std::string readString();
 
     //Tombana: Use this like: packet.read<int>(); and packet.read<DWORD>();

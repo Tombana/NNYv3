@@ -1,6 +1,9 @@
 #include "threadHandler.h"
 
-extern Grid     g_grid;
+//extern Grid     g_grid;
+    //Use it like this:
+    //Create an handle and store it
+    //Grid::Handle grid_hdl = g_grid.createHandle(threadData);
 extern Database g_database;
 
 void threadHandler (SOCKET &m_socketID) {
@@ -15,8 +18,8 @@ void threadHandler (SOCKET &m_socketID) {
     s_thread_data threadData;
     threadData.socket <= m_socketID; //push our socketID to the socket object :)
 
-    //Create an handle and store it
-    //Grid::Handle grid_hdl = g_grid.createHandle(threadData);
+    s_thread_data_local threadDataLocal;
+    threadDataLocal.authenticated = false;
 
     //====================================
     //       SERVER WELCOME PACKET
@@ -43,5 +46,14 @@ void threadHandler (SOCKET &m_socketID) {
     //====================================
     std::cout << "[threadHandler] Client logged out!" << std::endl;
     threadData.socket.socket_close();
+
+    //====================================
+    //  EVEN MORE TASK BEFORE CLEANING
+    //====================================
+    if (threadDataLocal.authenticated) {
+        std::string request = "UPDATE accounts SET online=0 WHERE id=" + intToStr(threadDataLocal.accountID);
+        g_database.query(request);
+    }
+
     //NO NEED PTHREAD_EXIT OR ANY RETURN!
 }

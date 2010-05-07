@@ -21,6 +21,11 @@ struct s_thread_data {
     ZSocket socket;
 };
 
+struct s_thread_data_local {
+    unsigned int accountID;
+    bool         authenticated;
+};
+
 //grid.h is placed here because it needs s_thread_data to be declared when included
 #include "Grid.h"
 

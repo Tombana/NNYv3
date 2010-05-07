@@ -18,7 +18,7 @@ unsigned int    g_threadPool_counter_job      = 0; //Protected with g_threadPool
 // == REALM CONNECTOR ==
 pthread_mutex_t g_realmConnector_mutex        = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
 pthread_cond_t  g_realmConnector_cond         = PTHREAD_COND_INITIALIZER; //Protected with g_realmConnector_mutex
-bool            g_realmConnector_authorized   = false; //Protected with g_realmConnector_mutex
+ACK             g_realmConnector_authorized   = 0; //Protected with g_realmConnector_mutex
 // == Grid class requirement ==
 Grid            g_grid; //Grid object is thread-safe
 // == Database class requirement ==
@@ -54,9 +54,9 @@ int main() {
     if (rc) std::cerr << "[main] @ERROR: pthread: pthread_create() failed! (Realm connector)" << std::endl;
     pthread_mutex_lock(&g_realmConnector_mutex);
     pthread_cond_wait(&g_realmConnector_cond, &g_realmConnector_mutex);
-    if (g_realmConnector_authorized) {
+    if (g_realmConnector_authorized == ACK_SUCCESS) {
             std::cerr << "OK!" << std::endl;
-    } else {
+    } else { //ACK_FAILURE
             std::cerr << "Failed!" << std::endl;
     }
     pthread_mutex_unlock(&g_realmConnector_mutex);
@@ -128,9 +128,7 @@ int main() {
             } else {
                 //TODO (NitriX#): We reached the thread limit!
                 std::cerr << "We reached the maximum thread limit!" << std::endl;
-                while (true) {
-                    sleep(1); //infine pause
-                }
+                pause();
             }
         }
 

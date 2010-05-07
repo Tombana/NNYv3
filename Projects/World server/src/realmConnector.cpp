@@ -40,7 +40,8 @@ void *realmConnector (void *ptr) {
                 case PCKT_R_WELCOME:
                     break;
                 case PCKT_R_SYNC_KEY_ACK:
-                    g_realmConnector_authorized = input.readBool();
+                    //Possible ACKs: ACK_SUCCESS(1) or ACK_FAILURE(0)
+                    g_realmConnector_authorized = input.readAck();
                     pthread_cond_signal(&g_realmConnector_cond);
                     break;
                 default:

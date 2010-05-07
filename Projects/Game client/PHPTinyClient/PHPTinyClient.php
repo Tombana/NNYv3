@@ -5,8 +5,8 @@ $REMOTE_PORT = 6131;
 $PROTOCOL_HPP_FILE = '../../Common/protocol.hpp';
 $REVISION = 0;
 $VERBOSE = False;
-$USERNAME = 'DemoUser';
-$PASSWORD = 'DemoPasswd';
+$USERNAME = 'nitrix';
+$PASSWORD = 'test';
 /////////////////////////////////////////////////////
 echo 'PHPTinyClient v1.0.9'."\n";
 include('ByteArray.php');
@@ -143,6 +143,29 @@ while (true) {
 			if ($VERBOSE) echo 'Capsule: '.$CAPSULE->getBuffer()."\n";
 			while (true) { //a loop to parse all CMDs in the capsule
 				switch ($CAPSULE->readWord()) {
+					case PCKT_W_AUTH_ACK:
+						echo '[capsuleHandler] World server auth ACK'."\n";
+						switch ($CAPSULE->readAck()) {
+							case ACK_SUCCESS:
+								echo '~Success! Now ask for the character list please :D'."\n";
+								break;
+							case ACK_NOT_FOUND:
+								echo '~Account not found!'."\n";
+								break;
+							case ACK_DOESNT_MATCH:
+								echo '~Wrong password!'."\n";
+								break;
+							case ACK_ALREADY:
+								echo '~Your are already connected!'."\n";
+								break;
+							case ACK_REFUSED:
+								echo '~The server refused you! Banned?!'."\n";
+								break;
+							default:
+								echo '~OhOh :('."\n";
+								break;
+						}
+						break;
 					case PCKT_R_SERVER_GONE:
 						echo '[capsuleHandler] Server is gone, ahah!'."\n";
 						break;

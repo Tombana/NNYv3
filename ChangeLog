@@ -4,12 +4,19 @@ NNYv3 0.2   (??? ??? 2010)
  as well as to the majority of game classes.
 
  ==== Server Features ====
-
+ * Modified: Updated ByteArray class to supports Adding/Reading ACK types
+ * Added: New type 'ACK' wich is nothing more than a typedef BYTE
+ * Added: Authentication now works properly and sends ACK reply.
+ * Added: Database class for handling the MySQL connection
+ 
  ==== Client Features ====
 
  ==== Optimisation ====
+ * Removed: Commented unused vars in threadHandler
+ * Fixed: Possible crash fixed in threadHandler
  
  ==== Protocol Features ====
+ * Added: I implemented the so waited ACK packet replies
  * Removed: PCKT_C_AUTH, parameter "token" has been removed.
  * Removed: PCKT_R_CONNECT, parameter "token" has been removed.
  

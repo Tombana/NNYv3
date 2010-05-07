@@ -20,6 +20,29 @@ Connection with Client/World server
 
             <- PCKT_W_WELCOME
 PCKT_C_AUTH ->
-	
+            <- PCKT_W_AUTH_ACK
+
+
 	[more soon]
-    [not implemented yet]
+
+
+(Theses packets are subject to MAJOR modifications and must not
+in any case be considered as their final version. It's just some
+ideas I had on how we could implement things; nothing's sure yet
+and I really am open to suggestions or improvements if it can makes
+the engine better. ~NitriX) 
+
+//---- [soon] Character list -----
+PCKT_C_GETCHARLIST
+             PCKT_W_CHARLIST
+PCKT_C_CREATE_CHAR
+             PCKT_C_CREATE_CHAR_ACK
+             //ACK like name 'ALREADY' used, 'REFUSED' (sepcial characters) and all
+PCKT_C_DELETE_CHAR
+
+//----- [soon] Deplacement packets -----
+PCKT_C_MOVE      (with X,Y,Z? coordinates)
+PCKT_C_WASD_MOVE (also with x,y,z coordinates but not trustable)
+PCKT_C_WASD_STOP (Final X,Y,Z coordinates)
+PCKT_C_JUMP      (With x,y and x2,y2 coordinates)
+PCKT_C_TURN      (with pivot's angle)

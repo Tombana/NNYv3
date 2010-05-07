@@ -25,12 +25,13 @@ class Database
 		Database();
 		~Database();
 		bool             connect(const char *server, const char *username, const char *password, const char *database);
+		void             query(std::string &obj);
+		void             query(const char *toSend);
 		MYSQL_RES*       query(bool store_result, std::string &obj);
 		MYSQL_RES*       query(bool store_result, const char *toSend);
 		MYSQL_ROW        fetch_row(MYSQL_RES *result);
 		void             queryDone();
 		void             close();
-		std::string      intToStr(int number);
 
 	private:
         MYSQL_RES       *m_sql_result;
@@ -39,5 +40,6 @@ class Database
 };
 
 std::string alphaNumOnly(std::string strToConvert);
+std::string intToStr(int number);
 
 #endif

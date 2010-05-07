@@ -38,6 +38,14 @@ class ByteArray {
 		$this->m_nbCmd++;
 		$this->addWord($hex);
 	}
+	
+	function addAck($ack) {
+		$this->addByte($ack);
+	}
+	
+	function readAck() {
+		return $this->readByte();
+	}
 
 	function addDword($hex) {
 		$this->m_buffer .= chr($hex %256);

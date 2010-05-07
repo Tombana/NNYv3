@@ -58,6 +58,15 @@ bool ByteArray::eof() {
     }
 }
 
+//! This function append a BYTE to the byte array
+void ByteArray::addAck(ACK ack) {
+    add<BYTE>(ack);
+}
+
+BYTE ByteArray::readAck() {
+    return read<BYTE>();
+}
+
 //! This function append a DWORD and a const char* to the byte array
 void ByteArray::addString(const char *str) {
     std::string buffer = str;

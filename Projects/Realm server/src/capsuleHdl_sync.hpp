@@ -17,7 +17,7 @@ case PCKT_W_SYNC_KEY:
     bool found = false;
     packetToSend.addCmd(PCKT_R_SYNC_KEY_ACK);
     while (rows = db_ptr->fetch_row(result)) {
-        packetToSend.addBool(true);
+        packetToSend.addAck(ACK_SUCCESS);
         threadData.dispatcher->setOnline(serverID);
         threadData.is_a_worldserver = true;
         threadData.worldserverID = serverID;
@@ -25,7 +25,7 @@ case PCKT_W_SYNC_KEY:
 
     }
     db_ptr->queryDone();
-    if (!found) packetToSend.addBool(false);
+    if (!found) packetToSend.addAck(ACK_FAILURE);
     socket << packetToSend.genPacket();
     //-----------------------------------------
     }

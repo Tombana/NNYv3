@@ -20,9 +20,23 @@ void Database::close() {
     mysql_close(m_mysql);
 }
 
-MYSQL_RES* Database::query(bool store_result, const char *toSend) {
+void Database::query(const char *toSend) {
     //TODO: Save the query if it cannot be performed
+    //----- Init
+    int sql_error = 0;
+    //----- Execute query
+    mysql_ping(m_mysql);
+    sql_error = mysql_query(m_mysql, toSend);
+    if (sql_error != 0) {
+        std::cout << "@ERROR: MySQL: " << mysql_error(m_mysql) << std::endl;
+    }
+}
 
+void Database::query(std::string &obj) {
+    query(obj.c_str());
+}
+
+MYSQL_RES* Database::query(bool store_result, const char *toSend) {
     //----- Init
     int sql_error = 0;
     //----- Lock mutex
@@ -58,7 +72,7 @@ MYSQL_ROW Database::fetch_row(MYSQL_RES *result) {
     return mysql_fetch_row(result);
 }
 
-std::string Database::intToStr(int number) {
+std::string intToStr(int number) {
    std::stringstream ss;//create a stringstream
    ss << number;//add number to the stream
    return ss.str();//return a string with the contents of the stream
