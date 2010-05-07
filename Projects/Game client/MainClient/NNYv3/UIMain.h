@@ -1,12 +1,13 @@
 #pragma once
 
+#include "ThreadMessages.h"
 #include "pthread.h"
 #include "InputHandler.h"
 #include "GUIHandler.h"
 #include <Ogre.h>
 
 
-class CUIMain : public Ogre::FrameListener
+class CUIMain : public Ogre::FrameListener, public CThreadMessages
 {
 public:
 	CUIMain(void);
@@ -18,12 +19,6 @@ public:
 	//Called form main thread: To launch the whole GUI
 	int StartUI(void);
 	int WaitForExit(void); //When the main thread is done and this thread is not yet done.
-	//Called from main thread: When the main thread wants to notify the gui thread
-	int SendNotify(int MessageID);
-
-	//Message constants
-	static const int	Message_Quit		=	100;
-	static const int	Message_DisplayLogin=	101;
 
 private:
 	//Singleton
@@ -36,9 +31,6 @@ private:
 	pthread_t	m_uithread;
 	friend		void* UIThreadStarter(void* class_pointer); //Helper function to give the created thread the right class pointer
 	void*		UIThread(void);
-	//When other threads notify this thread the notification will be put in this vector
-	std::list<int>	m_MessageQueue;
-	pthread_mutex_t	m_message_mutex;
 
 	//=============
 	// Ogre related

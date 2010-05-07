@@ -1,6 +1,7 @@
 #pragma once
 
 #include "UIMain.h"
+#include "ThreadMessages.h"
 
 #include <list>
 #include <vector>
@@ -15,7 +16,7 @@
 	#define sleep(x) usleep(x)
 #endif
 
-class CMainClient
+class CMainClient : public CThreadMessages
 {
 public:
 	CMainClient(void);
@@ -26,16 +27,6 @@ public:
 
 	int Run(void);
 
-	//When other threads (mainly GUI thread) want to notify the main thread of something
-	//they call this function
-	int SendNotify(int MessageID);
-
-	//Message constants
-	static const int	Message_Quit		=	100;	//The user pressed close. This does not neccesarily mean that the client should close immediately. There can be a confirmation or something like that.
-	static const int	Message_Previous	=	101;
-	static const int	Message_Login		=	1000;
-	static const int	Message_RealmSelect	=	1001;
-	static const int	Message_CharSelect	=	1002;
 private:
 	//Singleton
 	static CMainClient	*mSingleton;
@@ -65,9 +56,6 @@ private:
 	pthread_mutex_t	m_networkthread_mutex;
 	pthread_cond_t	m_networkthread_cond;
 
-	//List of ips of realm servers
-	std::vector<std::string> m_RealmServers;
-
 	//The main packet handler
 	void HandlePackets(void);
 	//The capsule handlers. They return true if they processed the packet
@@ -75,17 +63,19 @@ private:
 	bool HandleWorldLogin(WORD Cmd, ByteArray& capsule);
 	bool HandleDefault(WORD Cmd, ByteArray& capsule);
 
+	//List of ips of realm servers
+	std::vector<std::string> m_RealmServers;
+	//The version of this client
 	DWORD		m_Revision;
-
+	//The world server info
 	std::string	m_WorldIP;
 	WORD		m_WorldPort;
+	//Login info
+	std::string m_Username;
+	std::string m_Password;
 
 	//============
 	// Gui related
 	//============
 	CUIMain		m_gui;
-
-	//When other threads notify this thread the notification will be put in this vector
-	std::list<int>	m_MessageQueue;
-	pthread_mutex_t	m_message_mutex;
 };

@@ -3,7 +3,7 @@
 
 bool CInputHandler::windowClosing(Ogre::RenderWindow* rw)
 {
-	CMainClient::getSingleton().SendNotify(CMainClient::Message_Quit);
+	CMainClient::getSingleton().SendThreadMessage(Message_Quit);
 	return false; //Do not close the window. The main thread will decide that
 }
 

@@ -12,8 +12,8 @@ bool CMainClient::HandleWorldLogin(WORD Cmd, ByteArray& capsule)
 			std::cout << "[capsuleHandler] Welcome from world server" << std::endl;
 			ByteArray LoginPacket;
 			LoginPacket.addCmd(PCKT_C_AUTH);
-			LoginPacket.addString("username");
-			LoginPacket.addString("password");
+			LoginPacket.addString(m_Username);
+			LoginPacket.addString(m_Password);
 			m_mainsocket << LoginPacket;
 			}
 			break;

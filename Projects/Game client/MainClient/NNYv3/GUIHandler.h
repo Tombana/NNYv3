@@ -30,7 +30,7 @@
 class CGUIHandler
 {
 public:
-	CGUIHandler(void);
+	CGUIHandler(Ogre::RenderWindow *Window, Ogre::SceneManager *SceneMgr);
 	~CGUIHandler(void);
 
 	//Shows a messagebox with an Ok button.

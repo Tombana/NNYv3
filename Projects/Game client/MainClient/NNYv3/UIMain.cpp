@@ -5,10 +5,10 @@
 
 CUIMain* CUIMain::mSingleton = 0;
 
-CUIMain::CUIMain(void) :
-	Started(false), m_uithread(), m_MessageQueue(), m_message_mutex(PTHREAD_MUTEX_INITIALIZER),
+CUIMain::CUIMain(void) : Ogre::FrameListener(), CThreadMessages(),
+	Started(false), m_uithread(),
 	mRoot(0), mCamera(0), mSceneMgr(0), mWindow(0),
-	mInputHandler(0), mGUIHandler(0), mGUIRenderer(0), mGUISystem(0), mWindowManager(0)
+	mInputHandler(0), mGUIHandler(0)
 {
 	if( mSingleton == 0 ) mSingleton = this;
 }
@@ -45,16 +45,6 @@ int CUIMain::WaitForExit(void)
 	return 1;
 }
 
-int CUIMain::SendNotify(int MessageID)
-{
-	if( MessageID ){
-		pthread_mutex_lock(&m_message_mutex);
-		m_MessageQueue.push_back(MessageID);
-		pthread_mutex_unlock(&m_message_mutex);
-	}
-	return 0;
-}
-
 
 void* UIThreadStarter(void* class_pointer){
 	return ((CUIMain*)class_pointer)->UIThread();
@@ -88,12 +78,9 @@ void* CUIMain::UIThread(void)
 bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
 	bool ContinueRendering = true;
-	if( m_MessageQueue.size() ){ //If there are messages from other threads to process
-		pthread_mutex_lock(&m_message_mutex);
-		int Message = m_MessageQueue.front(); //Get the message from the queue
-		m_MessageQueue.pop_front(); //Remove the message from the queue
-		pthread_mutex_unlock(&m_message_mutex);
-		switch(Message){
+	CMessage* msg = GetThreadMessage();
+	if( msg ){ //If there are messages from other threads to process
+		switch(msg->ID){
 			case Message_Quit:
 				ContinueRendering = false;
 				break;
@@ -103,6 +90,7 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 			default:
 				break;
 		}
+		delete msg;
 	}
 	return ContinueRendering;
 }

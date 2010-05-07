@@ -1,8 +1,8 @@
 #include "InputHandler.h"
 #include "MainClient.h"
 
-CInputHandler::CInputHandler(Ogre::RenderWindow *window, CEGUI::System *guisystem) :
-	mWindow(window), mInputManager(0), mKeyboard(0), mMouse(0), mGUISystem(guisystem)
+CInputHandler::CInputHandler(Ogre::RenderWindow *window) :
+	mWindow(window), mInputManager(0), mKeyboard(0), mMouse(0), mGUISystem(CEGUI::System::getSingletonPtr())
 {
 	size_t windowHnd = 0;
 	mWindow->getCustomAttribute("WINDOW", &windowHnd);
@@ -50,7 +50,7 @@ bool CInputHandler::keyPressed(const OIS::KeyEvent &arg)
 
 	switch (arg.key){
 		case OIS::KC_ESCAPE:
-			CMainClient::getSingleton().SendNotify(CMainClient::Message_Quit);
+			CMainClient::getSingleton().SendThreadMessage(Message_Quit);
             break;
 		default:
 			break;

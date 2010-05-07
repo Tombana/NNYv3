@@ -9,7 +9,7 @@
 class CInputHandler : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener
 {
 public:
-	CInputHandler(Ogre::RenderWindow *window, CEGUI::System *guisystem = 0);
+	CInputHandler(Ogre::RenderWindow *window);
 	~CInputHandler(void);
 	
 	bool frameRenderingQueued(const Ogre::FrameEvent& evt);

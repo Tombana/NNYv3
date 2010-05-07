@@ -2,12 +2,12 @@
 #include "MainClient.h"
 
 
-CGUIHandler::CGUIHandler() :
+CGUIHandler::CGUIHandler(Ogre::RenderWindow *Window, Ogre::SceneManager *SceneMgr) :
 	mGUIRenderer(0), mGUISystem(0), mWindowManager(0), mRootWindow(0)
 {
 	try{
 #ifdef OLD_CEGUI
-		mGUIRenderer = new CEGUI::OgreCEGUIRenderer(mWindow, Ogre::RENDER_QUEUE_OVERLAY, false, 3000, mSceneMgr);
+		mGUIRenderer = new CEGUI::OgreCEGUIRenderer(Window, Ogre::RENDER_QUEUE_OVERLAY, false, 3000, SceneMgr);
 		mGUISystem = new CEGUI::System(mGUIRenderer);
 #else
 		mGUIRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
@@ -79,7 +79,7 @@ CGUIHandler::~CGUIHandler(void)
 
 bool CGUIHandler::QuitBtnClick(const CEGUI::EventArgs &e)
 {
-	CMainClient::getSingleton().SendNotify(CMainClient::Message_Quit);
+	CMainClient::getSingleton().SendThreadMessage(Message_Quit);
 	return true;
 }
 
@@ -133,16 +133,19 @@ int	CGUIHandler::DisplayLoginScreen(void)
 	Password->setMaskCodePoint('*');
 	Password->setTextMasked(true);
 	//Subscribe the handler for the login and about button
-	CEGUI::Window *LoginButton = 0;
-	CEGUI::Window *AboutButton = 0;
 	try{
-		LoginButton = mWindowManager->getWindow("LoginWindow/ButtonLogin");
+		CEGUI::Window *LoginButton = mWindowManager->getWindow("LoginWindow/ButtonLogin");
+		LoginButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::LoginBtnClick, this));
 	}catch(CEGUI::UnknownObjectException){}
 	try{
-		AboutButton = mWindowManager->getWindow("LoginWindow/ButtonAbout");
+		CEGUI::Window *AboutButton = mWindowManager->getWindow("LoginWindow/ButtonAbout");
+		AboutButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::AboutBtnClick, this));
 	}catch(CEGUI::UnknownObjectException){}
-	if( LoginButton ) LoginButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::LoginBtnClick, this));
-	if( AboutButton ) AboutButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::AboutBtnClick, this));
+	//Set the remembered username
+	try{
+		CEGUI::Window *txtUsername = mWindowManager->getWindow("LoginWindow/Username");
+		txtUsername->setText("remembered-username");
+	}catch(CEGUI::UnknownObjectException){}
 	//Attach the window to the root window so it's visible
 	mRootWindow->addChildWindow(LoginWindow);
 	return 1;
@@ -150,7 +153,16 @@ int	CGUIHandler::DisplayLoginScreen(void)
 
 bool CGUIHandler::LoginBtnClick(const CEGUI::EventArgs &e)
 {
-	CMainClient::getSingleton().SendNotify(CMainClient::Message_Login);
+	std::string Username, Password;
+	try{
+		CEGUI::Window *txtUsername = mWindowManager->getWindow("LoginWindow/Username");
+		Username = txtUsername->getText().c_str();
+	}catch(CEGUI::UnknownObjectException){}
+	try{
+		CEGUI::Window *txtPassword = mWindowManager->getWindow("LoginWindow/Password");
+		Password = txtPassword->getText().c_str();
+	}catch(CEGUI::UnknownObjectException){}
+	CMainClient::getSingleton().SendThreadMessage(new CMessageLogin(Username, Password));
 	return true;
 }
 

@@ -77,12 +77,12 @@ int CUIMain::SetupOgre(void)
 	//=================
 	// Set up the CEGUI system
 	//=================
-	mGUIHandler = new CGUIHandler();
+	mGUIHandler = new CGUIHandler(mWindow, mSceneMgr);
 
 	//=================
 	// Create the input handler
 	//=================
-	mInputHandler = new CInputHandler(mWindow, mGUISystem);
+	mInputHandler = new CInputHandler(mWindow);
 	mRoot->addFrameListener(mInputHandler);
 	mRoot->addFrameListener(this);
 
