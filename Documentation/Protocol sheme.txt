@@ -6,7 +6,7 @@ Connection with Client/Realm server
 
                <-  PCKT_R_WELCOME
 PCKT_C_VERSION ->
-               <- PCKT_R_DOWNLOAD (if needed)
+               <- PCKT_R_DOWNLOAD (as many times as needed, or not at all)
                <- PCKT_R_DOWNLOAD_EOF
                <- PCKT_R_CONNECT / PCKT_R_SERVER_GONE
 
@@ -16,12 +16,18 @@ PCKT_C_VERSION ->
 Connection with Client/World server
 ====================================
 
-  [Client]       [Server]
+       [Client]          [Server]
 
-            <- PCKT_W_WELCOME
-PCKT_C_AUTH ->
-            <- PCKT_W_AUTH_ACK
+#--- Authentication
+                   <- PCKT_W_WELCOME
+       PCKT_C_AUTH ->
+                   <- PCKT_W_AUTH_ACK
 
+#--- Character list
+PCKT_C_GETCHARLIST ->
+                   <- PCKT_W_CHARLIST_ADD (as many times as needed)
+
+ PCKT_C_DELETECHAR -> (if needed)
 
 	[more soon]
 
@@ -36,13 +42,14 @@ the engine better. ~NitriX)
 then the next byte/word can specify what type of movement, like jump/wasd/turn and so on.
 So kind a like a subcommand.)
 
+//---- [soon] Authentication -----
+PCKT_C_KICK_GHOST
+             //Force the server to kick out the player's ghost so this one can finally log in.
+
 //---- [soon] Character list -----
-PCKT_C_GETCHARLIST
-             PCKT_W_CHARLIST
 PCKT_C_CREATE_CHAR
              PCKT_C_CREATE_CHAR_ACK
              //ACK like name 'ALREADY' used, 'REFUSED' (sepcial characters) and all
-PCKT_C_DELETE_CHAR
 
 //----- [soon] Deplacement packets -----
 PCKT_C_MOVE      (with X,Y,Z? coordinates)

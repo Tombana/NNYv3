@@ -1,6 +1,6 @@
-//Next available PCKT CODE is      0x000E //PCKT decimal = 14
+//Next available PCKT CODE is      0x0012 //PCKT decimal = 18
 
-#define NNY_PROTOCOL_VERSION    31
+#define NNY_PROTOCOL_VERSION    32
 
 /*****************************
         [X] Multi-directional
@@ -20,6 +20,16 @@
 //Info: Authentication to the world server
 //Params: [String]Username (will be lowercased by the server)
 //Params: [String]Password (can be hashed with md5+salt or whatever)
+#define PCKT_C_GETCHARLIST  0x000E //PCKT decimal = 14
+//Info: Request your character list to the world server
+//Important: The world server will ignore this packet if you aren't authenticated.
+//Params: [None]
+#define PCKT_C_DELETECHAR   0x0011 //PCKT decimal = 17
+//Info: Delete a character from your account
+//Important: The world server will ignore this packet if you aren't authenticated.
+//Note: This packet will be performed silently by the server. Or you assume the character
+//      really has been deleted or send PCKT_C_GETCHARLIST again to receive the list updated.
+//Params: [Byte]Slot id
 
 /*****************************
         [R]ealm server
@@ -70,12 +80,26 @@
 #define PCKT_W_AUTH_ACK     0x000D //PCKT decimal = 13
 //Info: Reply to the authentification request PCKT_C_AUTH
 //Params: [ACK] Ack code reply
+//Note: This packet is sent in response to PCKT_C_AUTH
 //Possible replies:
 //[ACK_SUCCESS] = Good, you are now logged in
 //[ACK_NOT_FOUND] = We were unable to find your username in the database
 //[ACK_DOESNT_MATCH] = The password provided doesn't match your username
 //[ACK_ALREADY] = It seems like you are already logged in
 //[ACK_REFUSED] = The server explicitly refused your connection; you maybe are banned.
+#define PCKT_W_CHARLIST_ADD 0x000F //PCKT decimal = 15
+//Info: Send your character information to the client
+//Important: This packet will be send as many char as you have on your account
+//Note: This packet is sent in response to PCKT_C_GETCHARLIST
+//Params: [Byte]Slot
+//Params: [String]Character name
+//Params: [Byte]Character level (0 to 255)
+//Params: [Bool]Gender (0=male, 1=female)
+//TODO: More to come, like items the char's wearing?
+#define PCKT_W_CHARLIST_EOF 0x0010 //PCKT decimal = 16
+//Info: End of character list
+//Important: This packet will be send at the very end of all the PCKT_W_CHARLIST_ADD's
+//Params: [None]
 
 /*****************************
        ACK codes (BYTEs)

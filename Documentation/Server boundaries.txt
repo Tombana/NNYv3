@@ -1,0 +1,14 @@
+I decided to note down here things I judged impossible to get their maximum value. What I mean is I sometimes explicitly reduced their size to optimize memory/CPU processing because I knew their value couln't ever get this big... but still, to prevent crash errors and headaches, I'm gonna hold a list of them, just in case.
+
+- ACK replies are for the moment BYTE types because I don't expect having more than 255 possibilites. Though I still added a ByteArray function readAck() and addAck(), and a type ACK along so we can change them easily if needed later on.
+
+- Packets; max capsule lenghts can be at maximum 1Mb large. Defined in packetHandler.hpp (hard-coded)
+
+- Character maximum level is a BYTE (So maximum level is 255).
+
+- Maximum character slots per account is a BYTE too (So 255 slots possible)
+
+- Bool for character gender, only two choices here: male(0) or female(1)
+
+- Maximum account name/char name is 30 characters (The server deals fine with it, it's more for the database actually)
+

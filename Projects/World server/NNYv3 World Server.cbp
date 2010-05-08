@@ -92,6 +92,9 @@
 		<Unit filename="src\capsuleHdl_auth.hpp">
 			<Option virtualFolder="Packet &amp; capsule handlers\" />
 		</Unit>
+		<Unit filename="src\capsuleHdl_charlist.hpp">
+			<Option virtualFolder="Packet &amp; capsule handlers\" />
+		</Unit>
 		<Unit filename="src\capsuleHdl_default.hpp">
 			<Option virtualFolder="Packet &amp; capsule handlers\" />
 		</Unit>

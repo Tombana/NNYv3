@@ -143,11 +143,35 @@ while (true) {
 			if ($VERBOSE) echo 'Capsule: '.$CAPSULE->getBuffer()."\n";
 			while (true) { //a loop to parse all CMDs in the capsule
 				switch ($CAPSULE->readWord()) {
+					case PCKT_W_CHARLIST_EOF:
+						echo '[capsuleHandler] End of character list, you can now enter the world!'."\n";
+						//Testing deleting a character; result = it works
+						/*
+						$BA->addCmd(PCKT_C_DELETECHAR);
+						$BA->addByte(1); //delete slot 1
+						socket_write($SOCKET, $BA->getPacket());
+						$BA->clear();
+						*/
+						break;
+					case PCKT_W_CHARLIST_ADD:
+						echo '[capsuleHandler] Charlist, new character:'."\n";
+						echo '> Slot: '.$CAPSULE->readByte()."\n";
+						echo '> Name: '.$CAPSULE->readString()."\n";
+						echo '> Level: '.$CAPSULE->readByte()."\n";
+						if ($CAPSULE->readBool()) { //true=1=female
+							echo '> Gender: Female'."\n";
+						} else { //false=0=male
+							echo '> Gender: Male'."\n";
+						}
+						break;
 					case PCKT_W_AUTH_ACK:
 						echo '[capsuleHandler] World server auth ACK'."\n";
 						switch ($CAPSULE->readAck()) {
 							case ACK_SUCCESS:
 								echo '~Success! Now ask for the character list please :D'."\n";
+								$BA->addCmd(PCKT_C_GETCHARLIST);
+								socket_write($SOCKET, $BA->getPacket());
+								$BA->clear();
 								break;
 							case ACK_NOT_FOUND:
 								echo '~Account not found!'."\n";

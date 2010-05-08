@@ -75,7 +75,9 @@ MYSQL_ROW Database::fetch_row(MYSQL_RES *result) {
 std::string intToStr(int number) {
    std::stringstream ss;//create a stringstream
    ss << number;//add number to the stream
-   return ss.str();//return a string with the contents of the stream
+
+   //also make sure it doesn't contains any specials characters, we never knows...
+   return alphaNumOnly(ss.str());//return a string with the contents of the stream
 }
 
 std::string alphaNumOnly(std::string strToConvert) {

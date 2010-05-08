@@ -20,6 +20,14 @@ class ByteArray {
 		}
 	}
 	
+	function addBool($bool) {
+		$this->addByte($bool);
+	}
+	
+	function readBool() {
+		return $this->readByte();
+	}
+	
 	function addByte($hex) {
 		$this->m_buffer .= chr($hex %256); //append
 	}

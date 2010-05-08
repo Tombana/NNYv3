@@ -44,7 +44,7 @@ case PCKT_C_AUTH:
             if (db_password == password) {
                 if (!db_banned) {
                     answer.addAck(ACK_SUCCESS); //Success!
-                    request = "UPDATE accounts SET online=1 WHERE id=" + intToStr(db_id);
+                    request = "UPDATE accounts SET online=1,online_serverid=" + intToStr(CONFIG_SERVER_ID) + " WHERE id=" + intToStr(db_id);
                     g_database.query(request);
                     threadDataLocal.accountID = db_id;
                     threadDataLocal.authenticated = true;
@@ -61,5 +61,7 @@ case PCKT_C_AUTH:
 
     //-------- SEND A REPLY (ACK) TO THE CLIENT
     threadData.socket << answer;
+
+    //-------- SEND CHARLIST
 }
 break;

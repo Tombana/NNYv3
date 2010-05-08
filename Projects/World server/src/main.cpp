@@ -75,6 +75,15 @@ int main() {
     }
 
     //=========================================
+    //  CLEANING DATABASE FROM POSSIBLE BUGS
+    //=========================================
+    // We reset all the accounts connected to our server to offline because we knows they are all offline.
+    // This is to prevent from crashed threads. Also the user can kick its ghost anyway with another packet,
+    // but it's just to make sure the server starts with the good stats "cleanly".
+    std::string query = "UPDATE accounts SET online=0 WHERE online_serverid=" + intToStr(CONFIG_SERVER_ID);
+    g_database.query(query);
+
+    //=========================================
     //          START LISTENING PORT
     //=========================================
     std::cerr << "Listening on port " << CONFIG_SERVER_PORT << "... ";
