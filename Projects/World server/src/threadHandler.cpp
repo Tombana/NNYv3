@@ -51,7 +51,7 @@ void threadHandler (SOCKET &m_socketID) {
     //  EVEN MORE TASK BEFORE CLEANING
     //====================================
     if (threadDataLocal.authenticated) {
-        std::string request = "UPDATE accounts SET online=0 WHERE id=" + intToStr(threadDataLocal.accountID);
+        std::string request = "UPDATE accounts SET nbr_online=nbr_online-1 WHERE id=" + intToStr(threadDataLocal.accountID);
         g_database.query(request);
     }
 

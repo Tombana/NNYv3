@@ -3,7 +3,7 @@
 
 //Settings
 #define CONFIG_FILENAME             "world.conf"
-#define CONFIG_DATABASE_SUPPORTED   2
+#define CONFIG_DATABASE_SUPPORTED   3
 //=================================================
 //   DO NOT EDIT BELOW THIS LINE UNLESS YOU KNOW
 //              WHAT YOU ARE DOING
@@ -18,6 +18,7 @@
 #define CONFIG_SERVER_ID                            g_CONFIG.read<unsigned int>  ("SERVER_ID")
 #define CONFIG_SERVER_PORT                          g_CONFIG.read<unsigned int>  ("SERVER_PORT")
 #define CONFIG_SERVER_KEY                           g_CONFIG.read<std::string>   ("SERVER_KEY")
+#define CONFIG_DUAL_LOGGING_ALLOWED                 g_CONFIG.read<bool>          ("DUAL_LOGGING_ALLOWED")
 //Realm configuration
 #define CONFIG_REALM_IP                             g_CONFIG.read<std::string>   ("REALM_IP")
 #define CONFIG_REALM_PORT                           g_CONFIG.read<unsigned int>  ("REALM_PORT")

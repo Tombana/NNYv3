@@ -1,6 +1,6 @@
-//Next available PCKT CODE is      0x0012 //PCKT decimal = 18
+//Next available PCKT CODE is      0x0013 //PCKT decimal = 19
 
-#define NNY_PROTOCOL_VERSION    32
+#define NNY_PROTOCOL_VERSION    34
 
 /*****************************
         [X] Multi-directional
@@ -29,6 +29,11 @@
 //Important: The world server will ignore this packet if you aren't authenticated.
 //Note: This packet will be performed silently by the server. Or you assume the character
 //      really has been deleted or send PCKT_C_GETCHARLIST again to receive the list updated.
+//Params: [Byte]Slot id
+#define PCKT_C_ENTER_WORLD  0x0012 //PCKT decimal = 18
+//Info: Entering/Logging into the world server
+//Important: The world server will ignore this packet if you aren't authenticated.
+//Note: The server will return PCKT_W_ENTER_WORLD_ACK in response.
 //Params: [Byte]Slot id
 
 /*****************************
@@ -85,7 +90,7 @@
 //[ACK_SUCCESS] = Good, you are now logged in
 //[ACK_NOT_FOUND] = We were unable to find your username in the database
 //[ACK_DOESNT_MATCH] = The password provided doesn't match your username
-//[ACK_ALREADY] = It seems like you are already logged in
+//[ACK_ALREADY] = It seems like you are already logged in and dual logging isn't allowed
 //[ACK_REFUSED] = The server explicitly refused your connection; you maybe are banned.
 #define PCKT_W_CHARLIST_ADD 0x000F //PCKT decimal = 15
 //Info: Send your character information to the client
@@ -95,6 +100,7 @@
 //Params: [String]Character name
 //Params: [Byte]Character level (0 to 255)
 //Params: [Bool]Gender (0=male, 1=female)
+//Params: [Bool]Online (0=offline, 1=online)
 //TODO: More to come, like items the char's wearing?
 #define PCKT_W_CHARLIST_EOF 0x0010 //PCKT decimal = 16
 //Info: End of character list

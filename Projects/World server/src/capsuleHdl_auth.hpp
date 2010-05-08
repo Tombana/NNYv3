@@ -11,7 +11,7 @@ case PCKT_C_AUTH:
     std::cout << "[capsuleHandler] Password: " << password << std::endl;
 
     //-------- PERFORM SQL QUERY & CREATE A 'RESULTS' POINTER & A 'ROWS' ARRAY
-    std::string request = "SELECT id,password,online,banned FROM accounts WHERE username='" + username + "'";
+    std::string request = "SELECT id,password,nbr_online,banned FROM accounts WHERE username='" + username + "'";
     DB_RESULT  *results = g_database.query(DB_USE_RESULT, request);
     DB_ROW      rows;
 
@@ -19,7 +19,7 @@ case PCKT_C_AUTH:
     bool         flag_entryFound = false;
     unsigned int db_id;
     std::string  db_password;
-    bool         db_online;
+    unsigned int db_nbr_online;
     bool         db_banned;
     ByteArray    answer;
 
@@ -27,7 +27,7 @@ case PCKT_C_AUTH:
     if (rows = g_database.fetch_row(results)) {
         db_id           = atoi(rows[0]);
         db_password     = rows[1];
-        db_online       = static_cast<bool>(atoi(rows[2]));
+        db_nbr_online   = atoi(rows[2]);
         db_banned       = static_cast<bool>(atoi(rows[3]));
         flag_entryFound = true;
     }
@@ -38,13 +38,13 @@ case PCKT_C_AUTH:
     //-------- CHECK THE ENTRY WE FOUND
     answer.addCmd(PCKT_W_AUTH_ACK);
     if (flag_entryFound) {
-        if (db_online) {
-            answer.addAck(ACK_ALREADY); //Already online
+        if (db_nbr_online > 0 && !CONFIG_DUAL_LOGGING_ALLOWED) {
+            answer.addAck(ACK_ALREADY); //Already some characters online and dual logging is not allowed
         } else {
             if (db_password == password) {
                 if (!db_banned) {
                     answer.addAck(ACK_SUCCESS); //Success!
-                    request = "UPDATE accounts SET online=1,online_serverid=" + intToStr(CONFIG_SERVER_ID) + " WHERE id=" + intToStr(db_id);
+                    request = "UPDATE accounts SET nbr_online=nbr_online+1 WHERE id=" + intToStr(db_id);
                     g_database.query(request);
                     threadDataLocal.accountID = db_id;
                     threadDataLocal.authenticated = true;

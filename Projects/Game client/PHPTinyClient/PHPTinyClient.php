@@ -145,13 +145,13 @@ while (true) {
 				switch ($CAPSULE->readWord()) {
 					case PCKT_W_CHARLIST_EOF:
 						echo '[capsuleHandler] End of character list, you can now enter the world!'."\n";
-						//Testing deleting a character; result = it works
-						/*
-						$BA->addCmd(PCKT_C_DELETECHAR);
-						$BA->addByte(1); //delete slot 1
+						$BA->addCmd(PCKT_C_ENTER_WORLD);
+							echo 'Pickup a slot ID: ';
+							$s=fopen('php://stdin','r');
+							$slot=str_replace("\r",'',str_replace("\n",'',str_replace("\t",'',fgets($s))));
+						$BA->addByte($slot);
 						socket_write($SOCKET, $BA->getPacket());
 						$BA->clear();
-						*/
 						break;
 					case PCKT_W_CHARLIST_ADD:
 						echo '[capsuleHandler] Charlist, new character:'."\n";
@@ -163,6 +163,7 @@ while (true) {
 						} else { //false=0=male
 							echo '> Gender: Male'."\n";
 						}
+						echo '> Online: '.$CAPSULE->readBool()."\n";
 						break;
 					case PCKT_W_AUTH_ACK:
 						echo '[capsuleHandler] World server auth ACK'."\n";
@@ -180,7 +181,7 @@ while (true) {
 								echo '~Wrong password!'."\n";
 								break;
 							case ACK_ALREADY:
-								echo '~Your are already connected!'."\n";
+								echo '~Your are already connected and dual logging isn\'t allowed!'."\n";
 								break;
 							case ACK_REFUSED:
 								echo '~The server refused you! Banned?!'."\n";

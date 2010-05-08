@@ -6,7 +6,7 @@ Connection with Client/Realm server
 
                <-  PCKT_R_WELCOME
 PCKT_C_VERSION ->
-               <- PCKT_R_DOWNLOAD (as many times as needed, or not at all)
+               <- PCKT_R_DOWNLOAD (as many times as needed, optional)
                <- PCKT_R_DOWNLOAD_EOF
                <- PCKT_R_CONNECT / PCKT_R_SERVER_GONE
 
@@ -27,7 +27,10 @@ Connection with Client/World server
 PCKT_C_GETCHARLIST ->
                    <- PCKT_W_CHARLIST_ADD (as many times as needed)
 
- PCKT_C_DELETECHAR -> (if needed)
+ PCKT_C_DELETECHAR -> (optional)
+
+PCKT_C_ENTER_WORLD ->
+                   <- PCKT_W_ENTER_WORLD_ACK (TODO)
 
 	[more soon]
 
