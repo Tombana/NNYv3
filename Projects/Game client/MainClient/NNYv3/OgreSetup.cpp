@@ -10,6 +10,14 @@
 int CUIMain::SetupOgre(void)
 {
 	//=================
+	//Ogre defaultly logs to console
+	// To prevent this the LogManager has to be created
+	// before the Root object.
+	//=================
+	Ogre::LogManager* logMgr = OGRE_NEW Ogre::LogManager;
+	logMgr->createLog("Ogre.log", true, false, false);
+
+	//=================
 	//Create the Ogre root object
 	// It's possible to specify as parameters the paths to the:
 	// plugin file (what render systems it has to load), config file (screen resolution etc) and log file
