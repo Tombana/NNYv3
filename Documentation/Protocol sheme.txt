@@ -30,7 +30,7 @@ PCKT_C_GETCHARLIST ->
  PCKT_C_DELETECHAR -> (optional)
 
 PCKT_C_ENTER_WORLD ->
-                   <- PCKT_W_ENTER_WORLD_ACK (TODO)
+                   <- PCKT_W_ENTER_WORLD_ACK
 
 	[more soon]
 

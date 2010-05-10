@@ -3,15 +3,25 @@ NNYv3 0.3   (?? ??? 2010)
  NNYv3 0.3 - ??
 
  ==== Server Features ====
-
- ==== Client Features ====
-
- ==== Optimisation ====
+ * Added: Character list
+ * Added: Deleting a character
+ * Work-in-progress: Selecting a character and entering world (half done)
  
+ ==== Client Features ====
+ * As usual PHPTinyClient has been updated to the latest working server sources
+ 
+ ==== Optimisation ====
+
  ==== Protocol Features ====
+ * Added: PCKT_C_GETCHARLIST
+ * Added: PCKT_W_CHARLIST_ADD
+ * Added: PCKT_C_DELETE_CHAR
+ * Added: PCKT_C_ENTER_WORLD
+ * Added: PCKT_W_ENTER_WORLD_ACK
  
  ==== Portability ====
-
+ * Not checked yet for linux
+ 
  ---------------------------------------------------
  
  NNYv3 0.2   (07 May 2010)
