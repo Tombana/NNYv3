@@ -145,7 +145,7 @@ while (true) {
 				switch ($CAPSULE->readWord()) {
 					//-------------------------
 					case PCKT_W_ENTER_WORLD_ACK:
-						echo '[capsuleHandler] W got a reply from the server about entering the world!'."\n";
+						echo '[capsuleHandler] We got an ACK packet from the server about entering the world!'."\n";
 							switch ($CAPSULE->readAck()) {
 								case ACK_SUCCESS:
 									echo 'HURAY! You are now logged in! :)'."\n";

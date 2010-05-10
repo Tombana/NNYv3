@@ -1,6 +1,6 @@
 //Next available PCKT CODE is      0x0014 //PCKT decimal = 20
 
-#define NNY_PROTOCOL_VERSION    34
+#define NNY_PROTOCOL_VERSION    35
 
 /*****************************
         [X] Multi-directional
