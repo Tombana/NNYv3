@@ -55,6 +55,7 @@ public:
 	// Login section
 	//===================
 	int DisplayLoginScreen(const std::string& RememberedUsername);
+	int CloseLoginScreen(void);
 	bool LoginBtnClick(const CEGUI::EventArgs &e);
 	bool AboutBtnClick(const CEGUI::EventArgs &e);
 

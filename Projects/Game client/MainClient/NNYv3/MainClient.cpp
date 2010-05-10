@@ -8,7 +8,8 @@ CMainClient::CMainClient(void) :
 	m_networkthread_mutex(PTHREAD_MUTEX_INITIALIZER),
 	m_networkthread_cond(PTHREAD_COND_INITIALIZER),
 	m_RealmServers(),m_Revision(0), m_WorldIP(), m_WorldPort(0),
-	m_gui()
+	m_ui(),
+	m_Username(), m_Password(), m_Characters()
 {
 	m_RealmServers.push_back("127.0.0.1");
 	m_RealmServers.push_back("ceres.dlinkddns.com");
@@ -29,12 +30,14 @@ int CMainClient::Run(void)
 	//==============
 	//Load the UI and display the loading screen
 	//==============
-	if( !m_gui.StartUI() ) return 0;
+	if( !m_ui.StartUI() ) return 0;
 
 	//==============
 	//Load the data files
 	//==============
 	//datafileclass.load();
+	
+	m_Username = "remembered-username";
 
 	//==============
 	//Load the network system
@@ -52,11 +55,14 @@ int CMainClient::Run(void)
 	pthread_cond_wait(&m_networkthread_cond, &m_networkthread_mutex);
 	pthread_mutex_unlock(&m_networkthread_mutex);
 
+	if( m_WorldIP.empty() || !m_WorldPort )
+		m_ui.SendThreadMessage(new CMessageMsgBox("Could not get world server info from realm server!", "Error"));
+
 	//==============
 	//Signal 'Done Loading' to GUI and so on
 	//==============
 	m_state = State_LoginScreen;
-	m_gui.SendThreadMessage(new CMessageDisplayLoginScreen("remembered-username"));
+	m_ui.SendThreadMessage(new CMessageDisplayLoginScreen(m_Username));
 
 	while( m_state != State_Quitting ){
 		sleep(50);
@@ -75,7 +81,7 @@ int CMainClient::Run(void)
 						m_Username = loginmsg->Username;
 						m_Password = loginmsg->Password;
 						m_state = State_LoggingIn;
-						m_gui.SendThreadMessage(new CMessageDisplayWaitScreen("Logging in..."));
+						m_ui.SendThreadMessage(new CMessageDisplayWaitScreen("Logging in..."));
 						StartNetworkThread();
 					}
 					break;
@@ -94,8 +100,8 @@ int CMainClient::Run(void)
 
 	//datafileclass.unload();
 
-	m_gui.SendThreadMessage(Message_Quit);
-	m_gui.WaitForExit();
+	m_ui.SendThreadMessage(Message_Quit);
+	m_ui.WaitForExit();
 	return 0;
 }
 
@@ -131,14 +137,11 @@ void* CMainClient::NetworkThread(void)
 			if( !m_mainsocket.isConnected() ) std::cout << "[ERROR] Could not connect to a realm server.\n";
 			break;
 		case State_LoggingIn:
-			if( m_WorldIP.empty() || m_WorldPort == 0 ){
-				std::cout << "[ERROR] No world server specified!\n";
-			}else{
-				if(!m_mainsocket.socket_connect(m_WorldIP, m_WorldPort)){
-					std::cout << "[ERROR] Could not connect to world server!\n";
-				}
+			if( m_WorldIP.empty() || !m_WorldPort || !m_mainsocket.socket_connect(m_WorldIP, m_WorldPort)){
+				m_state = State_LoginScreen;
+				m_ui.SendThreadMessage(new CMessageMsgBox("Could not connect to the world server!", "Error"));
+				m_ui.SendThreadMessage(Message_CloseWaitScreen);
 			}
-			if( !m_mainsocket.isConnected() ) m_state = State_LoginScreen;
 			break;
 		default:
 			break;

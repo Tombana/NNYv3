@@ -84,10 +84,10 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 			case Message_Quit:
 				ContinueRendering = false;
 				break;
-			case Message_DisplayLoginScreen:
+			case Message_MsgBox:
 				{
-					CMessageDisplayLoginScreen* loginmsg = (CMessageDisplayLoginScreen*)msg;
-					mGUIHandler->DisplayLoginScreen(loginmsg->RememberedUsername);
+					CMessageMsgBox* msgbox = (CMessageMsgBox*)msg;
+					mGUIHandler->MsgBox(msgbox->Text, msgbox->Title, msgbox->WindowName);
 				}
 				break;
 			case Message_DisplayWaitScreen:
@@ -98,6 +98,19 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 				break;
 			case Message_CloseWaitScreen:
 				mGUIHandler->CloseWaitScreen();
+				break;
+			case Message_DisplayLoginScreen:
+				{
+					CMessageDisplayLoginScreen* loginmsg = (CMessageDisplayLoginScreen*)msg;
+					mGUIHandler->DisplayLoginScreen(loginmsg->RememberedUsername);
+				}
+				break;
+			case Message_DisplayCharSelect:
+				{
+					mGUIHandler->CloseLoginScreen();
+					CMessageDisplayCharSelect* charmsg = (CMessageDisplayCharSelect*)msg;
+					mGUIHandler->MsgBox("[Character select screen here]\nNot implemented yet, please quit.", "Not implemented yet");
+				}
 				break;
 			default:
 				break;

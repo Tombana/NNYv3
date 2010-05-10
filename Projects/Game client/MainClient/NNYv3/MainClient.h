@@ -1,12 +1,14 @@
 #pragma once
 
-#include "UIMain.h"
-#include "ThreadMessages.h"
-
 #include <list>
 #include <vector>
+
 #include "ZSocket.h"
 #include "pthread.h"
+
+#include "Structures.h"
+#include "UIMain.h"
+#include "ThreadMessages.h"
 
 #ifdef WIN32
     #include <winbase.h>
@@ -15,6 +17,7 @@
     #include <unistd.h>
 	#define sleep(x) usleep(x)
 #endif
+
 
 class CMainClient : public CThreadMessages
 {
@@ -74,12 +77,16 @@ private:
 	//The world server info
 	std::string	m_WorldIP;
 	WORD		m_WorldPort;
-	//Login info
-	std::string m_Username;
-	std::string m_Password;
 
 	//============
 	// Gui related
 	//============
-	CUIMain		m_gui;
+	CUIMain		m_ui;
+
+	//============
+	// Game related
+	//============
+	std::string				m_Username;
+	std::string				m_Password;
+	std::vector<CharacterInfo>	m_Characters;
 };

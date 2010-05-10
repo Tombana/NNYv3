@@ -251,6 +251,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Common\sharedModels.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Structures.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ThreadMessages.h"
 				>
 			</File>

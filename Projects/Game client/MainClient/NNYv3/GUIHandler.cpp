@@ -118,6 +118,7 @@ CEGUI::Window* CGUIHandler::MsgBox(std::string Text, std::string Title, std::str
 
 	MsgBox->addChildWindow(Label);
 	MsgBox->addChildWindow(ButtonOk);
+	MsgBox->setAlwaysOnTop(true);
 	mRootWindow->addChildWindow(MsgBox);
 
 	return MsgBox;
@@ -130,7 +131,7 @@ int	CGUIHandler::LoadWaitScreen(void)
 
 	WaitScreenLabel->setProperty("HorzFormatting", "WordWrapLeftAligned");
 	WaitScreenLabel->setArea(CEGUI::URect(CEGUI::UDim(0.03,0), CEGUI::UDim(0.15,0), CEGUI::UDim(0.97,0), CEGUI::UDim(0.80,0)));
-	WaitScreen->setSize(CEGUI::UVector2(CEGUI::UDim(0.40,0), CEGUI::UDim(0.30,0)));
+	WaitScreen->setSize(CEGUI::UVector2(CEGUI::UDim(0.40,0), CEGUI::UDim(0.25,0)));
 	WaitScreen->setPosition(CEGUI::UVector2(CEGUI::UDim(0.30,0), CEGUI::UDim(0.35,0)));
 
 	WaitScreen->setText("Please wait");
@@ -138,24 +139,29 @@ int	CGUIHandler::LoadWaitScreen(void)
 
 	WaitScreen->addChildWindow(WaitScreenLabel);
 
-	WaitScreen->hide();
-	WaitScreen->setAlwaysOnTop(true);
-
-	mRootWindow->addChildWindow(WaitScreen);
-
 	return 1;
 }
 
 int CGUIHandler::DisplayWaitScreen(std::string Text)
 {
 	if( WaitScreenLabel ) WaitScreenLabel->setText(Text);
-	if( WaitScreen ) WaitScreen->show();
+	if( WaitScreen ){
+		//The user might have moved the waitscreen, so reset it to the middle
+		WaitScreen->setSize(CEGUI::UVector2(CEGUI::UDim(0.40,0), CEGUI::UDim(0.25,0)));
+		//Attach it to the root window so it is drawn
+		mRootWindow->addChildWindow(WaitScreen);
+		//Bring it to the front
+		WaitScreen->activate();
+	}
 	return 1;
 }
 
 int CGUIHandler::CloseWaitScreen(void)
 {
-	if( WaitScreen ) WaitScreen->hide();
+	if( WaitScreen ){
+		//Detach it from parent so it is not drawn
+		WaitScreen->getParent()->removeChildWindow(WaitScreen);
+	}
 	return 1;
 }
 
@@ -164,28 +170,37 @@ int CGUIHandler::CloseWaitScreen(void)
 //===================
 int	CGUIHandler::DisplayLoginScreen(const std::string& RememberedUsername)
 {
-	//Load the window layout from file
-	CEGUI::Window *LoginWindow = mWindowManager->loadWindowLayout("loginscreen.layout");
-	//Set the password box to be masked
-	CEGUI::Editbox *Password = static_cast<CEGUI::Editbox*>(mWindowManager->getWindow("LoginWindow/Password"));
-	Password->setMaskCodePoint('*');
-	Password->setTextMasked(true);
-	//Subscribe the handler for the login and about button
-	try{
-		CEGUI::Window *LoginButton = mWindowManager->getWindow("LoginWindow/ButtonLogin");
-		LoginButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::LoginBtnClick, this));
-	}catch(CEGUI::UnknownObjectException){}
-	try{
-		CEGUI::Window *AboutButton = mWindowManager->getWindow("LoginWindow/ButtonAbout");
-		AboutButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::AboutBtnClick, this));
-	}catch(CEGUI::UnknownObjectException){}
+	if( mWindowManager->isWindowPresent("LoginWindow") == false ){
+		//Load the window layout from file
+		CEGUI::Window *LoginWindow = mWindowManager->loadWindowLayout("loginscreen.layout");
+		//Set the password box to be masked
+		CEGUI::Editbox *Password = static_cast<CEGUI::Editbox*>(mWindowManager->getWindow("LoginWindow/Password"));
+		Password->setMaskCodePoint('*');
+		Password->setTextMasked(true);
+		//Subscribe the handler for the login and about button
+		try{
+			CEGUI::Window *LoginButton = mWindowManager->getWindow("LoginWindow/ButtonLogin");
+			LoginButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::LoginBtnClick, this));
+		}catch(CEGUI::UnknownObjectException){}
+		try{
+			CEGUI::Window *AboutButton = mWindowManager->getWindow("LoginWindow/ButtonAbout");
+			AboutButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::AboutBtnClick, this));
+		}catch(CEGUI::UnknownObjectException){}
+		//Attach the window to the root window so it's visible
+		mRootWindow->addChildWindow(LoginWindow);
+	}
 	//Set the remembered username
 	try{
 		CEGUI::Window *txtUsername = mWindowManager->getWindow("LoginWindow/Username");
 		txtUsername->setText(RememberedUsername);
 	}catch(CEGUI::UnknownObjectException){}
-	//Attach the window to the root window so it's visible
-	mRootWindow->addChildWindow(LoginWindow);
+	return 1;
+}
+
+int CGUIHandler::CloseLoginScreen(void)
+{
+	CEGUI::Window *LoginWindow = mWindowManager->getWindow("LoginWindow");
+	LoginWindow->destroy();
 	return 1;
 }
 

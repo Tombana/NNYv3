@@ -1,8 +1,10 @@
 #pragma once
 
+#include <vector>
 #include <list>
 #include <string>
 #include "pthread.h"
+#include "Structures.h"
 
 //
 // Tombana's thread message system. Probably crappy and there are probably better systems out there
@@ -62,9 +64,11 @@ static const int	Message_Quit		=	100;	//The user pressed close. This does not ne
 static const int	Message_Login		=	1000;	//with Username and Password parameter
 static const int	Message_CharSelect	=	1001;
 //To the GUI thread
-static const int	Message_DisplayLoginScreen	=	2001;	//with RememberedUsername parameter
-static const int	Message_DisplayWaitScreen	=	2002;	//with Text parameter
-static const int	Message_CloseWaitScreen		=	2003;	//no parameters. Closes any previous wait screen
+static const int	Message_MsgBox				=	2000;	//parameters: text, title, windowname(optional)
+static const int	Message_DisplayWaitScreen	=	2001;	//parameters: text	(Any previous wait screens are closed)
+static const int	Message_CloseWaitScreen		=	2002;	//parameters: none	(Closes any previous wait screen)
+static const int	Message_DisplayLoginScreen	=	2010;	//parameters: RememberedUsername
+static const int	Message_DisplayCharSelect	=	2011;	//parameters: vector<CharacterInfo>, last_selected_char
 
 //==================================
 // All thread messages that have parameters
@@ -74,12 +78,28 @@ static const int	Message_CloseWaitScreen		=	2003;	//no parameters. Closes any pr
 
 class CMessageLogin : public CMessage{
 public:
-	CMessageLogin(std::string username, std::string password) : CMessage(Message_Login), Username(username), Password(password) {}
+	CMessageLogin(std::string username, std::string password) : CMessage(Message_Login),
+		Username(username), Password(password) {}
 	std::string	Username;
 	std::string Password;
 };
 
 // Messages to the GUI thread
+
+class CMessageMsgBox : public CMessage{
+public:
+	CMessageMsgBox(std::string text, std::string title, std::string windowname = "") : CMessage(Message_MsgBox),
+		Text(text), Title(title), WindowName(windowname) {}
+	std::string Text;
+	std::string	Title;
+	std::string WindowName;
+};
+
+class CMessageDisplayWaitScreen : public CMessage{
+public:
+	CMessageDisplayWaitScreen(std::string text) : CMessage(Message_DisplayWaitScreen), Text(text) {}
+	std::string Text;
+};
 
 class CMessageDisplayLoginScreen : public CMessage{
 public:
@@ -87,8 +107,10 @@ public:
 	std::string	RememberedUsername;
 };
 
-class CMessageDisplayWaitScreen : public CMessage{
+class CMessageDisplayCharSelect : public CMessage{
 public:
-	CMessageDisplayWaitScreen(std::string text) : CMessage(Message_DisplayWaitScreen), Text(text) {}
-	std::string Text;
+	CMessageDisplayCharSelect(const std::vector<CharacterInfo>& charinfo, int LastSelectedChar = 0) : CMessage(Message_DisplayCharSelect),
+		CharInfo(charinfo), SelectedChar(LastSelectedChar) {}
+	std::vector<CharacterInfo> CharInfo;
+	int SelectedChar;
 };
