@@ -67,7 +67,66 @@ case PCKT_C_ENTER_WORLD:
 
     if (threadDataLocal.authenticated) {
         std::cerr << "Request to enter world with character on slotID " << (unsigned int)slotID << std::endl;
-        //TODO: PCKT_W_ENTER_WORLD_ACK stuff
+        //-------- PERFORM SQL QUERY & CREATE A 'RESULTS' POINTER & A 'ROWS' ARRAY
+        std::string request = "SELECT online,id,name,level,gender,x,y,z FROM characters WHERE slot=" + intToStr((unsigned int)slotID) + " AND account_id=" + intToStr(threadDataLocal.accountID);
+        DB_RESULT  *results = g_database.query(DB_USE_RESULT, request);
+        DB_ROW      rows;
+
+        //-------- INITIALIZE NEEDED VARS FOR PROCESSING
+        bool         db_online; //not defined because it won't be checked if db_false == false
+        bool         db_found = false; //defined because it's checked right below
+
+        //-------- FETCHING ENTRY IF ANY
+        if (rows = g_database.fetch_row(results)) {
+            db_online = static_cast<bool>(atoi(rows[0])); //online
+            db_found  = true;
+
+            TDL.id     = atoi(rows[1]); //id
+            TDL.name   = rows[2]; //name
+            TDL.level  = (BYTE)atoi(rows[3]); //level
+            TDL.gender = static_cast<bool>(atoi(rows[4])); //gender
+            TDL.x      = atoi(rows[5]); //x
+            TDL.y      = atoi(rows[6]); //y
+            TDL.z      = atoi(rows[7]); //z
+        }
+
+        //-------- WE ARE DONE WITH THE SQL PART
+        g_database.queryDone();
+
+        //-------- PACKET ACK REPLY HEADING
+        ByteArray    packet;
+
+        //-------- PACKET ACK REPLY
+        packet.addCmd(PCKT_W_ENTER_WORLD_ACK);
+        if (db_found) {
+            if (db_online) {
+                packet.addAck(ACK_ALREADY); //character already inGame!
+            } else {
+                //Here everything looks good! Let the char log in
+                    packet.addAck(ACK_SUCCESS);
+                //Also mark the character as logged in
+                    TDL.logged = true;
+                //And perform other needed taks that i'm too lazy to take care of now like:
+                    //TODO (NitriX#): [Later]Send to messenger list that you are now online
+                    //TODO (NitriX#): [Later]If in any party, perform tasks it must do
+                    //TODO (NitriX#): [Later]Same with guild stuff
+                    //TODO (NitriX#): [Later]Everything else that must be performed at logon
+                //And now the ingame stuff:
+                    //TODO: Register to Grid where your character is
+                    //TODO: Send a spawn packet to your grid so other players see you
+                    //TODO: Also retrieve all entities around you and send them to the client
+                //And the database ;o
+                    std::string query = "UPDATE characters SET online=1 WHERE id=" + intToStr(TDL.id);
+                    g_database.query(query);
+                //And a debugging text x]
+                std::cerr << "Character " << TDL.name << " has logged in!" << std::endl;
+            }
+        } else {
+            packet.addAck(ACK_NOT_FOUND); //character not found in database!
+        }
+
+        //-------- Send packet to client
+        threadData.socket << packet;
     } else {
         std::cerr << "Packet ignored; user isn't authenticated." << std::endl;
     }
