@@ -3,7 +3,7 @@
 
 
 CGUIHandler::CGUIHandler(Ogre::RenderWindow *Window, Ogre::SceneManager *SceneMgr) :
-	mGUIRenderer(0), mGUISystem(0), mWindowManager(0), mRootWindow(0)
+	mGUIRenderer(0), mGUISystem(0), mWindowManager(0), mRootWindow(0), WaitScreen(0), WaitScreenLabel(0)
 {
 	try{
 #ifdef OLD_CEGUI
@@ -56,6 +56,8 @@ CGUIHandler::CGUIHandler(Ogre::RenderWindow *Window, Ogre::SceneManager *SceneMg
 		mRootWindow->addChildWindow(btnQuit);
 
 		CEGUI::System::getSingleton().setGUISheet(mRootWindow);
+
+		LoadWaitScreen();
 
 	}catch( CEGUI::Exception& e ){
 		std::cerr << "[ERROR] Exception in CEGUI:\n" << e.getMessage() << std::endl;
@@ -121,10 +123,46 @@ CEGUI::Window* CGUIHandler::MsgBox(std::string Text, std::string Title, std::str
 	return MsgBox;
 }
 
+int	CGUIHandler::LoadWaitScreen(void)
+{
+	WaitScreen = mWindowManager->createWindow("TaharezLook/FrameWindow");
+	WaitScreenLabel = mWindowManager->createWindow("TaharezLook/StaticText");
+
+	WaitScreenLabel->setProperty("HorzFormatting", "WordWrapLeftAligned");
+	WaitScreenLabel->setArea(CEGUI::URect(CEGUI::UDim(0.03,0), CEGUI::UDim(0.15,0), CEGUI::UDim(0.97,0), CEGUI::UDim(0.80,0)));
+	WaitScreen->setSize(CEGUI::UVector2(CEGUI::UDim(0.40,0), CEGUI::UDim(0.30,0)));
+	WaitScreen->setPosition(CEGUI::UVector2(CEGUI::UDim(0.30,0), CEGUI::UDim(0.35,0)));
+
+	WaitScreen->setText("Please wait");
+	WaitScreenLabel->setText("Please wait");
+
+	WaitScreen->addChildWindow(WaitScreenLabel);
+
+	WaitScreen->hide();
+	WaitScreen->setAlwaysOnTop(true);
+
+	mRootWindow->addChildWindow(WaitScreen);
+
+	return 1;
+}
+
+int CGUIHandler::DisplayWaitScreen(std::string Text)
+{
+	if( WaitScreenLabel ) WaitScreenLabel->setText(Text);
+	if( WaitScreen ) WaitScreen->show();
+	return 1;
+}
+
+int CGUIHandler::CloseWaitScreen(void)
+{
+	if( WaitScreen ) WaitScreen->hide();
+	return 1;
+}
+
 //===================
 // Login section
 //===================
-int	CGUIHandler::DisplayLoginScreen(void)
+int	CGUIHandler::DisplayLoginScreen(const std::string& RememberedUsername)
 {
 	//Load the window layout from file
 	CEGUI::Window *LoginWindow = mWindowManager->loadWindowLayout("loginscreen.layout");
@@ -144,7 +182,7 @@ int	CGUIHandler::DisplayLoginScreen(void)
 	//Set the remembered username
 	try{
 		CEGUI::Window *txtUsername = mWindowManager->getWindow("LoginWindow/Username");
-		txtUsername->setText("remembered-username");
+		txtUsername->setText(RememberedUsername);
 	}catch(CEGUI::UnknownObjectException){}
 	//Attach the window to the root window so it's visible
 	mRootWindow->addChildWindow(LoginWindow);
@@ -162,7 +200,10 @@ bool CGUIHandler::LoginBtnClick(const CEGUI::EventArgs &e)
 		CEGUI::Window *txtPassword = mWindowManager->getWindow("LoginWindow/Password");
 		Password = txtPassword->getText().c_str();
 	}catch(CEGUI::UnknownObjectException){}
-	CMainClient::getSingleton().SendThreadMessage(new CMessageLogin(Username, Password));
+	if( Username.empty() || Password.empty() )
+		MsgBox("Please fill in both the username and password!", "Error");
+	else
+		CMainClient::getSingleton().SendThreadMessage(new CMessageLogin(Username, Password));
 	return true;
 }
 

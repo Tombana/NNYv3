@@ -51,25 +51,44 @@ private:
 	pthread_mutex_t			m_message_mutex;
 };
 
+
 //==================================
 // All thread message constants
 //==================================
+
 //General messages
 static const int	Message_Quit		=	100;	//The user pressed close. This does not neccesarily mean that the client should close immediately. There can be a confirmation or something like that.
 //To the main thread
-static const int	Message_Login		=	1000;
-static const int	Message_RealmSelect	=	1001;
-static const int	Message_CharSelect	=	1002;
+static const int	Message_Login		=	1000;	//with Username and Password parameter
+static const int	Message_CharSelect	=	1001;
 //To the GUI thread
-static const int	Message_DisplayLogin=	2001;
+static const int	Message_DisplayLoginScreen	=	2001;	//with RememberedUsername parameter
+static const int	Message_DisplayWaitScreen	=	2002;	//with Text parameter
+static const int	Message_CloseWaitScreen		=	2003;	//no parameters. Closes any previous wait screen
 
-//
+//==================================
 // All thread messages that have parameters
-//
+//==================================
+
+//Messages to the main thread
 
 class CMessageLogin : public CMessage{
 public:
 	CMessageLogin(std::string username, std::string password) : CMessage(Message_Login), Username(username), Password(password) {}
 	std::string	Username;
 	std::string Password;
+};
+
+// Messages to the GUI thread
+
+class CMessageDisplayLoginScreen : public CMessage{
+public:
+	CMessageDisplayLoginScreen(std::string rememberedusername) : CMessage(Message_DisplayLoginScreen), RememberedUsername(rememberedusername) {}
+	std::string	RememberedUsername;
+};
+
+class CMessageDisplayWaitScreen : public CMessage{
+public:
+	CMessageDisplayWaitScreen(std::string text) : CMessage(Message_DisplayWaitScreen), Text(text) {}
+	std::string Text;
 };

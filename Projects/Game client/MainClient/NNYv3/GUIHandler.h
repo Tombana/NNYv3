@@ -40,18 +40,27 @@ public:
 	//   is called while there is still a window active with that name, nothing happens and it will return 0
 	CEGUI::Window* MsgBox(std::string Text, std::string Title, std::string WindowName = "");
 
+	//When logging in and waiting for the connection there is usually a wait screen
+	//DisplayWaitScreen will display the wait screen with the given Text
+	//Only one wait screen at a time can be displayed, if a waitscreen was
+	//already being displayed, it is removed and the new one is made.
+	//It can be closed with the CloseWaitScreen function
+	int DisplayWaitScreen(std::string Text);
+	int CloseWaitScreen(void);
+
 	bool QuitBtnClick(const CEGUI::EventArgs &e);
 	bool MessageBoxBtnOkClick(const CEGUI::EventArgs &e);
 
 	//===================
 	// Login section
 	//===================
-	int DisplayLoginScreen(void);
+	int DisplayLoginScreen(const std::string& RememberedUsername);
 	bool LoginBtnClick(const CEGUI::EventArgs &e);
 	bool AboutBtnClick(const CEGUI::EventArgs &e);
 
 
 private:
+	// General CEGUI variables
 #ifdef OLD_CEGUI
 	CEGUI::OgreCEGUIRenderer	*mGUIRenderer;
 #else
@@ -60,4 +69,9 @@ private:
 	CEGUI::System			*mGUISystem;
 	CEGUI::WindowManager	*mWindowManager;
 	CEGUI::Window			*mRootWindow;
+
+	// The general waiting screen
+	CEGUI::Window			*WaitScreen;
+	CEGUI::Window			*WaitScreenLabel;
+	int	LoadWaitScreen(void); //Creates the (hidden) wait screen used by DisplayWaitScreen and CloseWaitScreen
 };

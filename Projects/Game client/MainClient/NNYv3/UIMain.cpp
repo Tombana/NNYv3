@@ -84,8 +84,20 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 			case Message_Quit:
 				ContinueRendering = false;
 				break;
-			case Message_DisplayLogin:
-				mGUIHandler->DisplayLoginScreen();
+			case Message_DisplayLoginScreen:
+				{
+					CMessageDisplayLoginScreen* loginmsg = (CMessageDisplayLoginScreen*)msg;
+					mGUIHandler->DisplayLoginScreen(loginmsg->RememberedUsername);
+				}
+				break;
+			case Message_DisplayWaitScreen:
+				{
+					CMessageDisplayWaitScreen* waitscreen = (CMessageDisplayWaitScreen*)msg;
+					mGUIHandler->DisplayWaitScreen(waitscreen->Text);
+				}
+				break;
+			case Message_CloseWaitScreen:
+				mGUIHandler->CloseWaitScreen();
 				break;
 			default:
 				break;
