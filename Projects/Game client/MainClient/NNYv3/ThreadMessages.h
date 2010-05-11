@@ -5,6 +5,7 @@
 #include <string>
 #include "pthread.h"
 #include "Structures.h"
+#include "Callback.h"
 
 //
 // Tombana's thread message system. Probably crappy and there are probably better systems out there
@@ -64,11 +65,15 @@ static const int	Message_Quit		=	100;	//The user pressed close. This does not ne
 static const int	Message_Login		=	1000;	//with Username and Password parameter
 static const int	Message_CharSelect	=	1001;
 //To the GUI thread
-static const int	Message_MsgBox				=	2000;	//parameters: text, title, windowname(optional)
+static const int	Message_MsgBox				=	2000;	//parameters: text, title, buttons(optional), callback(optional), windowname(optional)
 static const int	Message_DisplayWaitScreen	=	2001;	//parameters: text	(Any previous wait screens are closed)
 static const int	Message_CloseWaitScreen		=	2002;	//parameters: none	(Closes any previous wait screen)
 static const int	Message_DisplayLoginScreen	=	2010;	//parameters: RememberedUsername
 static const int	Message_DisplayCharSelect	=	2011;	//parameters: vector<CharacterInfo>, last_selected_char
+
+//For the Message_MsgBox, for the button parameter
+static const int	MsgBoxBtnsOk	= 0;
+static const int	MsgBoxBtnsYesNo	= 1;
 
 //==================================
 // All thread messages that have parameters
@@ -86,12 +91,14 @@ public:
 
 // Messages to the GUI thread
 
-class CMessageMsgBox : public CMessage{
+class CMessageMsgBox : public CMessage{ //See Callback.h for explanation on the callback parameter
 public:
-	CMessageMsgBox(std::string text, std::string title, std::string windowname = "") : CMessage(Message_MsgBox),
-		Text(text), Title(title), WindowName(windowname) {}
+	CMessageMsgBox(std::string text, std::string title, int buttons = MsgBoxBtnsOk, CallbackFunction* callback = 0, std::string windowname = "") : CMessage(Message_MsgBox),
+		Text(text), Title(title), Buttons(buttons), Callback(callback), WindowName(windowname) {}
 	std::string Text;
 	std::string	Title;
+	int Buttons;
+	CallbackFunction* Callback;
 	std::string WindowName;
 };
 

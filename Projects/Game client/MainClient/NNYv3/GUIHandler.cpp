@@ -85,15 +85,40 @@ bool CGUIHandler::QuitBtnClick(const CEGUI::EventArgs &e)
 	return true;
 }
 
+//================
+// Message boxes
+//================
+
+//Message box handlers in CEGUI format.
 bool CGUIHandler::MessageBoxBtnOkClick(const CEGUI::EventArgs &e)
+{
+	return MessageBoxClick(e, MsgBoxBtnOk);
+}
+
+bool CGUIHandler::MessageBoxBtnYesClick(const CEGUI::EventArgs &e)
+{
+	return MessageBoxClick(e, MsgBoxBtnYes);
+}
+
+bool CGUIHandler::MessageBoxBtnNoClick(const CEGUI::EventArgs &e)
+{
+	return MessageBoxClick(e, MsgBoxBtnNo);
+}
+
+//The message box handler calls the callback function if one is specified
+bool CGUIHandler::MessageBoxClick(const CEGUI::EventArgs &e, int Button)
 {
 	CEGUI::WindowEventArgs& arg = *(CEGUI::WindowEventArgs*)&e;
 	CEGUI::Window *MsgBox = arg.window->getParent();
-	mWindowManager->destroyWindow(MsgBox);
+	CallbackFunction* callback = (CallbackFunction*)MsgBox->getUserData();
+	bool Destroy = true;
+	if( callback ) Destroy = callback->CallCallback((void*)Button);
+	if( Destroy ) mWindowManager->destroyWindow(MsgBox);
 	return true;
 }
 
-CEGUI::Window* CGUIHandler::MsgBox(std::string Text, std::string Title, std::string WindowName)
+//Creates and shows a message box
+CEGUI::Window* CGUIHandler::MsgBox(std::string Text, std::string Title, int Buttons, CallbackFunction* Callback, std::string WindowName)
 {
 	CEGUI::Window *MsgBox = 0;
 	try{
@@ -101,26 +126,43 @@ CEGUI::Window* CGUIHandler::MsgBox(std::string Text, std::string Title, std::str
 	}catch( CEGUI::AlreadyExistsException ){
 		return 0;
 	}
+	MsgBox->setUserData(Callback);
+
 	CEGUI::Window *Label = mWindowManager->createWindow("TaharezLook/StaticText");
-	CEGUI::Window *ButtonOk = mWindowManager->createWindow("TaharezLook/Button");
 
 	Label->setProperty("HorzFormatting", "WordWrapLeftAligned");
 	Label->setArea(CEGUI::URect(CEGUI::UDim(0.03,0), CEGUI::UDim(0.15,0), CEGUI::UDim(0.97,0), CEGUI::UDim(0.80,0)));
-	ButtonOk->setSize(CEGUI::UVector2(CEGUI::UDim(0.40,0), CEGUI::UDim(0.14,0)));
-	ButtonOk->setPosition(CEGUI::UVector2(CEGUI::UDim(0.30,0), CEGUI::UDim(0.83,0)));
 	MsgBox->setSize(CEGUI::UVector2(CEGUI::UDim(0.40,0), CEGUI::UDim(0.30,0)));
 	MsgBox->setPosition(CEGUI::UVector2(CEGUI::UDim(0.30,0), CEGUI::UDim(0.35,0)));
 
 	MsgBox->setText(Title);
 	Label->setText(Text);
-	ButtonOk->setText("Ok");
-	ButtonOk->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::MessageBoxBtnOkClick, this));
 
 	MsgBox->addChildWindow(Label);
-	MsgBox->addChildWindow(ButtonOk);
 	MsgBox->setAlwaysOnTop(true);
 	mRootWindow->addChildWindow(MsgBox);
 
+	if( Buttons == MsgBoxBtnsYesNo ){
+		CEGUI::Window *ButtonYes = mWindowManager->createWindow("TaharezLook/Button");
+		CEGUI::Window *ButtonNo = mWindowManager->createWindow("TaharezLook/Button");
+		ButtonYes->setSize(CEGUI::UVector2(CEGUI::UDim(0.30,0), CEGUI::UDim(0.14,0)));
+		ButtonYes->setPosition(CEGUI::UVector2(CEGUI::UDim(0.18,0), CEGUI::UDim(0.83,0)));
+		ButtonNo->setSize(CEGUI::UVector2(CEGUI::UDim(0.30,0), CEGUI::UDim(0.14,0)));
+		ButtonNo->setPosition(CEGUI::UVector2(CEGUI::UDim(0.52,0), CEGUI::UDim(0.83,0)));
+		ButtonYes->setText("Yes");
+		ButtonNo->setText("No");
+		ButtonYes->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::MessageBoxBtnYesClick, this));
+		ButtonNo->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::MessageBoxBtnNoClick, this));
+		MsgBox->addChildWindow(ButtonYes);
+		MsgBox->addChildWindow(ButtonNo);
+	}else{
+		CEGUI::Window *ButtonOk = mWindowManager->createWindow("TaharezLook/Button");
+		ButtonOk->setSize(CEGUI::UVector2(CEGUI::UDim(0.40,0), CEGUI::UDim(0.14,0)));
+		ButtonOk->setPosition(CEGUI::UVector2(CEGUI::UDim(0.30,0), CEGUI::UDim(0.83,0)));
+		ButtonOk->setText("Ok");
+		ButtonOk->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::MessageBoxBtnOkClick, this));
+		MsgBox->addChildWindow(ButtonOk);
+	}
 	return MsgBox;
 }
 
@@ -224,6 +266,6 @@ bool CGUIHandler::LoginBtnClick(const CEGUI::EventArgs &e)
 
 bool CGUIHandler::AboutBtnClick(const CEGUI::EventArgs &e)
 {
-	MsgBox("NNYv3 stands for No Name Yet version 3.\nNNYv3 is an open source MMORPG client made mainly by nitrix and Tombana.", "About NNYv3", "NNYv3/Aboutbox");
+	MsgBox("NNYv3 stands for No Name Yet version 3.\nNNYv3 is an open source MMORPG client made mainly by nitrix and Tombana.", "About NNYv3", MsgBoxBtnsOk, 0, "NNYv3/Aboutbox");
 	return true;
 }

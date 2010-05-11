@@ -43,7 +43,8 @@ int CMainClient::HandleWorldLogin(WORD Cmd, ByteArray& capsule)
 							Message = "Invalid password.";
 							break;
 						case ACK_ALREADY:
-							Message = "You were already logged in.";
+							//TODO: Possibility to kick
+							Message = "Your account is already logged in. Do you want to kick that account?\nAn 'Yes'-'No' Message box is gonna be made soon ;)";
 							break;
 						case ACK_REFUSED:
 							Message = "The server explicitly refused your connection. You might be banned.";

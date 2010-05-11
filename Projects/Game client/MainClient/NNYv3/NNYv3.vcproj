@@ -282,6 +282,10 @@
 				Name="UI"
 				>
 				<File
+					RelativePath=".\Callback.h"
+					>
+				</File>
+				<File
 					RelativePath=".\GUIHandler.h"
 					>
 				</File>

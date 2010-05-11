@@ -87,7 +87,7 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 			case Message_MsgBox:
 				{
 					CMessageMsgBox* msgbox = (CMessageMsgBox*)msg;
-					mGUIHandler->MsgBox(msgbox->Text, msgbox->Title, msgbox->WindowName);
+					mGUIHandler->MsgBox(msgbox->Text, msgbox->Title, msgbox->Buttons, msgbox->Callback, msgbox->WindowName);
 				}
 				break;
 			case Message_DisplayWaitScreen:
