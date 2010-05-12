@@ -59,17 +59,26 @@ private:
 // All thread message constants
 //==================================
 
+//
 //General messages
+//
 static const int	Message_Quit		=	100;	//The user pressed close. This does not neccesarily mean that the client should close immediately. There can be a confirmation or something like that.
+//
 //To the main thread
-static const int	Message_Login		=	1000;	//with Username and Password parameter
-static const int	Message_CharSelect	=	1001;
+//
+static const int	Message_Login		=	1000;	//parameters: Username, Password
+static const int	Message_KickAccount	=	1001;	//parameters: bool (true kicks and continues, false will close connection)
+static const int	Message_CharSelect	=	1002;	//parameters: slot
+//
 //To the GUI thread
+//
 static const int	Message_MsgBox				=	2000;	//parameters: text, title, buttons(optional), callback(optional), windowname(optional)
 static const int	Message_DisplayWaitScreen	=	2001;	//parameters: text	(Any previous wait screens are closed)
 static const int	Message_CloseWaitScreen		=	2002;	//parameters: none	(Closes any previous wait screen)
+//Login procedure
 static const int	Message_DisplayLoginScreen	=	2010;	//parameters: RememberedUsername
-static const int	Message_DisplayCharSelect	=	2011;	//parameters: vector<CharacterInfo>, last_selected_char
+static const int	Message_LoginResponse		=	2011;	//parameters: ACK_ code
+static const int	Message_DisplayCharSelect	=	2012;	//parameters: vector<CharacterInfo>, last_selected_char
 
 //For the Message_MsgBox, for the button parameter
 static const int	MsgBoxBtnsOk	= 0;
@@ -79,8 +88,9 @@ static const int	MsgBoxBtnsYesNo	= 1;
 // All thread messages that have parameters
 //==================================
 
+//
 //Messages to the main thread
-
+//
 class CMessageLogin : public CMessage{
 public:
 	CMessageLogin(std::string username, std::string password) : CMessage(Message_Login),
@@ -89,8 +99,15 @@ public:
 	std::string Password;
 };
 
-// Messages to the GUI thread
+class CMessageKickAccount : public CMessage{
+public:
+	CMessageKickAccount(bool Kick) : CMessage(Message_KickAccount), DoKick(Kick) {};
+	bool DoKick;
+};
 
+//
+// Messages to the GUI thread
+//
 class CMessageMsgBox : public CMessage{ //See Callback.h for explanation on the callback parameter
 public:
 	CMessageMsgBox(std::string text, std::string title, int buttons = MsgBoxBtnsOk, CallbackFunction* callback = 0, std::string windowname = "") : CMessage(Message_MsgBox),
@@ -108,10 +125,18 @@ public:
 	std::string Text;
 };
 
+// Login procedure
+
 class CMessageDisplayLoginScreen : public CMessage{
 public:
 	CMessageDisplayLoginScreen(std::string rememberedusername) : CMessage(Message_DisplayLoginScreen), RememberedUsername(rememberedusername) {}
 	std::string	RememberedUsername;
+};
+
+class CMessageLoginResponse : public CMessage{
+public:
+	CMessageLoginResponse(int code) : CMessage(Message_LoginResponse), Code(code) {}
+	int Code;
 };
 
 class CMessageDisplayCharSelect : public CMessage{

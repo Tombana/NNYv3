@@ -85,6 +85,22 @@ int CMainClient::Run(void)
 						StartNetworkThread();
 					}
 					break;
+				case Message_KickAccount:
+					{
+						CMessageKickAccount* kickmsg = (CMessageKickAccount*)msg;
+						if( kickmsg->DoKick == false ){
+							m_state = State_LoginScreen;
+							m_mainsocket.socket_close();
+						}else{
+							//TODO: implement (waiting for nitrix to do the packet)
+							//ByteArray KickPacket;
+							//KickPacket.addCmd(PCKT_C_KICK);
+							//m_mainsocket << KickPacket;
+							//remove:
+							m_ui.SendThreadMessage(new CMessageMsgBox("Sorry, not implemented yet.\nWaiting for nitrix to do the packet ;)", "Problem?"));
+						}
+					}
+					break;
 				case Message_CharSelect:
 					if( m_state != State_CharSelectScreen ) break;
 					m_state = State_SelectingChar;

@@ -113,7 +113,10 @@ bool CGUIHandler::MessageBoxClick(const CEGUI::EventArgs &e, int Button)
 	CallbackFunction* callback = (CallbackFunction*)MsgBox->getUserData();
 	bool Destroy = true;
 	if( callback ) Destroy = callback->CallCallback((void*)Button);
-	if( Destroy ) mWindowManager->destroyWindow(MsgBox);
+	if( Destroy ){
+		if( callback ) delete callback;
+		mWindowManager->destroyWindow(MsgBox);
+	}
 	return true;
 }
 

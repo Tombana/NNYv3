@@ -48,4 +48,9 @@ private:
 
 	int SetupOgre(void);
 	int CleanupOgre(void);
+
+	//=============
+	// Login section
+	//=============
+	bool MsgBoxKickCallback(void* Param);
 };

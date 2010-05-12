@@ -10,9 +10,9 @@
 //Usage example:
 //If you want to pass CUIMain::SomeCallback as a callback
 //then pass this complete thing as parameter: (assuming m_uimain is a pointer to the class)
-// new MemberCallbackFunction(&CUIMain::SomeCallback, m_uimain)
+// new MemberCallbackFunction<CUIMain>(&CUIMain::SomeCallback, m_uimain)
 //Or from within the CUIMain class it would be
-// new MemberCallbackFunction(&CUIMain::SomeCallback, this)
+// new MemberCallbackFunction<CUIMain>(&CUIMain::SomeCallback, this)
 //=================================
 
 //Abstract base class
@@ -33,7 +33,7 @@ public:
 
 	virtual bool CallCallback(void* Param)
 	{
-		return (m_objet->*m_function)(Param);
+		return (m_object->*m_function)(Param);
 	}
 
 private:

@@ -33,31 +33,11 @@ int CMainClient::HandleWorldLogin(WORD Cmd, ByteArray& capsule)
 					ByteArray CharPacket;
 					CharPacket.addCmd(PCKT_C_GETCHARLIST);
 					m_mainsocket << CharPacket;
-				}else{
-					std::string Message;
-					switch(code){
-						case ACK_NOT_FOUND:
-							Message = "The server was unable to find your username in the database.";
-							break;
-						case ACK_DOESNT_MATCH:
-							Message = "Invalid password.";
-							break;
-						case ACK_ALREADY:
-							//TODO: Possibility to kick
-							Message = "Your account is already logged in. Do you want to kick that account?\nAn 'Yes'-'No' Message box is gonna be made soon ;)";
-							break;
-						case ACK_REFUSED:
-							Message = "The server explicitly refused your connection. You might be banned.";
-							break;
-						default:
-							Message = "Error: invalid code in PCKT_W_AUTH_ACK.";
-							break;
-					}
-					ret = -1;
+				}else if( code != ACK_ALREADY ){
+					ret = -1; //Close connection
 					m_state = State_LoginScreen;
-					m_ui.SendThreadMessage(new CMessageMsgBox(Message, "Error"));
-					m_ui.SendThreadMessage(Message_CloseWaitScreen);
 				}
+				m_ui.SendThreadMessage(new CMessageLoginResponse(code));
 			}
 			break;
 		//=====================================
