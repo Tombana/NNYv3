@@ -61,7 +61,7 @@ break;
 //=====================================
 case PCKT_C_ENTER_WORLD:
 {
-        //-------- DISPLAY DEBUG INFO
+    //-------- DISPLAY DEBUG INFO
     std::cerr << "[capsuleHandler] -- PCKT_C_ENTER_WORLD --" << std::endl;
     BYTE slotID = capsule.read<BYTE>();
 
@@ -127,6 +127,40 @@ case PCKT_C_ENTER_WORLD:
 
         //-------- Send packet to client
         threadData.socket << packet;
+    } else {
+        std::cerr << "Packet ignored; user isn't authenticated." << std::endl;
+    }
+}
+break;
+
+//=====================================
+// PCKT_C_KICK_GHOST_ACCOUNT
+//=====================================
+case PCKT_C_KICK_GHOST_ACCOUNT:
+{
+    //-------- DISPLAY DEBUG INFO
+    std::cerr << "[capsuleHandler] -- PCKT_C_KICK_GHOST_ACCOUNT --" << std::endl;
+    //No parameters
+
+    if (TDL.authenticated) {
+        //TODO (NitriX#): Kick all characters logged on this account
+    } else {
+        std::cerr << "Packet ignored; user isn't authenticated." << std::endl;
+    }
+}
+break;
+
+//=====================================
+// PCKT_C_KICK_GHOST_CHAR
+//=====================================
+case PCKT_C_KICK_GHOST_CHAR:
+{
+    //-------- DISPLAY DEBUG INFO
+    std::cerr << "[capsuleHandler] -- PCKT_C_KICK_GHOST_CHAR --" << std::endl;
+    BYTE slotID = capsule.read<BYTE>();
+
+    if (TDL.authenticated) {
+        //TODO (NitriX#): Kick a character logged on this account
     } else {
         std::cerr << "Packet ignored; user isn't authenticated." << std::endl;
     }

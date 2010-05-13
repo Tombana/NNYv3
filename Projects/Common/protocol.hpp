@@ -1,39 +1,49 @@
-//Next available PCKT CODE is      0x0014 //PCKT decimal = 20
+//Next available PCKT CODE is       0x0016 //PCKT decimal = 22
 
-#define NNY_PROTOCOL_VERSION    35
+#define NNY_PROTOCOL_VERSION        36
 
 /*****************************
         [X] Multi-directional
             Debug / Temporary
 *****************************/
-#define PCKT_X_DEBUG            0x0009 //PCKT decimal = 9
+#define PCKT_X_DEBUG                0x0009 //PCKT decimal = 9
 //Info: Send a string for debugging purpose
 //Params: [PSTR]Text
 
 /*****************************
         [C]lient packets
 *****************************/
-#define PCKT_C_REVISION         0x0002 //PCKT decimal = 2
+#define PCKT_C_REVISION             0x0002 //PCKT decimal = 2
 //Info: Send your revision to the realm server
 //Params: [DWORD]Client version
-#define PCKT_C_AUTH             0x000C //PCKT decimal = 12
+#define PCKT_C_AUTH                 0x000C //PCKT decimal = 12
 //Info: Authentication to the world server
 //Params: [String]Username (will be lowercased by the server)
 //Params: [String]Password (can be hashed with md5+salt or whatever)
-#define PCKT_C_GETCHARLIST      0x000E //PCKT decimal = 14
+#define PCKT_C_GETCHARLIST          0x000E //PCKT decimal = 14
 //Info: Request your character list to the world server
 //Important: The world server will ignore this packet if you aren't authenticated.
 //Params: [None]
-#define PCKT_C_DELETECHAR       0x0011 //PCKT decimal = 17
+#define PCKT_C_DELETECHAR           0x0011 //PCKT decimal = 17
 //Info: Delete a character from your account
 //Important: The world server will ignore this packet if you aren't authenticated.
 //Note: This packet will be performed silently by the server. Or you assume the character
 //      really has been deleted or send PCKT_C_GETCHARLIST again to receive the list updated.
 //Params: [Byte]Slot id
-#define PCKT_C_ENTER_WORLD      0x0012 //PCKT decimal = 18
+#define PCKT_C_ENTER_WORLD          0x0012 //PCKT decimal = 18
 //Info: Entering/Logging into the world server
 //Important: The world server will ignore this packet if you aren't authenticated.
 //Note: The server will return PCKT_W_ENTER_WORLD_ACK in response.
+//Params: [Byte]Slot id
+#define PCKT_C_KICK_GHOST_ACCOUNT   0x0014 //PCKT decimal = 20
+//Info: Kick all characters logged on this account on the whole cluster (all world servers)
+//Important: The world server will ignore this packet if you aren't authenticated.
+//Note: This packet doesn't take any parameters, the action will be performed on the current authenticated account.
+//Params: [None]
+#define PCKT_C_KICK_GHOST_CHAR      0x0015 //PCKT decimal = 21
+//Info: Kick a character logged on your account (in case MULTIPLE_LOGGING_ALLOWED is turned on)
+//Important: The world server will ignore this packet if you aren't authenticated.
+//Note: The action will be performed on the slotID of current authenticated account.
 //Params: [Byte]Slot id
 
 /*****************************
