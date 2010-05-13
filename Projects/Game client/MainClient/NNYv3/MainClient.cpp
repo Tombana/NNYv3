@@ -92,12 +92,13 @@ int CMainClient::Run(void)
 							m_state = State_LoginScreen;
 							m_mainsocket.socket_close();
 						}else{
-							//TODO: implement (waiting for nitrix to do the packet)
-							//ByteArray KickPacket;
-							//KickPacket.addCmd(PCKT_C_KICK);
-							//m_mainsocket << KickPacket;
-							//remove:
-							m_ui.SendThreadMessage(new CMessageMsgBox("Sorry, not implemented yet.\nWaiting for nitrix to do the packet ;)", "Problem?"));
+							ByteArray Packet;
+							//Send kick packet
+							Packet.addCmd(PCKT_C_KICK_GHOST_ACCOUNT);
+							//Send get character list packet
+							m_Characters.clear();
+							Packet.addCmd(PCKT_C_GETCHARLIST);
+							m_mainsocket << Packet;
 						}
 					}
 					break;
