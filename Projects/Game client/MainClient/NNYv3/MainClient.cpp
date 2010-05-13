@@ -90,15 +90,16 @@ int CMainClient::Run(void)
 						CMessageKickAccount* kickmsg = (CMessageKickAccount*)msg;
 						if( kickmsg->DoKick == false ){
 							m_state = State_LoginScreen;
+							m_ui.SendThreadMessage(new CMessageDisplayLoginScreen(m_Username));
 							m_mainsocket.socket_close();
 						}else{
-							ByteArray Packet;
-							//Send kick packet
-							Packet.addCmd(PCKT_C_KICK_GHOST_ACCOUNT);
-							//Send get character list packet
-							m_Characters.clear();
-							Packet.addCmd(PCKT_C_GETCHARLIST);
-							m_mainsocket << Packet;
+							//Log in again with kick set to true
+							ByteArray LoginPacket;
+							LoginPacket.addCmd(PCKT_C_AUTH);
+							LoginPacket.addString(m_Username);
+							LoginPacket.addString(m_Password);
+							LoginPacket.addBool(true); //Wether to kick the account that is logged in.
+							m_mainsocket << LoginPacket;
 						}
 					}
 					break;
@@ -156,8 +157,7 @@ void* CMainClient::NetworkThread(void)
 		case State_LoggingIn:
 			if( m_WorldIP.empty() || !m_WorldPort || !m_mainsocket.socket_connect(m_WorldIP, m_WorldPort)){
 				m_state = State_LoginScreen;
-				m_ui.SendThreadMessage(new CMessageMsgBox("Could not connect to the world server!", "Error"));
-				m_ui.SendThreadMessage(Message_CloseWaitScreen);
+				m_ui.SendThreadMessage(Message_NoWorld);
 			}
 			break;
 		default:

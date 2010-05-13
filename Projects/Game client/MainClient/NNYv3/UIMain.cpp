@@ -105,10 +105,18 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 			//=================
 			// Login section
 			//=================
+			case Message_NoWorld:
+				{
+					mGUIHandler->MsgBox("Unable to connect to the world server", "Error");
+					mGUIHandler->DisplayLoginScreen("");
+					mGUIHandler->CloseWaitScreen();
+				}
+				break;
 			case Message_DisplayLoginScreen:
 				{
 					CMessageDisplayLoginScreen* loginmsg = (CMessageDisplayLoginScreen*)msg;
 					mGUIHandler->DisplayLoginScreen(loginmsg->RememberedUsername);
+					mGUIHandler->CloseWaitScreen();
 				}
 				break;
 			case Message_LoginResponse:
@@ -133,6 +141,7 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 								break;
 						}
 						mGUIHandler->MsgBox(Message, "Error");
+						mGUIHandler->DisplayLoginScreen("");
 						mGUIHandler->CloseWaitScreen();
 					}
 				}
@@ -155,7 +164,6 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 bool CUIMain::MsgBoxKickCallback(void* Param)
 {
 	bool DoKick = ((int)Param == CGUIHandler::MsgBoxBtnYes);
-	if( !DoKick ) mGUIHandler->CloseWaitScreen();
 	CMainClient::getSingleton().SendThreadMessage(new CMessageKickAccount(DoKick));
 	return true;
 }

@@ -76,6 +76,7 @@ static const int	Message_MsgBox				=	2000;	//parameters: text, title, buttons(op
 static const int	Message_DisplayWaitScreen	=	2001;	//parameters: text	(Any previous wait screens are closed)
 static const int	Message_CloseWaitScreen		=	2002;	//parameters: none	(Closes any previous wait screen)
 //Login procedure
+static const int	Message_NoWorld				=	2009;	//parameters: none
 static const int	Message_DisplayLoginScreen	=	2010;	//parameters: RememberedUsername
 static const int	Message_LoginResponse		=	2011;	//parameters: ACK_ code
 static const int	Message_DisplayCharSelect	=	2012;	//parameters: vector<CharacterInfo>, last_selected_char

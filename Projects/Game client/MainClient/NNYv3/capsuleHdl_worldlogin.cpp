@@ -18,6 +18,7 @@ int CMainClient::HandleWorldLogin(WORD Cmd, ByteArray& capsule)
 			LoginPacket.addCmd(PCKT_C_AUTH);
 			LoginPacket.addString(m_Username);
 			LoginPacket.addString(m_Password);
+			LoginPacket.addBool(false); //Wether to kick the account that is logged in.
 			m_mainsocket << LoginPacket;
 			}
 			break;

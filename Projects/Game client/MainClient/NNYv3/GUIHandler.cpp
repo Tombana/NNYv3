@@ -205,7 +205,8 @@ int CGUIHandler::CloseWaitScreen(void)
 {
 	if( WaitScreen ){
 		//Detach it from parent so it is not drawn
-		WaitScreen->getParent()->removeChildWindow(WaitScreen);
+		CEGUI::Window* Parent = WaitScreen->getParent();
+		if( Parent ) Parent->removeChildWindow(WaitScreen);
 	}
 	return 1;
 }
@@ -215,7 +216,12 @@ int CGUIHandler::CloseWaitScreen(void)
 //===================
 int	CGUIHandler::DisplayLoginScreen(const std::string& RememberedUsername)
 {
-	if( mWindowManager->isWindowPresent("LoginWindow") == false ){
+	bool CreateNew = false;
+	try{ //See if the window already exists
+		CEGUI::Window *LoginWindow = mWindowManager->getWindow("LoginWindow");
+		LoginWindow->setEnabled(true);
+	}catch(CEGUI::UnknownObjectException){ CreateNew = true; };
+	if( CreateNew ){
 		//Load the window layout from file
 		CEGUI::Window *LoginWindow = mWindowManager->loadWindowLayout("loginscreen.layout");
 		//Set the password box to be masked
@@ -234,11 +240,14 @@ int	CGUIHandler::DisplayLoginScreen(const std::string& RememberedUsername)
 		//Attach the window to the root window so it's visible
 		mRootWindow->addChildWindow(LoginWindow);
 	}
+	
 	//Set the remembered username
-	try{
-		CEGUI::Window *txtUsername = mWindowManager->getWindow("LoginWindow/Username");
-		txtUsername->setText(RememberedUsername);
-	}catch(CEGUI::UnknownObjectException){}
+	if( !RememberedUsername.empty() ){
+		try{
+			CEGUI::Window *txtUsername = mWindowManager->getWindow("LoginWindow/Username");
+			txtUsername->setText(RememberedUsername);
+		}catch(CEGUI::UnknownObjectException){}
+	}
 	return 1;
 }
 
@@ -260,10 +269,17 @@ bool CGUIHandler::LoginBtnClick(const CEGUI::EventArgs &e)
 		CEGUI::Window *txtPassword = mWindowManager->getWindow("LoginWindow/Password");
 		Password = txtPassword->getText().c_str();
 	}catch(CEGUI::UnknownObjectException){}
+
 	if( Username.empty() || Password.empty() )
 		MsgBox("Please fill in both the username and password!", "Error");
-	else
+	else{
+		try{ //Disable the login window
+			CEGUI::Window *LoginWindow = mWindowManager->getWindow("LoginWindow");
+			LoginWindow->setEnabled(false);
+		}catch(CEGUI::UnknownObjectException){}
+		//Send login message
 		CMainClient::getSingleton().SendThreadMessage(new CMessageLogin(Username, Password));
+	}
 	return true;
 }
 
