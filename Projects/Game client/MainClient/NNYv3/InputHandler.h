@@ -9,7 +9,7 @@
 class CInputHandler : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener
 {
 public:
-	CInputHandler(Ogre::RenderWindow *window);
+	CInputHandler(Ogre::RenderWindow *window, Ogre::Camera *Cam, Ogre::SceneManager *SceneMgr);
 	~CInputHandler(void);
 	
 	bool frameRenderingQueued(const Ogre::FrameEvent& evt);
@@ -29,8 +29,16 @@ public:
 
 private:
 	Ogre::RenderWindow	*mWindow;
+	Ogre::Camera		*mCamera;
+	Ogre::SceneManager	*mSceneMgr;
 	OIS::InputManager	*mInputManager;
 	OIS::Keyboard		*mKeyboard;
 	OIS::Mouse			*mMouse;
 	CEGUI::System		*mGUISystem;
+
+	//Camera related
+	Ogre::SceneNode		*mCamNode;
+	Ogre::Real			mCamDist; //Zoom. Higher means further away
+	Ogre::Real			MinCamDist;
+	Ogre::Real			MaxCamDist;
 };

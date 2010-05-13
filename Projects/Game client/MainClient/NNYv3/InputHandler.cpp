@@ -1,8 +1,9 @@
 #include "InputHandler.h"
 #include "MainClient.h"
 
-CInputHandler::CInputHandler(Ogre::RenderWindow *window) :
-	mWindow(window), mInputManager(0), mKeyboard(0), mMouse(0), mGUISystem(CEGUI::System::getSingletonPtr())
+CInputHandler::CInputHandler(Ogre::RenderWindow *window, Ogre::Camera *Cam, Ogre::SceneManager *SceneMgr) :
+	mWindow(window), mCamera(Cam), mSceneMgr(SceneMgr), mInputManager(0), mKeyboard(0), mMouse(0), mGUISystem(CEGUI::System::getSingletonPtr()),
+		mCamNode(0), mCamDist(200), MinCamDist(100), MaxCamDist(800)
 {
 	size_t windowHnd = 0;
 	mWindow->getCustomAttribute("WINDOW", &windowHnd);
@@ -24,6 +25,12 @@ CInputHandler::CInputHandler(Ogre::RenderWindow *window) :
 
 	//Register this class as a Window listener
 	Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
+
+	//The CamNode will be the point that the camera rotates around, so a point at the player
+	mCamNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("CameraNode");
+	mCamNode->attachObject(mCamera);
+	mCamera->setPosition(Ogre::Vector3(0,0,mCamDist)); //Set the camera 100 units in front the node
+	mCamera->lookAt(Ogre::Vector3(0,0,0)); //Look at the node
 }
 
 CInputHandler::~CInputHandler(void)
@@ -71,6 +78,19 @@ bool CInputHandler::mouseMoved(const OIS::MouseEvent &arg)
 		mGUISystem->injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
 		// Scroll wheel.
 		if (arg.state.Z.rel) mGUISystem->injectMouseWheelChange(arg.state.Z.rel / 120.0f);
+	}
+	//Zoom using scroll wheel
+	if( arg.state.Z.rel ){
+		mCamDist -= Ogre::Real(arg.state.Z.rel) / 15.0f;
+		if( mCamDist < MinCamDist ) mCamDist = MinCamDist;
+		else if( mCamDist > MaxCamDist ) mCamDist = MaxCamDist;
+		mCamera->setPosition(Ogre::Vector3(0,0,mCamDist));
+	}
+	//Look around when right mouse button is down (regardless of wether the mouse is on a window)
+	if (arg.state.buttonDown(OIS::MB_Right))
+	{
+		mCamNode->yaw(Ogre::Degree(-0.1 * arg.state.X.rel), Ogre::Node::TS_WORLD);
+		mCamNode->pitch(Ogre::Degree(-0.1 * arg.state.Y.rel), Ogre::Node::TS_LOCAL);
 	}
 	return true;
 }
