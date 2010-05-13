@@ -9,6 +9,9 @@ case PCKT_C_AUTH:
     std::string password = capsule.readString();
     std::cout << "[capsuleHandler] Username: " << username << std::endl;
     std::cout << "[capsuleHandler] Password: " << password << std::endl;
+    std::cout << "[capsuleHandler] Kick ghost: " << (unsigned int)capsule.readBool() << std::endl;
+
+    //TODO (NitriX#): Kick ghost account if bool enabled
 
     //-------- PERFORM SQL QUERY & CREATE A 'RESULTS' POINTER & A 'ROWS' ARRAY
     std::string request = "SELECT id,password,nbr_online,banned FROM accounts WHERE username='" + username + "'";

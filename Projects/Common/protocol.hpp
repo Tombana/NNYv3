@@ -1,6 +1,6 @@
-//Next available PCKT CODE is       0x0016 //PCKT decimal = 22
+//Next available PCKT CODE is       0x0014 //PCKT decimal = 20
 
-#define NNY_PROTOCOL_VERSION        36
+#define NNY_PROTOCOL_VERSION        37
 
 /*****************************
         [X] Multi-directional
@@ -20,6 +20,7 @@
 //Info: Authentication to the world server
 //Params: [String]Username (will be lowercased by the server)
 //Params: [String]Password (can be hashed with md5+salt or whatever)
+//Params: [Bool]Kick ghost
 #define PCKT_C_GETCHARLIST          0x000E //PCKT decimal = 14
 //Info: Request your character list to the world server
 //Important: The world server will ignore this packet if you aren't authenticated.
@@ -35,16 +36,7 @@
 //Important: The world server will ignore this packet if you aren't authenticated.
 //Note: The server will return PCKT_W_ENTER_WORLD_ACK in response.
 //Params: [Byte]Slot id
-#define PCKT_C_KICK_GHOST_ACCOUNT   0x0014 //PCKT decimal = 20
-//Info: Kick all characters logged on this account on the whole cluster (all world servers)
-//Important: The world server will ignore this packet if you aren't authenticated.
-//Note: This packet doesn't take any parameters, the action will be performed on the current authenticated account.
-//Params: [None]
-#define PCKT_C_KICK_GHOST_CHAR      0x0015 //PCKT decimal = 21
-//Info: Kick a character logged on your account (in case MULTIPLE_LOGGING_ALLOWED is turned on)
-//Important: The world server will ignore this packet if you aren't authenticated.
-//Note: The action will be performed on the slotID of current authenticated account.
-//Params: [Byte]Slot id
+//Params: [Bool]Kick ghost
 
 /*****************************
         [R]ealm server
