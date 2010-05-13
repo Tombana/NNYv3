@@ -22,8 +22,19 @@ struct s_thread_data {
 };
 
 struct s_thread_data_local {
+    //Authentification
     unsigned int accountID;
     bool         authenticated;
+    //Entering world
+    bool         logged;
+    //Character infos
+    unsigned int id;
+    std::string  name;
+    BYTE         level;
+    bool         gender;
+    unsigned int x;
+    unsigned int y;
+    unsigned int z;
 };
 
 //grid.h is placed here because it needs s_thread_data to be declared when included

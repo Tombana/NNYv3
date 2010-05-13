@@ -38,7 +38,7 @@ case PCKT_C_AUTH:
     //-------- CHECK THE ENTRY WE FOUND
     answer.addCmd(PCKT_W_AUTH_ACK);
     if (flag_entryFound) {
-        if (db_nbr_online > 0 && !CONFIG_DUAL_LOGGING_ALLOWED) {
+        if (db_nbr_online > 0 && !CONFIG_MULTIPLE_LOGGING_ALLOWED) {
             answer.addAck(ACK_ALREADY); //Already some characters online and dual logging is not allowed
         } else {
             if (db_password == password) {
@@ -61,7 +61,5 @@ case PCKT_C_AUTH:
 
     //-------- SEND A REPLY (ACK) TO THE CLIENT
     threadData.socket << answer;
-
-    //-------- SEND CHARLIST
 }
 break;

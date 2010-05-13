@@ -20,6 +20,13 @@ void threadHandler (SOCKET &m_socketID) {
 
     s_thread_data_local threadDataLocal;
     threadDataLocal.authenticated = false;
+    threadDataLocal.logged = false;
+
+    //====================================
+    // Creating an alias/reference because sometimes I'm lazy
+    //====================================
+    s_thread_data       &TD  = threadData;
+    s_thread_data_local &TDL = threadDataLocal;
 
     //====================================
     //       SERVER WELCOME PACKET
@@ -50,9 +57,16 @@ void threadHandler (SOCKET &m_socketID) {
     //====================================
     //  EVEN MORE TASK BEFORE CLEANING
     //====================================
-    if (threadDataLocal.authenticated) {
-        std::string request = "UPDATE accounts SET nbr_online=nbr_online-1 WHERE id=" + intToStr(threadDataLocal.accountID);
+    if (TDL.authenticated) {
+        //If you were authentificated, decrement the variable
+        std::string request = "UPDATE accounts SET nbr_online=nbr_online-1 WHERE id=" + intToStr(TDL.accountID);
         g_database.query(request);
+        //Oh and is the character logged in?!
+        if (TDL.logged) {
+            std::string request = "UPDATE characters SET online=0 WHERE id=" + intToStr(TDL.id);
+            g_database.query(request);
+            std::cerr << "Character " << TDL.name << " has logged out!" << std::endl;
+        }
     }
 
     //NO NEED PTHREAD_EXIT OR ANY RETURN!

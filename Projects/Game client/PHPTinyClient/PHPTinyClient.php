@@ -143,6 +143,25 @@ while (true) {
 			if ($VERBOSE) echo 'Capsule: '.$CAPSULE->getBuffer()."\n";
 			while (true) { //a loop to parse all CMDs in the capsule
 				switch ($CAPSULE->readWord()) {
+					//-------------------------
+					case PCKT_W_ENTER_WORLD_ACK:
+						echo '[capsuleHandler] We got an ACK packet from the server about entering the world!'."\n";
+							switch ($CAPSULE->readAck()) {
+								case ACK_SUCCESS:
+									echo 'HURAY! You are now logged in! :)'."\n";
+									break;
+								case ACK_ALREADY:
+									echo 'Someone\'s already logged on that character; sorry.'."\n";
+									break;
+								case ACK_NOT_FOUND:
+									echo 'This character doesn\'t exists anymore!'."\n";
+									break;
+								default:
+									echo 'Error code #2'."\n";
+									break;
+							}
+						break;
+					//-------------------------
 					case PCKT_W_CHARLIST_EOF:
 						echo '[capsuleHandler] End of character list, you can now enter the world!'."\n";
 						$BA->addCmd(PCKT_C_ENTER_WORLD);
@@ -153,6 +172,7 @@ while (true) {
 						socket_write($SOCKET, $BA->getPacket());
 						$BA->clear();
 						break;
+					//-------------------------
 					case PCKT_W_CHARLIST_ADD:
 						echo '[capsuleHandler] Charlist, new character:'."\n";
 						echo '> Slot: '.$CAPSULE->readByte()."\n";
@@ -165,6 +185,7 @@ while (true) {
 						}
 						echo '> Online: '.$CAPSULE->readBool()."\n";
 						break;
+					//-------------------------
 					case PCKT_W_AUTH_ACK:
 						echo '[capsuleHandler] World server auth ACK'."\n";
 						switch ($CAPSULE->readAck()) {
@@ -187,16 +208,19 @@ while (true) {
 								echo '~The server refused you! Banned?!'."\n";
 								break;
 							default:
-								echo '~OhOh :('."\n";
+								echo 'Error code #1'."\n";
 								break;
 						}
 						break;
+					//-------------------------
 					case PCKT_R_SERVER_GONE:
 						echo '[capsuleHandler] Server is gone, ahah!'."\n";
 						break;
+					//-------------------------
 					case PCKT_R_WELCOME:
 						echo '[capsuleHandler] Realm server welcome packet'."\n";
 						break;
+					//-------------------------
 					case PCKT_W_WELCOME:
 						echo '[capsuleHandler] World server welcome packet'."\n";
 						$BA->addCmd(PCKT_C_AUTH);
@@ -205,12 +229,14 @@ while (true) {
 						socket_write($SOCKET, $BA->getPacket());
 						$BA->clear();
 						break;
+					//-------------------------
 					case PCKT_R_CONNECT:
 						$RECONNECT = true;
 						$RECONNECT_IP = $CAPSULE->readString();
 						$RECONNECT_PORT = $CAPSULE->readWord();
 						echo '[capsuleHandler] Connect to server '.$RECONNECT_IP.' on port '.$RECONNECT_PORT."\n";
 						break;
+					//-------------------------
 					case PCKT_R_SYNC_KEY_ACK:
 						if ($CAPSULE->readByte()) {
 							echo '[capsuleHandler] Server synced!'."\n";
@@ -218,18 +244,22 @@ while (true) {
 							echo '[capsuleHandler] Server refused attempt!'."\n";
 						}
 						break;
+					//-------------------------
 					case PCKT_R_DOWNLOAD:
 						$CAPSULE->readDword();
 						$CAPSULE->readString();
 						$CAPSULE->readString();
 						echo '[capsuleHandler] File download requested but ignored'."\n";
 						break;
+					//-------------------------
 					case PCKT_R_DOWNLOAD_EOF:
 						echo '[capsuleHandler] List complete!'."\n";
 						break;
+					//-------------------------
 					case PCKT_X_DEBUG:
 						echo '[capsuleHandler] Debug message: '.$CAPSULE->readString()."\n";
 						break;
+					//-------------------------
 					default:
 						$CAPSULE->modSeek(-2);
 						echo '[capsuleHandler] Unknow packet cmdID '.$CAPSULE->readWord().'! STOP!'."\n";
