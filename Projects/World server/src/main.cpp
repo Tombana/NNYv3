@@ -25,7 +25,7 @@ Grid                      g_grid; //Grid object is thread-safe
 Database                  g_database; //Database object is thread-safe
 // == Online (authenticated/logged) user list ==
 pthread_mutex_t g_onlineList_mutex            = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
-std::list<s_thread_data_local*> g_onlineList; //Protected with g_onlineList_mutex
+std::list<s_thread_data*> g_onlineList; //Protected with g_onlineList_mutex
 
 //pthread_rwlock_t g_name = PTHREAD_RWLOCK_INITIALIZER;
 //-------------------------------------------------
@@ -43,7 +43,7 @@ int main() {
     //         CREATING MAP GRID
     //=========================================
     std::cerr << "Creating map grid... ";
-    g_grid.createMap(1);
+    g_grid.createMap(0); //default map
     std::cerr << "OK!" << std::endl;
 
     //=========================================

@@ -6,9 +6,9 @@ case PCKT_C_GETCHARLIST:
     //-------- DISPLAY DEBUG INFO
     std::cerr << "[capsuleHandler] -- PCKT_C_GETCHARLIST --" << std::endl;
 
-    if (threadDataLocal.authenticated) {
+    if (td.authenticated) {
         //-------- PERFORM SQL QUERY & CREATE A 'RESULTS' POINTER & A 'ROWS' ARRAY
-        std::string request = "SELECT slot,name,level,gender,online FROM characters WHERE account_id=" + intToStr(threadDataLocal.accountID);
+        std::string request = "SELECT slot,name,level,gender,online FROM characters WHERE account_id=" + intToStr(td.accountID);
         DB_RESULT  *results = g_database.query(DB_USE_RESULT, request);
         DB_ROW      rows;
 
@@ -30,7 +30,7 @@ case PCKT_C_GETCHARLIST:
 
         //-------- SEND A REPLY (ACK) TO THE CLIENT
         packet.addCmd(PCKT_W_CHARLIST_EOF);
-        threadData.socket << packet;
+        td.socket << packet;
     } else {
         std::cerr << "Packet ignored; user isn't authenticated." << std::endl;
     }
@@ -46,8 +46,8 @@ case PCKT_C_DELETECHAR:
     std::cerr << "[capsuleHandler] -- PCKT_C_DELETECHAR --" << std::endl;
     BYTE slotID = capsule.read<BYTE>();
 
-    if (threadDataLocal.authenticated) {
-        std::string query = "DELETE FROM characters WHERE slot=" + intToStr(slotID) + " AND account_id=" + intToStr(threadDataLocal.accountID);
+    if (td.authenticated) {
+        std::string query = "DELETE FROM characters WHERE slot=" + intToStr(slotID) + " AND account_id=" + intToStr(td.accountID);
         g_database.query(query);
         std::cerr << "Character on slot ID " << (unsigned int)slotID << " has been deleted if any was found" << std::endl;
     } else {
@@ -68,10 +68,10 @@ case PCKT_C_ENTER_WORLD:
     std::cout << "[capsuleHandler] SlotID: " << (unsigned int)capsule.read<BYTE>() << std::endl;
     std::cout << "[capsuleHandler] Kick ghost: " << (unsigned int)kick << std::endl;
 
-    if (threadDataLocal.authenticated) {
+    if (td.authenticated) {
         std::cerr << "Request to enter world with character on slotID " << (unsigned int)slotID << std::endl;
         //-------- PERFORM SQL QUERY & CREATE A 'RESULTS' POINTER & A 'ROWS' ARRAY
-        std::string request = "SELECT online,id,name,level,gender,x,y,z FROM characters WHERE slot=" + intToStr((unsigned int)slotID) + " AND account_id=" + intToStr(threadDataLocal.accountID);
+        std::string request = "SELECT online,id,name,level,gender,x,y,z,map FROM characters WHERE slot=" + intToStr((unsigned int)slotID) + " AND account_id=" + intToStr(td.accountID);
         DB_RESULT  *results = g_database.query(DB_USE_RESULT, request);
         DB_ROW      rows;
 
@@ -84,13 +84,14 @@ case PCKT_C_ENTER_WORLD:
             db_online = static_cast<bool>(atoi(rows[0])); //online
             db_found  = true;
 
-            TDL.id     = atoi(rows[1]); //id
-            TDL.name   = rows[2]; //name
-            TDL.level  = (BYTE)atoi(rows[3]); //level
-            TDL.gender = static_cast<bool>(atoi(rows[4])); //gender
-            TDL.x      = atoi(rows[5]); //x
-            TDL.y      = atoi(rows[6]); //y
-            TDL.z      = atoi(rows[7]); //z
+            td.id     = atoi(rows[1]); //id
+            td.name   = rows[2]; //name
+            td.level  = (BYTE)atoi(rows[3]); //level
+            td.gender = static_cast<bool>(atoi(rows[4])); //gender
+            td.x      = atoi(rows[5]); //x
+            td.y      = atoi(rows[6]); //y
+            td.z      = atoi(rows[7]); //z
+            td.map    = atoi(rows[8]); //map
         }
 
         //-------- WE ARE DONE WITH THE SQL PART
@@ -105,9 +106,9 @@ case PCKT_C_ENTER_WORLD:
             //Kick ghost character if bool enabled
             if (kick) {
                 pthread_mutex_lock(&g_onlineList_mutex);
-                for (std::list<s_thread_data_local*>::iterator it=g_onlineList.begin(); it!=g_onlineList.end(); ++it) {
-                    if ((*it)->logged && (*it)->id == TDL.id) {
-                        (*it)->td->socket.socket_close(); //Force disconnection
+                for (std::list<s_thread_data*>::iterator it=g_onlineList.begin(); it!=g_onlineList.end(); ++it) {
+                    if ((*it)->logged && (*it)->id == td.id) {
+                        (*it)->socket.socket_close(); //Force disconnection
                         pthread_join((*it)->thread, NULL); //wait for the thread to be terminated
                     }
                 }
@@ -121,28 +122,46 @@ case PCKT_C_ENTER_WORLD:
                 //Here everything looks good! Let the char log in
                     packet.addAck(ACK_SUCCESS);
                 //Also mark the character as logged in
-                    TDL.logged = true;
+                    td.logged = true;
                 //And perform other needed taks that i'm too lazy to take care of now like:
                     //TODO (NitriX#): [Later]Send to messenger list that you are now online
                     //TODO (NitriX#): [Later]If in any party, perform tasks it must do
                     //TODO (NitriX#): [Later]Same with guild stuff
                     //TODO (NitriX#): [Later]Everything else that must be performed at logon
                 //And now the ingame stuff:
-                    //TODO: Register to Grid where your character is
+                    //Register to Grid where your character is
+                        unsigned short grid_x = g_grid.getGridFromCoord(td.x);
+                        unsigned short grid_y = g_grid.getGridFromCoord(td.y);
+                        //first row
+                        g_grid.subscribe(grid_hdl, td.map, grid_x-1, grid_y-1);
+                        g_grid.subscribe(grid_hdl, td.map, grid_x, grid_y-1);
+                        g_grid.subscribe(grid_hdl, td.map, grid_x+1, grid_y-1);
+                        //middle row
+                        g_grid.subscribe(grid_hdl, td.map, grid_x-1, grid_y);
+                        grid_hdl = g_grid.subscribe(grid_hdl, td.map, grid_x, grid_y);
+                        g_grid.subscribe(grid_hdl, td.map, grid_x+1, grid_y);
+                        //bottom row
+                        g_grid.subscribe(grid_hdl, td.map, grid_x-1, grid_y+1);
+                        g_grid.subscribe(grid_hdl, td.map, grid_x, grid_y+1);
+                        g_grid.subscribe(grid_hdl, td.map, grid_x+1, grid_y+1);
                     //TODO: Send a spawn packet to your grid so other players see you
+                        ByteArray spawnPacket;
+                        spawnPacket.addCmd(PCKT_X_DEBUG);
+                        spawnPacket.addString("FUTURE_SPAWN_PACKET; New character is "+td.name);
+                        g_grid.send(grid_hdl, spawnPacket);
                     //TODO: Also retrieve all entities around you and send them to the client
                 //And the database ;o
-                    std::string query = "UPDATE characters SET online=1 WHERE id=" + intToStr(TDL.id);
+                    std::string query = "UPDATE characters SET online=1 WHERE id=" + intToStr(td.id);
                     g_database.query(query);
                 //And a debugging text x]
-                std::cerr << "Character " << TDL.name << " has logged in!" << std::endl;
+                std::cerr << "Character " << td.name << " has logged in!" << std::endl;
             }
         } else {
             packet.addAck(ACK_NOT_FOUND); //character not found in database!
         }
 
         //-------- Send packet to client
-        threadData.socket << packet;
+        td.socket << packet;
     } else {
         std::cerr << "Packet ignored; user isn't authenticated." << std::endl;
     }

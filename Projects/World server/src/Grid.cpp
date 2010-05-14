@@ -137,7 +137,7 @@ Grid::Handle Grid::createHandle(s_thread_data &data) {
 }
 
 //===================================
-//            SEND
+//             SEND
 // Public and thread-safe
 //===================================
 void Grid::send(Handle &handle, ByteArray &packet) {
@@ -149,4 +149,14 @@ void Grid::send(Handle &handle, ByteArray &packet) {
         ptr = ptr->next;
     }
     pthread_mutex_unlock(&handle->cell->mutex);
+}
+
+//===================================
+//       GET GRID FROM COORD
+// Public
+//===================================
+unsigned short Grid::getGridFromCoord(unsigned int xy) {
+    unsigned short grid_xy = xy / GRID_CELL_SIZE;
+    if (grid_xy*GRID_CELL_SIZE < xy) grid_xy++;
+    return grid_xy;
 }

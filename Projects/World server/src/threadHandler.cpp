@@ -1,12 +1,9 @@
 #include "threadHandler.h"
 
-//extern Grid     g_grid;
-    //Use it like this:
-    //Create an handle and store it
-    //Grid::Handle grid_hdl = g_grid.createHandle(threadData);
+extern Grid     g_grid;
 extern Database g_database;
 extern pthread_mutex_t g_onlineList_mutex;
-extern std::list<s_thread_data_local*> g_onlineList;
+extern std::list<s_thread_data*> g_onlineList;
 
 void threadHandler (SOCKET &m_socketID) {
     //====================================
@@ -17,20 +14,13 @@ void threadHandler (SOCKET &m_socketID) {
     //====================================
     // INITIALIZING THREAD VARS & SOCKET
     //====================================
-    s_thread_data threadData;
-    threadData.socket <= m_socketID; //push our socketID to the socket object :)
+    s_thread_data td;
+    td.socket <= m_socketID; //push our socketID to the socket object :)
+    td.authenticated = false;
+    td.logged = false;
+    td.thread = pthread_self();
 
-    s_thread_data_local threadDataLocal;
-    threadDataLocal.td = &threadData;
-    threadDataLocal.authenticated = false;
-    threadDataLocal.logged = false;
-    threadDataLocal.thread = pthread_self();
-
-    //====================================
-    // Creating an alias/reference because sometimes I'm lazy
-    //====================================
-    s_thread_data       &TD  = threadData;
-    s_thread_data_local &TDL = threadDataLocal;
+    Grid::Handle grid_hdl = g_grid.createHandle(td);
 
     //====================================
     //       SERVER WELCOME PACKET
@@ -43,7 +33,7 @@ void threadHandler (SOCKET &m_socketID) {
     packetToSend.addCmd(PCKT_X_DEBUG);
     packetToSend.addString("World server says hi :)");
     //Writing to socket
-    threadData.socket << packetToSend;
+    td.socket << packetToSend;
     //Cleaning buffer
     packetToSend.clear();
 
@@ -55,22 +45,36 @@ void threadHandler (SOCKET &m_socketID) {
     //====================================
     //    SOCKET CLOSE & CONSOLE PRINT
     //====================================
-    std::cerr << "[threadHandler] Client logged out!" << std::endl;
-    threadData.socket.socket_close();
+    td.socket.socket_close();
 
     //====================================
     //  EVEN MORE TASK BEFORE CLEANING
     //====================================
-    if (TDL.authenticated) {
+    if (td.authenticated) {
         //If you were authentificated, decrement the variable
-        std::string request = "UPDATE accounts SET nbr_online=nbr_online-1 WHERE id=" + intToStr(TDL.accountID);
+        std::string request = "UPDATE accounts SET nbr_online=nbr_online-1 WHERE id=" + intToStr(td.accountID);
         g_database.query(request);
         //Oh and is the character logged in?!
-        if (TDL.logged) {
-            std::string request = "UPDATE characters SET online=0 WHERE id=" + intToStr(TDL.id);
+        if (td.logged) {
+            std::cerr << "Character " << td.name << " has logged out!" << std::endl;
+            std::string request = "UPDATE characters SET online=0 WHERE id=" + intToStr(td.id);
             g_database.query(request);
+            //Unsubcribe to Grid where your character is
+            unsigned short grid_x = g_grid.getGridFromCoord(td.x);
+            unsigned short grid_y = g_grid.getGridFromCoord(td.y);
+            g_grid.unsubscribe(grid_hdl, td.map, grid_x-1, grid_y-1);
+            g_grid.unsubscribe(grid_hdl, td.map, grid_x, grid_y-1);
+            g_grid.unsubscribe(grid_hdl, td.map, grid_x+1, grid_y-1);
+            g_grid.unsubscribe(grid_hdl, td.map, grid_x-1, grid_y);
+            g_grid.unsubscribe(grid_hdl, td.map, grid_x, grid_y);
+            g_grid.unsubscribe(grid_hdl, td.map, grid_x+1, grid_y);
+            g_grid.unsubscribe(grid_hdl, td.map, grid_x-1, grid_y+1);
+            g_grid.unsubscribe(grid_hdl, td.map, grid_x, grid_y+1);
+            g_grid.unsubscribe(grid_hdl, td.map, grid_x+1, grid_y+1);
         }
     }
+
+    std::cerr << "[threadHandler] Is no more handling this client!" << std::endl;
 
     //NO NEED PTHREAD_EXIT OR ANY RETURN!
 }

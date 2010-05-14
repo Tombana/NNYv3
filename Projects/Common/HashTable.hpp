@@ -22,7 +22,7 @@
 
 //Amount of buckets in the table, must be a prime number
 //See Documentation/1000 first primes.txt
-#define HASHTABLE_PRIME 5
+#define HASHTABLE_PRIME 101
 
 //Note: HASHTABLE_PRIME cannot be greather than 65535 (short)(maximum size of an array)
 

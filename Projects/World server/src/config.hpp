@@ -3,7 +3,7 @@
 
 //Settings
 #define CONFIG_FILENAME             "world.conf"
-#define CONFIG_DATABASE_SUPPORTED   3
+#define CONFIG_DATABASE_SUPPORTED   4
 //=================================================
 //   DO NOT EDIT BELOW THIS LINE UNLESS YOU KNOW
 //              WHAT YOU ARE DOING

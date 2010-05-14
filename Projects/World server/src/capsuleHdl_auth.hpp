@@ -45,9 +45,9 @@ case PCKT_C_AUTH:
         //Kick ghost account if bool enabled
         if (kick && !CONFIG_MULTIPLE_LOGGING_ALLOWED) {
             pthread_mutex_lock(&g_onlineList_mutex);
-            for (std::list<s_thread_data_local*>::iterator it=g_onlineList.begin(); it!=g_onlineList.end(); ++it) {
+            for (std::list<s_thread_data*>::iterator it=g_onlineList.begin(); it!=g_onlineList.end(); ++it) {
                 if ((*it)->authenticated && (*it)->accountID == db_id) {
-                    (*it)->td->socket.socket_close(); //Force disconnection
+                    (*it)->socket.socket_close(); //Force disconnection
                     pthread_join((*it)->thread, NULL); //wait for the thread to be terminated
                 }
             }
@@ -65,11 +65,11 @@ case PCKT_C_AUTH:
                     answer.addAck(ACK_SUCCESS); //Success!
                     request = "UPDATE accounts SET nbr_online=nbr_online+1 WHERE id=" + intToStr(db_id);
                     g_database.query(request);
-                    threadDataLocal.accountID = db_id;
-                    threadDataLocal.authenticated = true;
+                    td.accountID = db_id;
+                    td.authenticated = true;
                     //Add our thread to the logged list (helpful for iterating through all players/searching)
                     pthread_mutex_lock(&g_onlineList_mutex);
-                    g_onlineList.push_back(&TDL);
+                    g_onlineList.push_back(&td);
                     pthread_mutex_unlock(&g_onlineList_mutex);
                 } else {
                     answer.addAck(ACK_REFUSED); //Refused because the account is banned
@@ -83,6 +83,6 @@ case PCKT_C_AUTH:
     }
 
     //-------- SEND A REPLY (ACK) TO THE CLIENT
-    threadData.socket << answer;
+    td.socket << answer;
 }
 break;

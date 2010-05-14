@@ -14,21 +14,13 @@
 #include <list>
 
 //=============================
-//       THREAD DATA
-//=============================
-//s_thread_data is a structure mostly used by the Grid system & the threadHandler
-struct s_thread_data {
-    ZSocket socket;
-};
-
-//=============================
-//     THREAD DATA LOCAL
+//        THREAD DATA
 //=============================
 //s_thread_data is a structure that contains all datas our thread needs to work properly.
-struct s_thread_data_local {
-    //TD
-    s_thread_data  *td;
-    //Running
+struct s_thread_data {
+    //Socket
+    ZSocket socket; //is thread-safe
+    //Thread infos (mostly used in the ghost kicking system)
     pthread_t       thread;
     //Authentification
     unsigned int    accountID;
@@ -43,6 +35,7 @@ struct s_thread_data_local {
     unsigned int    x;
     unsigned int    y;
     unsigned int    z;
+    unsigned int    map;
 };
 
 //grid.h is placed here because it needs s_thread_data to be declared when included
