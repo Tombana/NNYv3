@@ -5,6 +5,8 @@
     //Create an handle and store it
     //Grid::Handle grid_hdl = g_grid.createHandle(threadData);
 extern Database g_database;
+extern pthread_mutex_t g_onlineList_mutex;
+extern std::list<s_thread_data_local*> g_onlineList;
 
 void threadHandler (SOCKET &m_socketID) {
     //====================================
@@ -19,8 +21,10 @@ void threadHandler (SOCKET &m_socketID) {
     threadData.socket <= m_socketID; //push our socketID to the socket object :)
 
     s_thread_data_local threadDataLocal;
+    threadDataLocal.td = &threadData;
     threadDataLocal.authenticated = false;
     threadDataLocal.logged = false;
+    threadDataLocal.thread = pthread_self();
 
     //====================================
     // Creating an alias/reference because sometimes I'm lazy
@@ -51,7 +55,7 @@ void threadHandler (SOCKET &m_socketID) {
     //====================================
     //    SOCKET CLOSE & CONSOLE PRINT
     //====================================
-    std::cout << "[threadHandler] Client logged out!" << std::endl;
+    std::cerr << "[threadHandler] Client logged out!" << std::endl;
     threadData.socket.socket_close();
 
     //====================================
@@ -65,7 +69,6 @@ void threadHandler (SOCKET &m_socketID) {
         if (TDL.logged) {
             std::string request = "UPDATE characters SET online=0 WHERE id=" + intToStr(TDL.id);
             g_database.query(request);
-            std::cerr << "Character " << TDL.name << " has logged out!" << std::endl;
         }
     }
 

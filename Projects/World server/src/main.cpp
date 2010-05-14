@@ -20,9 +20,12 @@ pthread_mutex_t g_realmConnector_mutex        = PTHREAD_MUTEX_INITIALIZER; //MUT
 pthread_cond_t  g_realmConnector_cond         = PTHREAD_COND_INITIALIZER; //Protected with g_realmConnector_mutex
 ACK             g_realmConnector_authorized   = 0; //Protected with g_realmConnector_mutex
 // == Grid class requirement ==
-Grid            g_grid; //Grid object is thread-safe
+Grid                      g_grid; //Grid object is thread-safe
 // == Database class requirement ==
-Database        g_database; //Database object is thread-safe
+Database                  g_database; //Database object is thread-safe
+// == Online (authenticated/logged) user list ==
+pthread_mutex_t g_onlineList_mutex            = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
+std::list<s_thread_data_local*> g_onlineList; //Protected with g_onlineList_mutex
 
 //pthread_rwlock_t g_name = PTHREAD_RWLOCK_INITIALIZER;
 //-------------------------------------------------

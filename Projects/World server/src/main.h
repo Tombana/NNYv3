@@ -15,6 +15,7 @@
 #include "sharedModels.hpp"
 #include "Grid.h"
 #include "Database.h"
+#include <list>
 
 int main();
 void printStartupMessage();

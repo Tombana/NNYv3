@@ -28,7 +28,7 @@ void Database::query(const char *toSend) {
     mysql_ping(m_mysql);
     sql_error = mysql_query(m_mysql, toSend);
     if (sql_error != 0) {
-        std::cout << "@ERROR: MySQL: " << mysql_error(m_mysql) << std::endl;
+        std::cerr << "@ERROR: MySQL: " << mysql_error(m_mysql) << std::endl;
     }
 }
 
@@ -36,6 +36,8 @@ void Database::query(std::string &obj) {
     query(obj.c_str());
 }
 
+//TODO: That d/c's WAY too much often... we must think about a better
+//implementation (that re-connects or whatever).
 MYSQL_RES* Database::query(bool store_result, const char *toSend) {
     //----- Init
     int sql_error = 0;

@@ -7,9 +7,10 @@ case PCKT_C_AUTH:
     std::cout << "[capsuleHandler] -- PCKT_C_AUTH --" << std::endl;
     std::string username = alphaNumOnly(capsule.readString());
     std::string password = capsule.readString();
+    bool kick = capsule.readBool();
     std::cout << "[capsuleHandler] Username: " << username << std::endl;
     std::cout << "[capsuleHandler] Password: " << password << std::endl;
-    std::cout << "[capsuleHandler] Kick ghost: " << (unsigned int)capsule.readBool() << std::endl;
+    std::cout << "[capsuleHandler] Kick ghost: " << (unsigned int)kick << std::endl;
 
     //TODO (NitriX#): Kick ghost account if bool enabled
 
@@ -41,6 +42,21 @@ case PCKT_C_AUTH:
     //-------- CHECK THE ENTRY WE FOUND
     answer.addCmd(PCKT_W_AUTH_ACK);
     if (flag_entryFound) {
+        //Kick ghost account if bool enabled
+        if (kick && !CONFIG_MULTIPLE_LOGGING_ALLOWED) {
+            pthread_mutex_lock(&g_onlineList_mutex);
+            for (std::list<s_thread_data_local*>::iterator it=g_onlineList.begin(); it!=g_onlineList.end(); ++it) {
+                if ((*it)->authenticated && (*it)->accountID == db_id) {
+                    (*it)->td->socket.socket_close(); //Force disconnection
+                    pthread_join((*it)->thread, NULL); //wait for the thread to be terminated
+                }
+            }
+            pthread_mutex_unlock(&g_onlineList_mutex);
+            db_nbr_online=0; //little hack here, we know the character isn't online anymore
+            request = "UPDATE accounts SET nbr_online=0 WHERE id=" + intToStr(db_id); //more hack
+            g_database.query(request); //more hack
+        }
+
         if (db_nbr_online > 0 && !CONFIG_MULTIPLE_LOGGING_ALLOWED) {
             answer.addAck(ACK_ALREADY); //Already some characters online and dual logging is not allowed
         } else {
@@ -51,6 +67,10 @@ case PCKT_C_AUTH:
                     g_database.query(request);
                     threadDataLocal.accountID = db_id;
                     threadDataLocal.authenticated = true;
+                    //Add our thread to the logged list (helpful for iterating through all players/searching)
+                    pthread_mutex_lock(&g_onlineList_mutex);
+                    g_onlineList.push_back(&TDL);
+                    pthread_mutex_unlock(&g_onlineList_mutex);
                 } else {
                     answer.addAck(ACK_REFUSED); //Refused because the account is banned
                 }
