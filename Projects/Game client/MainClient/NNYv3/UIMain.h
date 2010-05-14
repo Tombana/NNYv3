@@ -39,6 +39,7 @@ private:
 	Ogre::Camera		*mCamera;
 	Ogre::SceneManager	*mSceneMgr;
 	Ogre::RenderWindow	*mWindow;
+	Ogre::RaySceneQuery	*mRaySceneQuery;
 	CInputHandler		*mInputHandler;
 	// CEGUI related
 	CGUIHandler			*mGUIHandler;

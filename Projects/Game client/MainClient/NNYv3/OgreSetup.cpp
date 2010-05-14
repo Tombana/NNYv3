@@ -83,6 +83,11 @@ int CUIMain::SetupOgre(void)
 	//Set a moving cloud texture as background
 	mSceneMgr->setSkyDome(true, "CloudySky", 5, 8);
 
+	//Get a RaySceneQuery object. A SceneQuery object is a class that can query all
+	//objects in a region or scene. RaySceneQuery has it as a base class. RaySceneQuery
+	//can get all objects that intersect a ray.
+	mRaySceneQuery = mSceneMgr->createRayQuery(Ogre::Ray());
+
 	LoadWorld();
 
 	//=================
@@ -93,7 +98,7 @@ int CUIMain::SetupOgre(void)
 	//=================
 	// Create the input handler
 	//=================
-	mInputHandler = new CInputHandler(mWindow, mCamera, mSceneMgr);
+	mInputHandler = new CInputHandler(mWindow, mCamera, mSceneMgr, mRaySceneQuery);
 	mRoot->addFrameListener(mInputHandler);
 	mRoot->addFrameListener(this);
 
@@ -132,7 +137,7 @@ int CUIMain::LoadWorld(void)
 	mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(GroundEnt);
 
 	Ogre::Entity *head = mSceneMgr->createEntity("OgreHead", "ogrehead.mesh");
-	Ogre::SceneNode *headnode = mSceneMgr->getRootSceneNode()->createChildSceneNode("OgreHeadNode", Ogre::Vector3(0,10,0));
+	Ogre::SceneNode *headnode = mSceneMgr->getRootSceneNode()->createChildSceneNode("LocalPlayerNode", Ogre::Vector3(0,10,0));
 	headnode->attachObject(head);
 	return 1;
 }
