@@ -11,30 +11,38 @@
 #include "config.hpp"
 #include "sharedModels.hpp"
 #include "Database.h"
+#include <list>
 
 //=============================
 //       THREAD DATA
 //=============================
-//s_thread_data is a structure that contains all datas
-//a thread needs to work properly.
+//s_thread_data is a structure mostly used by the Grid system & the threadHandler
 struct s_thread_data {
     ZSocket socket;
 };
 
+//=============================
+//     THREAD DATA LOCAL
+//=============================
+//s_thread_data is a structure that contains all datas our thread needs to work properly.
 struct s_thread_data_local {
+    //TD
+    s_thread_data  *td;
+    //Running
+    pthread_t       thread;
     //Authentification
-    unsigned int accountID;
-    bool         authenticated;
+    unsigned int    accountID;
+    bool            authenticated;
     //Entering world
-    bool         logged;
+    bool            logged;
     //Character infos
-    unsigned int id;
-    std::string  name;
-    BYTE         level;
-    bool         gender;
-    unsigned int x;
-    unsigned int y;
-    unsigned int z;
+    unsigned int    id;
+    std::string     name;
+    BYTE            level;
+    bool            gender;
+    unsigned int    x;
+    unsigned int    y;
+    unsigned int    z;
 };
 
 //grid.h is placed here because it needs s_thread_data to be declared when included

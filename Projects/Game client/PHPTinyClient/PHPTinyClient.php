@@ -7,6 +7,8 @@ $REVISION = 0;
 $VERBOSE = False;
 $USERNAME = 'nitrix';
 $PASSWORD = 'test';
+$KICKGHOSTCHAR = False;
+$KICKGHOSTACCOUNT = False;
 /////////////////////////////////////////////////////
 echo 'PHPTinyClient v1.0.9'."\n";
 include('ByteArray.php');
@@ -75,6 +77,7 @@ echo '@ERROR: Connection closed by the remote host'."\n";
 		}
 		echo '@INFO: Now connected to '.$RECONNECT_IP.' on port '.$RECONNECT_PORT."\n";
 		$clients[$nb]['BUFFER']=new ByteArray();
+		$RECONNECT = false;
 	} else {
 		array_splice($clients,$j,1); // on le retire du tableau
 		$i--;
@@ -169,6 +172,7 @@ while (true) {
 							$s=fopen('php://stdin','r');
 							$slot=str_replace("\r",'',str_replace("\n",'',str_replace("\t",'',fgets($s))));
 						$BA->addByte($slot);
+						$BA->addBool($KICKGHOSTCHAR); //kick ghost
 						socket_write($SOCKET, $BA->getPacket());
 						$BA->clear();
 						break;
@@ -202,7 +206,7 @@ while (true) {
 								echo '~Wrong password!'."\n";
 								break;
 							case ACK_ALREADY:
-								echo '~Your are already connected and dual logging isn\'t allowed!'."\n";
+								echo '~Your are already connected on this account and multiple logging isn\'t allowed!'."\n";
 								break;
 							case ACK_REFUSED:
 								echo '~The server refused you! Banned?!'."\n";
@@ -226,6 +230,7 @@ while (true) {
 						$BA->addCmd(PCKT_C_AUTH);
 						$BA->addString($USERNAME);
 						$BA->addString(md5($PASSWORD));
+						$BA->addBool($KICKGHOSTACCOUNT);
 						socket_write($SOCKET, $BA->getPacket());
 						$BA->clear();
 						break;

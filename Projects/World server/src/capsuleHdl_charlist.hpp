@@ -64,10 +64,9 @@ case PCKT_C_ENTER_WORLD:
     //-------- DISPLAY DEBUG INFO
     std::cerr << "[capsuleHandler] -- PCKT_C_ENTER_WORLD --" << std::endl;
     BYTE slotID = capsule.read<BYTE>();
+    bool kick   = capsule.readBool();
     std::cout << "[capsuleHandler] SlotID: " << (unsigned int)capsule.read<BYTE>() << std::endl;
-    std::cout << "[capsuleHandler] Kick ghost: " << (unsigned int)capsule.readBool() << std::endl;
-
-    //TODO (NitriX#): Kick ghost character if bool enabled
+    std::cout << "[capsuleHandler] Kick ghost: " << (unsigned int)kick << std::endl;
 
     if (threadDataLocal.authenticated) {
         std::cerr << "Request to enter world with character on slotID " << (unsigned int)slotID << std::endl;
@@ -103,6 +102,19 @@ case PCKT_C_ENTER_WORLD:
         //-------- PACKET ACK REPLY
         packet.addCmd(PCKT_W_ENTER_WORLD_ACK);
         if (db_found) {
+            //Kick ghost character if bool enabled
+            if (kick) {
+                pthread_mutex_lock(&g_onlineList_mutex);
+                for (std::list<s_thread_data_local*>::iterator it=g_onlineList.begin(); it!=g_onlineList.end(); ++it) {
+                    if ((*it)->logged && (*it)->id == TDL.id) {
+                        (*it)->td->socket.socket_close(); //Force disconnection
+                        pthread_join((*it)->thread, NULL); //wait for the thread to be terminated
+                    }
+                }
+                pthread_mutex_unlock(&g_onlineList_mutex);
+                db_online = false; //little hack here, we know the character isn't online anymore
+            }
+
             if (db_online) {
                 packet.addAck(ACK_ALREADY); //character already inGame!
             } else {
