@@ -48,4 +48,10 @@ private:
 
 	int SetupOgre(void);
 	int CleanupOgre(void);
+	int LoadWorld(void);
+
+	//=============
+	// Login section
+	//=============
+	bool MsgBoxKickCallback(void* Param);
 };

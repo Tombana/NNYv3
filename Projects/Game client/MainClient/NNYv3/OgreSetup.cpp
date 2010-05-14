@@ -10,6 +10,14 @@
 int CUIMain::SetupOgre(void)
 {
 	//=================
+	//Ogre defaultly logs to console
+	// To prevent this the LogManager has to be created
+	// before the Root object.
+	//=================
+	Ogre::LogManager* logMgr = OGRE_NEW Ogre::LogManager;
+	logMgr->createLog("Ogre.log", true, false, false);
+
+	//=================
 	//Create the Ogre root object
 	// It's possible to specify as parameters the paths to the:
 	// plugin file (what render systems it has to load), config file (screen resolution etc) and log file
@@ -60,19 +68,22 @@ int CUIMain::SetupOgre(void)
 	//=================
 	// Preparing the scene
 	//=================
-	mSceneMgr = mRoot->createSceneManager(Ogre::ST_GENERIC); //ST_EXTERIOR_CLOSE if we want to render terrain
-	
+	mSceneMgr = mRoot->createSceneManager(Ogre::ST_EXTERIOR_CLOSE); //ST_EXTERIOR_CLOSE allows rendering terrain
+
 	mCamera = mSceneMgr->createCamera("PlayerCam");
 	mCamera->setNearClipDistance(5);
-	mCamera->setPosition(0,0,200); //set the camera 200 units in front of the screen
 	
 	Ogre::Viewport* vp = mWindow->addViewport(mCamera);
 	vp->setBackgroundColour(Ogre::ColourValue(0.9,0.9,0.9));
-	
+	//Fog will not work with sky ;)
+	//mSceneMgr->setFog(Ogre::FOG_LINEAR, Ogre::ColourValue(0.9,0.9,0.9), 0.0, 50, 500);
+
 	mCamera->setAspectRatio(Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
 	
 	//Set a moving cloud texture as background
 	mSceneMgr->setSkyDome(true, "CloudySky", 5, 8);
+
+	LoadWorld();
 
 	//=================
 	// Set up the CEGUI system
@@ -82,7 +93,7 @@ int CUIMain::SetupOgre(void)
 	//=================
 	// Create the input handler
 	//=================
-	mInputHandler = new CInputHandler(mWindow);
+	mInputHandler = new CInputHandler(mWindow, mCamera, mSceneMgr);
 	mRoot->addFrameListener(mInputHandler);
 	mRoot->addFrameListener(this);
 
@@ -108,5 +119,20 @@ int CUIMain::CleanupOgre(void)
 	if(mRoot) OGRE_DELETE mRoot;
 	mRoot = 0;
 
+	return 1;
+}
+
+int CUIMain::LoadWorld(void)
+{
+	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, -10); //10 under the ground
+	Ogre::MeshManager::getSingleton().createPlane("ground", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane,
+		2000,2000,20,20,true,1,5,5,Ogre::Vector3::UNIT_Z);
+	Ogre::Entity *GroundEnt = mSceneMgr->createEntity("GroundEntity", "ground");
+	GroundEnt->setMaterialName("Rockwall");
+	mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(GroundEnt);
+
+	Ogre::Entity *head = mSceneMgr->createEntity("OgreHead", "ogrehead.mesh");
+	Ogre::SceneNode *headnode = mSceneMgr->getRootSceneNode()->createChildSceneNode("OgreHeadNode", Ogre::Vector3(0,10,0));
+	headnode->attachObject(head);
 	return 1;
 }

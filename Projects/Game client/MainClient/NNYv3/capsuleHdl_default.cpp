@@ -1,7 +1,7 @@
 #include "MainClient.h"
 #include "protocol.hpp"
 
-bool CMainClient::HandleDefault(WORD Cmd, ByteArray& capsule)
+int CMainClient::HandleDefault(WORD Cmd, ByteArray& capsule)
 {
 	switch(Cmd){
 		//=====================================
@@ -21,5 +21,5 @@ bool CMainClient::HandleDefault(WORD Cmd, ByteArray& capsule)
 			capsule.setSeek(capsule.size()); //Goto EOF so it breaks to loop
 			break;
 	}
-	return true;
+	return 1;
 }

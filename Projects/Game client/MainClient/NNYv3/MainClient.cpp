@@ -4,17 +4,17 @@
 CMainClient* CMainClient::mSingleton = 0;
 
 CMainClient::CMainClient(void) :
-	m_state(State_Loading), m_mainsocket(), m_networkthread(),
+	m_state(State_Loading), m_mainsocket(), m_networkthread(), NetworkThreadRunning(0),
 	m_networkthread_mutex(PTHREAD_MUTEX_INITIALIZER),
 	m_networkthread_cond(PTHREAD_COND_INITIALIZER),
 	m_RealmServers(),m_Revision(0), m_WorldIP(), m_WorldPort(0),
-	m_gui(), m_MessageQueue(), m_message_mutex(PTHREAD_MUTEX_INITIALIZER)
+	m_ui(),
+	m_Username(), m_Password(), m_Characters()
 {
 	m_RealmServers.push_back("127.0.0.1");
 	m_RealmServers.push_back("ceres.dlinkddns.com");
 	pthread_mutex_init(&m_networkthread_mutex, NULL);
 	pthread_cond_init(&m_networkthread_cond, NULL);
-	pthread_mutex_init(&m_message_mutex, NULL);
 	if( mSingleton == 0 ) mSingleton = this;
 }
 
@@ -30,12 +30,14 @@ int CMainClient::Run(void)
 	//==============
 	//Load the UI and display the loading screen
 	//==============
-	if( !m_gui.StartUI() ) return 0;
+	if( !m_ui.StartUI() ) return 0;
 
 	//==============
 	//Load the data files
 	//==============
 	//datafileclass.load();
+	
+	m_Username = "remembered-username";
 
 	//==============
 	//Load the network system
@@ -53,32 +55,53 @@ int CMainClient::Run(void)
 	pthread_cond_wait(&m_networkthread_cond, &m_networkthread_mutex);
 	pthread_mutex_unlock(&m_networkthread_mutex);
 
+	if( m_WorldIP.empty() || !m_WorldPort )
+		m_ui.SendThreadMessage(new CMessageMsgBox("Could not get world server info from realm server!", "Error"));
+
 	//==============
 	//Signal 'Done Loading' to GUI and so on
 	//==============
 	m_state = State_LoginScreen;
-	m_gui.SendNotify(m_gui.Message_DisplayLogin);
+	m_ui.SendThreadMessage(new CMessageDisplayLoginScreen(m_Username));
 
 	while( m_state != State_Quitting ){
 		sleep(50);
-		//When the gui wants to notify this thread the message will get into the list.
-		//Examples: the user pressed close
-		//
-		if( m_MessageQueue.size() ){ //If there are messages from other threads to process
-			pthread_mutex_lock(&m_message_mutex);
-			int MessageID = m_MessageQueue.front(); //Get the message from the queue
-			m_MessageQueue.pop_front(); //Remove the message from the queue
-			pthread_mutex_unlock(&m_message_mutex);
-			switch( MessageID ){
+		CMessage* msg = GetThreadMessage();
+		if( msg ){ //If there are messages from other threads to process
+			switch(msg->ID){
 				case Message_Quit:
 					m_state = State_Quitting;
 					//TODO: Show unloading screen
 					m_mainsocket.socket_close(); //This should make any receiver thread that is busy receiving quit
 					break;
 				case Message_Login:
-					if( m_state != State_LoginScreen ) break;
-					m_state = State_LoggingIn;
-					StartNetworkThread();
+					{
+						CMessageLogin* loginmsg = (CMessageLogin*)msg;
+						if( m_state != State_LoginScreen ) break;
+						m_Username = loginmsg->Username;
+						m_Password = loginmsg->Password;
+						m_state = State_LoggingIn;
+						m_ui.SendThreadMessage(new CMessageDisplayWaitScreen("Logging in..."));
+						StartNetworkThread();
+					}
+					break;
+				case Message_KickAccount:
+					{
+						CMessageKickAccount* kickmsg = (CMessageKickAccount*)msg;
+						if( kickmsg->DoKick == false ){
+							m_state = State_LoginScreen;
+							m_ui.SendThreadMessage(new CMessageDisplayLoginScreen(m_Username));
+							m_mainsocket.socket_close();
+						}else{
+							//Log in again with kick set to true
+							ByteArray LoginPacket;
+							LoginPacket.addCmd(PCKT_C_AUTH);
+							LoginPacket.addString(m_Username);
+							LoginPacket.addString(m_Password);
+							LoginPacket.addBool(true); //Wether to kick the account that is logged in.
+							m_mainsocket << LoginPacket;
+						}
+					}
 					break;
 				case Message_CharSelect:
 					if( m_state != State_CharSelectScreen ) break;
@@ -88,25 +111,16 @@ int CMainClient::Run(void)
 				default:
 					break;
 			}
+			delete msg;
 		}
 		//TODO: Do other actions that need to be peformed every now and then.
 	}
 
 	//datafileclass.unload();
 
-	m_gui.SendNotify(m_gui.Message_Quit);
-	m_gui.WaitForExit();
+	m_ui.SendThreadMessage(Message_Quit);
+	m_ui.WaitForExit();
 	return 0;
-}
-
-int CMainClient::SendNotify(int MessageID)
-{
-	if( MessageID ){
-		pthread_mutex_lock(&m_message_mutex);
-		m_MessageQueue.push_back(MessageID);
-		pthread_mutex_unlock(&m_message_mutex);
-	}
-	return 1;
 }
 
 int	CMainClient::StartNetworkThread(void)
@@ -127,6 +141,7 @@ void* NetworkThreadStarter(void* class_pointer){
 
 void* CMainClient::NetworkThread(void)
 {
+	++NetworkThreadRunning;
 	//Disconnect the socket if it was still connected
 	if( m_mainsocket.isConnected() ) m_mainsocket.socket_close();
 	//Choose what we have to connect to
@@ -140,14 +155,10 @@ void* CMainClient::NetworkThread(void)
 			if( !m_mainsocket.isConnected() ) std::cout << "[ERROR] Could not connect to a realm server.\n";
 			break;
 		case State_LoggingIn:
-			if( m_WorldIP.empty() || m_WorldPort == 0 ){
-				std::cout << "[ERROR] No world server specified!\n";
-			}else{
-				if(!m_mainsocket.socket_connect(m_WorldIP, m_WorldPort)){
-					std::cout << "[ERROR] Could not connect to world server!\n";
-				}
+			if( m_WorldIP.empty() || !m_WorldPort || !m_mainsocket.socket_connect(m_WorldIP, m_WorldPort)){
+				m_state = State_LoginScreen;
+				m_ui.SendThreadMessage(Message_NoWorld);
 			}
-			if( !m_mainsocket.isConnected() ) m_state = State_LoginScreen;
 			break;
 		default:
 			break;
@@ -157,6 +168,8 @@ void* CMainClient::NetworkThread(void)
 		//This will keep looping untill an error occurred or the socket got disconnected
 		HandlePackets();
 	}
+
+	--NetworkThreadRunning;
 	//Disconnected. Signal the main thread
 	pthread_cond_signal(&m_networkthread_cond); //Signal the main thread that this thread is done
 	return 0;

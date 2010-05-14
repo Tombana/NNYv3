@@ -1,12 +1,14 @@
 #pragma once
 
-#include "UIMain.h"
-#include "ThreadMessages.h"
-
 #include <list>
 #include <vector>
+
 #include "ZSocket.h"
 #include "pthread.h"
+
+#include "Structures.h"
+#include "UIMain.h"
+#include "ThreadMessages.h"
 
 #ifdef WIN32
     #include <winbase.h>
@@ -15,6 +17,7 @@
     #include <unistd.h>
 	#define sleep(x) usleep(x)
 #endif
+
 
 class CMainClient : public CThreadMessages
 {
@@ -50,6 +53,7 @@ private:
 	//============
 	ZSocket		m_mainsocket;
 	pthread_t	m_networkthread;
+	int			NetworkThreadRunning; //If the network thread is currently running. No true/false but instead increment/decrement when a thread starts/stops to prevent overlap.
 	int			StartNetworkThread(void); //Call this from the main thread
 	void*		NetworkThread(void); //The network thread
 	friend		void* NetworkThreadStarter(void* class_pointer); //Helper function to give the created thread the right class pointer
@@ -58,10 +62,13 @@ private:
 
 	//The main packet handler
 	void HandlePackets(void);
-	//The capsule handlers. They return true if they processed the packet
-	bool HandleRealm(WORD Cmd, ByteArray& capsule);
-	bool HandleWorldLogin(WORD Cmd, ByteArray& capsule);
-	bool HandleDefault(WORD Cmd, ByteArray& capsule);
+	//The capsule handlers.
+	//They return 1 if they processed the packet
+	//They return 0 if they did not process the packet (so try another handler)
+	//They return -1 if they closed the connection
+	int HandleRealm(WORD Cmd, ByteArray& capsule);
+	int HandleWorldLogin(WORD Cmd, ByteArray& capsule);
+	int HandleDefault(WORD Cmd, ByteArray& capsule);
 
 	//List of ips of realm servers
 	std::vector<std::string> m_RealmServers;
@@ -70,12 +77,16 @@ private:
 	//The world server info
 	std::string	m_WorldIP;
 	WORD		m_WorldPort;
-	//Login info
-	std::string m_Username;
-	std::string m_Password;
 
 	//============
 	// Gui related
 	//============
-	CUIMain		m_gui;
+	CUIMain		m_ui;
+
+	//============
+	// Game related
+	//============
+	std::string				m_Username;
+	std::string				m_Password;
+	std::vector<CharacterInfo>	m_Characters;
 };

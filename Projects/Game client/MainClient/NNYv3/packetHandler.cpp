@@ -70,11 +70,12 @@ void CMainClient::HandlePackets(void)
 					//PROCESS THE CAPSULE (switches and stuff)
 					while (true) { //a loop to parse all CMDs in the capsule
 						WORD Cmd = capsule.read<WORD>();
-						bool Handled = false;
-						if( !Handled ) Handled = HandleRealm(Cmd, capsule);
-						if( !Handled ) Handled = HandleWorldLogin(Cmd, capsule);
-						if( !Handled ) Handled = HandleDefault(Cmd, capsule);
-						if( !Handled ) break;
+						int Handled = false;
+						if( Handled == 0 ) Handled = HandleRealm(Cmd, capsule);
+						if( Handled == 0 ) Handled = HandleWorldLogin(Cmd, capsule);
+						if( Handled == 0 ) Handled = HandleDefault(Cmd, capsule);
+						if( Handled == 0 ) break;
+						if( Handled == -1 ){ CloseSocket = true; break; }
 						if (capsule.eof()) break; //break the loop, no more CMDs
 					}
 					//-----------------------------------------------

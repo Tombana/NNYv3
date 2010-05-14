@@ -81,11 +81,77 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	CMessage* msg = GetThreadMessage();
 	if( msg ){ //If there are messages from other threads to process
 		switch(msg->ID){
+			//=================
+			// General section
+			//=================
 			case Message_Quit:
 				ContinueRendering = false;
 				break;
-			case Message_DisplayLogin:
-				mGUIHandler->DisplayLoginScreen();
+			case Message_MsgBox:
+				{
+					CMessageMsgBox* msgbox = (CMessageMsgBox*)msg;
+					mGUIHandler->MsgBox(msgbox->Text, msgbox->Title, msgbox->Buttons, msgbox->Callback, msgbox->WindowName);
+				}
+				break;
+			case Message_DisplayWaitScreen:
+				{
+					CMessageDisplayWaitScreen* waitscreen = (CMessageDisplayWaitScreen*)msg;
+					mGUIHandler->DisplayWaitScreen(waitscreen->Text);
+				}
+				break;
+			case Message_CloseWaitScreen:
+				mGUIHandler->CloseWaitScreen();
+				break;
+			//=================
+			// Login section
+			//=================
+			case Message_NoWorld:
+				{
+					mGUIHandler->MsgBox("Unable to connect to the world server", "Error");
+					mGUIHandler->DisplayLoginScreen("");
+					mGUIHandler->CloseWaitScreen();
+				}
+				break;
+			case Message_DisplayLoginScreen:
+				{
+					CMessageDisplayLoginScreen* loginmsg = (CMessageDisplayLoginScreen*)msg;
+					mGUIHandler->DisplayLoginScreen(loginmsg->RememberedUsername);
+					mGUIHandler->CloseWaitScreen();
+				}
+				break;
+			case Message_LoginResponse:
+				{
+					CMessageLoginResponse* loginresponse = (CMessageLoginResponse*)msg;
+					if( loginresponse->Code == ACK_ALREADY ){
+						mGUIHandler->MsgBox("Your account is already logged in. Do you want to kick that account?", "Notice", MsgBoxBtnsYesNo, new MemberCallbackFunction<CUIMain>(&CUIMain::MsgBoxKickCallback, this));
+					}else if( loginresponse->Code != ACK_SUCCESS ){
+						std::string Message;
+						switch(loginresponse->Code){
+							case ACK_NOT_FOUND:
+								Message = "The server was unable to find your username in the database.";
+								break;
+							case ACK_DOESNT_MATCH:
+								Message = "Invalid password.";
+								break;
+							case ACK_REFUSED:
+								Message = "The server explicitly refused your connection. You might be banned.";
+								break;
+							default:
+								Message = "Error: invalid code in PCKT_W_AUTH_ACK.";
+								break;
+						}
+						mGUIHandler->MsgBox(Message, "Error");
+						mGUIHandler->DisplayLoginScreen("");
+						mGUIHandler->CloseWaitScreen();
+					}
+				}
+				break;
+			case Message_DisplayCharSelect:
+				{
+					mGUIHandler->CloseLoginScreen();
+					CMessageDisplayCharSelect* charmsg = (CMessageDisplayCharSelect*)msg;
+					mGUIHandler->MsgBox("[Character select screen here]\nNot implemented yet, please quit.", "Not implemented yet");
+				}
 				break;
 			default:
 				break;
@@ -93,4 +159,11 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		delete msg;
 	}
 	return ContinueRendering;
+}
+
+bool CUIMain::MsgBoxKickCallback(void* Param)
+{
+	bool DoKick = ((int)Param == CGUIHandler::MsgBoxBtnYes);
+	CMainClient::getSingleton().SendThreadMessage(new CMessageKickAccount(DoKick));
+	return true;
 }

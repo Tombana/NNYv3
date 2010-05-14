@@ -1,7 +1,7 @@
 #include "MainClient.h"
 #include "protocol.hpp"
 
-bool CMainClient::HandleRealm(WORD Cmd, ByteArray& capsule)
+int CMainClient::HandleRealm(WORD Cmd, ByteArray& capsule)
 {
 	switch(Cmd){
 		//=====================================
@@ -55,7 +55,7 @@ bool CMainClient::HandleRealm(WORD Cmd, ByteArray& capsule)
 			m_state = State_LoginScreen;
 			break;
 		default:
-			return false;
+			return 0;
 	}
-	return true;
+	return 1;
 }

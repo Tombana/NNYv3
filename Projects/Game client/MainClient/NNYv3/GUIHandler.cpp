@@ -3,7 +3,7 @@
 
 
 CGUIHandler::CGUIHandler(Ogre::RenderWindow *Window, Ogre::SceneManager *SceneMgr) :
-	mGUIRenderer(0), mGUISystem(0), mWindowManager(0), mRootWindow(0)
+	mGUIRenderer(0), mGUISystem(0), mWindowManager(0), mRootWindow(0), WaitScreen(0), WaitScreenLabel(0)
 {
 	try{
 #ifdef OLD_CEGUI
@@ -57,6 +57,8 @@ CGUIHandler::CGUIHandler(Ogre::RenderWindow *Window, Ogre::SceneManager *SceneMg
 
 		CEGUI::System::getSingleton().setGUISheet(mRootWindow);
 
+		LoadWaitScreen();
+
 	}catch( CEGUI::Exception& e ){
 		std::cerr << "[ERROR] Exception in CEGUI:\n" << e.getMessage() << std::endl;
 	}
@@ -83,15 +85,43 @@ bool CGUIHandler::QuitBtnClick(const CEGUI::EventArgs &e)
 	return true;
 }
 
+//================
+// Message boxes
+//================
+
+//Message box handlers in CEGUI format.
 bool CGUIHandler::MessageBoxBtnOkClick(const CEGUI::EventArgs &e)
+{
+	return MessageBoxClick(e, MsgBoxBtnOk);
+}
+
+bool CGUIHandler::MessageBoxBtnYesClick(const CEGUI::EventArgs &e)
+{
+	return MessageBoxClick(e, MsgBoxBtnYes);
+}
+
+bool CGUIHandler::MessageBoxBtnNoClick(const CEGUI::EventArgs &e)
+{
+	return MessageBoxClick(e, MsgBoxBtnNo);
+}
+
+//The message box handler calls the callback function if one is specified
+bool CGUIHandler::MessageBoxClick(const CEGUI::EventArgs &e, int Button)
 {
 	CEGUI::WindowEventArgs& arg = *(CEGUI::WindowEventArgs*)&e;
 	CEGUI::Window *MsgBox = arg.window->getParent();
-	mWindowManager->destroyWindow(MsgBox);
+	CallbackFunction* callback = (CallbackFunction*)MsgBox->getUserData();
+	bool Destroy = true;
+	if( callback ) Destroy = callback->CallCallback((void*)Button);
+	if( Destroy ){
+		if( callback ) delete callback;
+		mWindowManager->destroyWindow(MsgBox);
+	}
 	return true;
 }
 
-CEGUI::Window* CGUIHandler::MsgBox(std::string Text, std::string Title, std::string WindowName)
+//Creates and shows a message box
+CEGUI::Window* CGUIHandler::MsgBox(std::string Text, std::string Title, int Buttons, CallbackFunction* Callback, std::string WindowName)
 {
 	CEGUI::Window *MsgBox = 0;
 	try{
@@ -99,55 +129,132 @@ CEGUI::Window* CGUIHandler::MsgBox(std::string Text, std::string Title, std::str
 	}catch( CEGUI::AlreadyExistsException ){
 		return 0;
 	}
+	MsgBox->setUserData(Callback);
+
 	CEGUI::Window *Label = mWindowManager->createWindow("TaharezLook/StaticText");
-	CEGUI::Window *ButtonOk = mWindowManager->createWindow("TaharezLook/Button");
 
 	Label->setProperty("HorzFormatting", "WordWrapLeftAligned");
 	Label->setArea(CEGUI::URect(CEGUI::UDim(0.03,0), CEGUI::UDim(0.15,0), CEGUI::UDim(0.97,0), CEGUI::UDim(0.80,0)));
-	ButtonOk->setSize(CEGUI::UVector2(CEGUI::UDim(0.40,0), CEGUI::UDim(0.14,0)));
-	ButtonOk->setPosition(CEGUI::UVector2(CEGUI::UDim(0.30,0), CEGUI::UDim(0.83,0)));
 	MsgBox->setSize(CEGUI::UVector2(CEGUI::UDim(0.40,0), CEGUI::UDim(0.30,0)));
 	MsgBox->setPosition(CEGUI::UVector2(CEGUI::UDim(0.30,0), CEGUI::UDim(0.35,0)));
 
 	MsgBox->setText(Title);
 	Label->setText(Text);
-	ButtonOk->setText("Ok");
-	ButtonOk->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::MessageBoxBtnOkClick, this));
 
 	MsgBox->addChildWindow(Label);
-	MsgBox->addChildWindow(ButtonOk);
+	MsgBox->setAlwaysOnTop(true);
 	mRootWindow->addChildWindow(MsgBox);
 
+	if( Buttons == MsgBoxBtnsYesNo ){
+		CEGUI::Window *ButtonYes = mWindowManager->createWindow("TaharezLook/Button");
+		CEGUI::Window *ButtonNo = mWindowManager->createWindow("TaharezLook/Button");
+		ButtonYes->setSize(CEGUI::UVector2(CEGUI::UDim(0.30,0), CEGUI::UDim(0.14,0)));
+		ButtonYes->setPosition(CEGUI::UVector2(CEGUI::UDim(0.18,0), CEGUI::UDim(0.83,0)));
+		ButtonNo->setSize(CEGUI::UVector2(CEGUI::UDim(0.30,0), CEGUI::UDim(0.14,0)));
+		ButtonNo->setPosition(CEGUI::UVector2(CEGUI::UDim(0.52,0), CEGUI::UDim(0.83,0)));
+		ButtonYes->setText("Yes");
+		ButtonNo->setText("No");
+		ButtonYes->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::MessageBoxBtnYesClick, this));
+		ButtonNo->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::MessageBoxBtnNoClick, this));
+		MsgBox->addChildWindow(ButtonYes);
+		MsgBox->addChildWindow(ButtonNo);
+	}else{
+		CEGUI::Window *ButtonOk = mWindowManager->createWindow("TaharezLook/Button");
+		ButtonOk->setSize(CEGUI::UVector2(CEGUI::UDim(0.40,0), CEGUI::UDim(0.14,0)));
+		ButtonOk->setPosition(CEGUI::UVector2(CEGUI::UDim(0.30,0), CEGUI::UDim(0.83,0)));
+		ButtonOk->setText("Ok");
+		ButtonOk->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::MessageBoxBtnOkClick, this));
+		MsgBox->addChildWindow(ButtonOk);
+	}
 	return MsgBox;
+}
+
+int	CGUIHandler::LoadWaitScreen(void)
+{
+	WaitScreen = mWindowManager->createWindow("TaharezLook/FrameWindow");
+	WaitScreenLabel = mWindowManager->createWindow("TaharezLook/StaticText");
+
+	WaitScreenLabel->setProperty("HorzFormatting", "WordWrapLeftAligned");
+	WaitScreenLabel->setArea(CEGUI::URect(CEGUI::UDim(0.03,0), CEGUI::UDim(0.15,0), CEGUI::UDim(0.97,0), CEGUI::UDim(0.80,0)));
+	WaitScreen->setSize(CEGUI::UVector2(CEGUI::UDim(0.40,0), CEGUI::UDim(0.25,0)));
+	WaitScreen->setPosition(CEGUI::UVector2(CEGUI::UDim(0.30,0), CEGUI::UDim(0.35,0)));
+
+	WaitScreen->setText("Please wait");
+	WaitScreenLabel->setText("Please wait");
+
+	WaitScreen->addChildWindow(WaitScreenLabel);
+
+	return 1;
+}
+
+int CGUIHandler::DisplayWaitScreen(std::string Text)
+{
+	if( WaitScreenLabel ) WaitScreenLabel->setText(Text);
+	if( WaitScreen ){
+		//The user might have moved the waitscreen, so reset it to the middle
+		WaitScreen->setSize(CEGUI::UVector2(CEGUI::UDim(0.40,0), CEGUI::UDim(0.25,0)));
+		//Attach it to the root window so it is drawn
+		mRootWindow->addChildWindow(WaitScreen);
+		//Bring it to the front
+		WaitScreen->activate();
+	}
+	return 1;
+}
+
+int CGUIHandler::CloseWaitScreen(void)
+{
+	if( WaitScreen ){
+		//Detach it from parent so it is not drawn
+		CEGUI::Window* Parent = WaitScreen->getParent();
+		if( Parent ) Parent->removeChildWindow(WaitScreen);
+	}
+	return 1;
 }
 
 //===================
 // Login section
 //===================
-int	CGUIHandler::DisplayLoginScreen(void)
+int	CGUIHandler::DisplayLoginScreen(const std::string& RememberedUsername)
 {
-	//Load the window layout from file
-	CEGUI::Window *LoginWindow = mWindowManager->loadWindowLayout("loginscreen.layout");
-	//Set the password box to be masked
-	CEGUI::Editbox *Password = static_cast<CEGUI::Editbox*>(mWindowManager->getWindow("LoginWindow/Password"));
-	Password->setMaskCodePoint('*');
-	Password->setTextMasked(true);
-	//Subscribe the handler for the login and about button
-	try{
-		CEGUI::Window *LoginButton = mWindowManager->getWindow("LoginWindow/ButtonLogin");
-		LoginButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::LoginBtnClick, this));
-	}catch(CEGUI::UnknownObjectException){}
-	try{
-		CEGUI::Window *AboutButton = mWindowManager->getWindow("LoginWindow/ButtonAbout");
-		AboutButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::AboutBtnClick, this));
-	}catch(CEGUI::UnknownObjectException){}
+	bool CreateNew = false;
+	try{ //See if the window already exists
+		CEGUI::Window *LoginWindow = mWindowManager->getWindow("LoginWindow");
+		LoginWindow->setEnabled(true);
+	}catch(CEGUI::UnknownObjectException){ CreateNew = true; };
+	if( CreateNew ){
+		//Load the window layout from file
+		CEGUI::Window *LoginWindow = mWindowManager->loadWindowLayout("loginscreen.layout");
+		//Set the password box to be masked
+		CEGUI::Editbox *Password = static_cast<CEGUI::Editbox*>(mWindowManager->getWindow("LoginWindow/Password"));
+		Password->setMaskCodePoint('*');
+		Password->setTextMasked(true);
+		//Subscribe the handler for the login and about button
+		try{
+			CEGUI::Window *LoginButton = mWindowManager->getWindow("LoginWindow/ButtonLogin");
+			LoginButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::LoginBtnClick, this));
+		}catch(CEGUI::UnknownObjectException){}
+		try{
+			CEGUI::Window *AboutButton = mWindowManager->getWindow("LoginWindow/ButtonAbout");
+			AboutButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::AboutBtnClick, this));
+		}catch(CEGUI::UnknownObjectException){}
+		//Attach the window to the root window so it's visible
+		mRootWindow->addChildWindow(LoginWindow);
+	}
+	
 	//Set the remembered username
-	try{
-		CEGUI::Window *txtUsername = mWindowManager->getWindow("LoginWindow/Username");
-		txtUsername->setText("remembered-username");
-	}catch(CEGUI::UnknownObjectException){}
-	//Attach the window to the root window so it's visible
-	mRootWindow->addChildWindow(LoginWindow);
+	if( !RememberedUsername.empty() ){
+		try{
+			CEGUI::Window *txtUsername = mWindowManager->getWindow("LoginWindow/Username");
+			txtUsername->setText(RememberedUsername);
+		}catch(CEGUI::UnknownObjectException){}
+	}
+	return 1;
+}
+
+int CGUIHandler::CloseLoginScreen(void)
+{
+	CEGUI::Window *LoginWindow = mWindowManager->getWindow("LoginWindow");
+	LoginWindow->destroy();
 	return 1;
 }
 
@@ -162,12 +269,22 @@ bool CGUIHandler::LoginBtnClick(const CEGUI::EventArgs &e)
 		CEGUI::Window *txtPassword = mWindowManager->getWindow("LoginWindow/Password");
 		Password = txtPassword->getText().c_str();
 	}catch(CEGUI::UnknownObjectException){}
-	CMainClient::getSingleton().SendThreadMessage(new CMessageLogin(Username, Password));
+
+	if( Username.empty() || Password.empty() )
+		MsgBox("Please fill in both the username and password!", "Error");
+	else{
+		try{ //Disable the login window
+			CEGUI::Window *LoginWindow = mWindowManager->getWindow("LoginWindow");
+			LoginWindow->setEnabled(false);
+		}catch(CEGUI::UnknownObjectException){}
+		//Send login message
+		CMainClient::getSingleton().SendThreadMessage(new CMessageLogin(Username, Password));
+	}
 	return true;
 }
 
 bool CGUIHandler::AboutBtnClick(const CEGUI::EventArgs &e)
 {
-	MsgBox("NNYv3 stands for No Name Yet version 3.\nNNYv3 is an open source MMORPG client made mainly by nitrix and Tombana.", "About NNYv3", "NNYv3/Aboutbox");
+	MsgBox("NNYv3 stands for No Name Yet version 3.\nNNYv3 is an open source MMORPG client made mainly by nitrix and Tombana.", "About NNYv3", MsgBoxBtnsOk, 0, "NNYv3/Aboutbox");
 	return true;
 }

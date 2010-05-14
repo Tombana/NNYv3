@@ -251,6 +251,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Common\sharedModels.hpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Structures.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ThreadMessages.h"
 				>
 			</File>
@@ -273,6 +281,10 @@
 			<Filter
 				Name="UI"
 				>
+				<File
+					RelativePath=".\Callback.h"
+					>
+				</File>
 				<File
 					RelativePath=".\GUIHandler.h"
 					>
