@@ -7,7 +7,7 @@ CUIMain* CUIMain::mSingleton = 0;
 
 CUIMain::CUIMain(void) : Ogre::FrameListener(), CThreadMessages(),
 	Started(false), m_uithread(),
-	mRoot(0), mCamera(0), mSceneMgr(0), mWindow(0),
+	mRoot(0), mCamera(0), mSceneMgr(0), mWindow(0), mRaySceneQuery(0),
 	mInputHandler(0), mGUIHandler(0)
 {
 	if( mSingleton == 0 ) mSingleton = this;
