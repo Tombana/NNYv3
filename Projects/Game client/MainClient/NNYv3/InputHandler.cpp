@@ -1,8 +1,9 @@
 #include "InputHandler.h"
 #include "MainClient.h"
 
-CInputHandler::CInputHandler(Ogre::RenderWindow *window, Ogre::Camera *Cam, Ogre::SceneManager *SceneMgr) :
-	mWindow(window), mCamera(Cam), mSceneMgr(SceneMgr), mInputManager(0), mKeyboard(0), mMouse(0), mGUISystem(CEGUI::System::getSingletonPtr()),
+CInputHandler::CInputHandler(Ogre::RenderWindow *window, Ogre::Camera *Cam, Ogre::SceneManager *SceneMgr, Ogre::RaySceneQuery *RaySceneQuery) :
+	mWindow(window), mCamera(Cam), mSceneMgr(SceneMgr), mRaySceneQuery(RaySceneQuery),
+		mInputManager(0), mKeyboard(0), mMouse(0), mGUISystem(CEGUI::System::getSingletonPtr()),
 		mCamNode(0), mCamDist(200), MinCamDist(100), MaxCamDist(800)
 {
 	size_t windowHnd = 0;
@@ -110,7 +111,25 @@ CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID)
 
 bool CInputHandler::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 {
-	if( mGUISystem ) mGUISystem->injectMouseButtonDown(convertButton(id));
+	bool ProcessedByGUI = false;
+	if( mGUISystem ) ProcessedByGUI = mGUISystem->injectMouseButtonDown(convertButton(id));
+	if( ProcessedByGUI ) return true;
+
+	if( id == OIS::MB_Left ){
+		CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getDisplayIndependantPosition();
+		Ogre::Ray ray(mCamera->getCameraToViewportRay(mousePos.d_x, mousePos.d_y));
+		mRaySceneQuery->setRay(ray);
+		Ogre::RaySceneQueryResult& qryResult = mRaySceneQuery->execute();
+		Ogre::RaySceneQueryResult::iterator it = qryResult.begin();
+		if( it != qryResult.end() ){
+			Ogre::Vector3 Collision = ray.getPoint(it->distance);
+			if( mSceneMgr->hasSceneNode("LocalPlayerNode") ){
+				Ogre::SceneNode *node = mSceneMgr->getSceneNode("LocalPlayerNode");
+				node->setPosition(Collision.x, Collision.y + 10, Collision.z);
+				mCamNode->setPosition(Collision.x, Collision.y + 20, Collision.z);
+			}
+		}
+	}
 	return true;
 }
 

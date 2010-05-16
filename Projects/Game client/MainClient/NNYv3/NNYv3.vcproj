@@ -177,6 +177,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\LocalPlayer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
@@ -240,12 +244,44 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="InGame"
+				>
+				<File
+					RelativePath=".\CombatEntity.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Item.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Monster.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Npc.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\Player.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\WorldManager.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\LocalPlayer.h"
+				>
+			</File>
 			<File
 				RelativePath=".\MainClient.h"
 				>
@@ -299,6 +335,38 @@
 				</File>
 				<File
 					RelativePath=".\UIMain.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="InGame"
+				>
+				<File
+					RelativePath=".\CombatEntity.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Entity.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Item.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Monster.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Npc.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Player.h"
+					>
+				</File>
+				<File
+					RelativePath=".\WorldManager.h"
 					>
 				</File>
 			</Filter>
