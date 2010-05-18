@@ -40,7 +40,7 @@ case PCKT_C_AUTH:
     g_database.queryDone();
 
     //-------- CHECK THE ENTRY WE FOUND
-    answer.addCmd(PCKT_W_AUTH_ACK);
+    answer.add<CMD>(PCKT_W_AUTH_ACK);
     if (flag_entryFound) {
         //Kick ghost account if bool enabled
         if (kick && !CONFIG_MULTIPLE_LOGGING_ALLOWED) {
@@ -58,11 +58,11 @@ case PCKT_C_AUTH:
         }
 
         if (db_nbr_online > 0 && !CONFIG_MULTIPLE_LOGGING_ALLOWED) {
-            answer.addAck(ACK_ALREADY); //Already some characters online and dual logging is not allowed
+            answer.add<ACK>(ACK_ALREADY); //Already some characters online and dual logging is not allowed
         } else {
             if (db_password == password) {
                 if (!db_banned) {
-                    answer.addAck(ACK_SUCCESS); //Success!
+                    answer.add<ACK>(ACK_SUCCESS); //Success!
                     request = "UPDATE accounts SET nbr_online=nbr_online+1 WHERE id=" + intToStr(db_id);
                     g_database.query(request);
                     td.accountID = db_id;
@@ -72,14 +72,14 @@ case PCKT_C_AUTH:
                     g_onlineList.push_back(&td);
                     pthread_mutex_unlock(&g_onlineList_mutex);
                 } else {
-                    answer.addAck(ACK_REFUSED); //Refused because the account is banned
+                    answer.add<ACK>(ACK_REFUSED); //Refused because the account is banned
                 }
             } else {
-                answer.addAck(ACK_DOESNT_MATCH); //Password doesn't match
+                answer.add<ACK>(ACK_DOESNT_MATCH); //Password doesn't match
             }
         }
     } else {
-        answer.addAck(ACK_NOT_FOUND); //Not found
+        answer.add<ACK>(ACK_NOT_FOUND); //Not found
     }
 
     //-------- SEND A REPLY (ACK) TO THE CLIENT

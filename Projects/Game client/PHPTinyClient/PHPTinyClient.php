@@ -134,13 +134,13 @@ while (true) {
 		//Okay now the interesting part
 		//is the [buffer data] (full size - packet header)
 		//greater OR equal the [capsule data] length we have been told earlier?
-		if ($BUFFER->size()-6 >= $length) {
+		if ($BUFFER->size()-5 >= $length) {
 			if ($VERBOSE) echo 'Enough bytes, processing...'."\n";
 			//Awesome we have enough bytes now :D
 			//Lets continue the "so waited" code part
-			//Copy the 6+length first bytes from the buffer to $CAPSULE.
+			//Copy the 5+length first bytes from the buffer to $CAPSULE.
 			$CAPSULE = new ByteArray();
-			$CAPSULE->append(substr($BUFFER->getBuffer(), 6, $length)); //position to 6 and read length bytes
+			$CAPSULE->append(substr($BUFFER->getBuffer(), 5, $length)); //position to 5 and read length bytes
 			//PROCESS THE CAPSULE (switch and stuff)
 			//-----------------------------------------------
 			if ($VERBOSE) echo 'Capsule: '.$CAPSULE->getBuffer()."\n";
@@ -274,8 +274,8 @@ while (true) {
 				if ($CAPSULE->eof()) break; //break the loop, no more CMDs
 			}
 			//-----------------------------------------------
-			//Delete the 6+length first bytes from the buffer
-			$BUFFER->delete(6+$length); //position to 6+length and read the rest
+			//Delete the 5+length first bytes from the buffer
+			$BUFFER->delete(5+$length); //position to 5+length and read the rest
 			//We already processed it, we no need anymore. Anyway keeping it
 			//would totally screw up the code because the Seek is always set
 			//to the begening remember? So trust me, delete it >:D

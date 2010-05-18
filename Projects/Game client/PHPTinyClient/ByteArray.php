@@ -1,14 +1,12 @@
 <?php
 class ByteArray {
 	var $m_activeInput = true;
-	var $m_nbCmd = 0;
 	var $m_buffer = '';
 	var $m_seek = 0;
 	//====== PUBLIC ========
 	function clear() {
 		$this->m_buffer = '';
 		$this->m_activeInput = true;
-		$this->m_nbCmd = 0;
 		$this->m_seek = 0;
 	}
 	
@@ -43,7 +41,6 @@ class ByteArray {
 	}
 	
 	function addCmd($hex) {
-		$this->m_nbCmd++;
 		$this->addWord($hex);
 	}
 	
@@ -92,8 +89,6 @@ class ByteArray {
 		$output .= chr(($bufferSize / pow(256,1)) %256);
 		$output .= chr(($bufferSize / pow(256,2)) %256);
 		$output .= chr(($bufferSize / pow(256,3)) %256);
-		//Packet nbCmd [Byte]
-		$output .= chr($this->m_nbCmd %256);
 		//Packet content
 		return $output.$this->m_buffer;
 	}

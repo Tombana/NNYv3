@@ -38,7 +38,7 @@ struct s_thread_data {
     unsigned int    map;
 };
 
-//grid.h is placed here because it needs s_thread_data to be declared when included
+//grid.h is placed here because it needs s_thread_data to be compiled
 #include "Grid.h"
 
 void threadHandler(SOCKET &m_socketID);

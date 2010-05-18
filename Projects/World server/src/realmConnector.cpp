@@ -14,7 +14,7 @@ void *realmConnector (void *ptr) {
         if (realm.socket_connect(CONFIG_REALM_IP, CONFIG_REALM_PORT)) {
             //---
             ByteArray packetToSend;
-            packetToSend.addCmd(PCKT_W_SYNC_KEY);
+            packetToSend.add<CMD>(PCKT_W_SYNC_KEY);
             packetToSend.add<DWORD>(CONFIG_SERVER_ID);
             packetToSend.addString(CONFIG_SERVER_KEY);
             //---
@@ -28,8 +28,7 @@ void *realmConnector (void *ptr) {
 
             //input.readByte(); //Header
             //input.readDword(); //Size
-            //input.readByte(); //Cmd_nbs
-            input.modSeek(6); //Optimization
+            input.modSeek(5); //Optimization
 
             while (true) { //a loop to parse all CMDs in the capsule
                 switch (input.read<WORD>()) {
@@ -41,7 +40,7 @@ void *realmConnector (void *ptr) {
                     break;
                 case PCKT_R_SYNC_KEY_ACK:
                     //Possible ACKs: ACK_SUCCESS(1) or ACK_FAILURE(0)
-                    g_realmConnector_authorized = input.readAck();
+                    g_realmConnector_authorized = input.read<ACK>();
                     pthread_cond_signal(&g_realmConnector_cond);
                     break;
                 default:

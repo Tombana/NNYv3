@@ -26,8 +26,6 @@ Database                  g_database; //Database object is thread-safe
 // == Online (authenticated/logged) user list ==
 pthread_mutex_t g_onlineList_mutex            = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
 std::list<s_thread_data*> g_onlineList; //Protected with g_onlineList_mutex
-
-//pthread_rwlock_t g_name = PTHREAD_RWLOCK_INITIALIZER;
 //-------------------------------------------------
 
 int main() {

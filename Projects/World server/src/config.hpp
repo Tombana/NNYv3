@@ -29,10 +29,6 @@
 #define CONFIG_MYSQL_USERNAME                       g_CONFIG.read<std::string>  ("MYSQL_USERNAME").c_str()
 #define CONFIG_MYSQL_PASSWORD                       g_CONFIG.read<std::string>  ("MYSQL_PASSWORD").c_str()
 #define CONFIG_MYSQL_DATABASE                       g_CONFIG.read<std::string>  ("MYSQL_DATABASE").c_str()
-//Console error mode (static)
-#define CONFIG_VERBOSE_NOTHING                      0
-#define CONFIG_VERBOSE_IMPORTANT                    1
-#define CONFIG_VERBOSE_DEBUGGING                    2
 //ThreadPool configuration
 #define CONFIG_THREADPOOL_DEFAULT_WORKER            g_CONFIG.read<unsigned int>  ("THREADPOOL_DEFAULT_WORKER")
 #define CONFIG_THREADPOOL_ADD_WORKER                g_CONFIG.read<unsigned int>  ("THREADPOOL_ADD_WORKER")

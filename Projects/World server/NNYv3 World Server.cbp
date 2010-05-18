@@ -5,7 +5,7 @@
 		<Option title="NNYv3 World Server" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="Extras\;Sources\;Headers\;Packet &amp; capsule handlers\;Thread handlers\;Realm connector\;Common &amp; shared\;Classes\;Main\;" />
+		<Option virtualFolders="Configuration\;Sources\;Headers\;PacketHandler &amp; capsules\;Thread handlers\;Realm connector\;Common &amp; shared\;Classes\;Main\;" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin\Debug\NNYv3 World Server" prefix_auto="1" extension_auto="1" />
@@ -87,19 +87,19 @@
 			<Option virtualFolder="Classes\" />
 		</Unit>
 		<Unit filename="src\capsuleHandler.hpp">
-			<Option virtualFolder="Packet &amp; capsule handlers\" />
+			<Option virtualFolder="PacketHandler &amp; capsules\" />
 		</Unit>
 		<Unit filename="src\capsuleHdl_auth.hpp">
-			<Option virtualFolder="Packet &amp; capsule handlers\" />
+			<Option virtualFolder="PacketHandler &amp; capsules\" />
 		</Unit>
 		<Unit filename="src\capsuleHdl_charlist.hpp">
-			<Option virtualFolder="Packet &amp; capsule handlers\" />
+			<Option virtualFolder="PacketHandler &amp; capsules\" />
 		</Unit>
 		<Unit filename="src\capsuleHdl_default.hpp">
-			<Option virtualFolder="Packet &amp; capsule handlers\" />
+			<Option virtualFolder="PacketHandler &amp; capsules\" />
 		</Unit>
 		<Unit filename="src\config.hpp">
-			<Option virtualFolder="Extras\" />
+			<Option virtualFolder="Configuration\" />
 		</Unit>
 		<Unit filename="src\main.cpp">
 			<Option virtualFolder="Main\" />
@@ -108,7 +108,7 @@
 			<Option virtualFolder="Main\" />
 		</Unit>
 		<Unit filename="src\packetHandler.hpp">
-			<Option virtualFolder="Packet &amp; capsule handlers\" />
+			<Option virtualFolder="PacketHandler &amp; capsules\" />
 		</Unit>
 		<Unit filename="src\realmConnector.cpp">
 			<Option virtualFolder="Realm connector\" />

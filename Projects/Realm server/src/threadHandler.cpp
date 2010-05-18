@@ -40,9 +40,9 @@ void *threadHandler (void *ptr) {
         //Creating packet buffer
         ByteArray packetToSend;
         //Welcome packet
-        packetToSend.addCmd(PCKT_R_WELCOME);
+        packetToSend.add<CMD>(PCKT_R_WELCOME);
         //Debug packet
-        packetToSend.addCmd(PCKT_X_DEBUG);
+        packetToSend.add<CMD>(PCKT_X_DEBUG);
         packetToSend.addString("Yay~! Awsum-server-of-doom says hi :)");
         //Writing
         socket << packetToSend;
@@ -82,14 +82,13 @@ void *threadHandler (void *ptr) {
             //read a "~" (0x7E) byte firstly.
             if (buffer.read<BYTE>() == 0x7E) { //[byte] Packet begining signature
                 DWORD length = buffer.read<DWORD>(); //we will need this later on so we know when we are done accumulating data
-                BYTE nbCmds = buffer.read<BYTE>(); //might be usefull for debugging even if its useless now
 
                 //Is the length too big? We never know, some hackers could send a fake
                 //packet to force the server to put 1Go of trash in memory.
                 //Lets fix a limit of 1MB, i doubt we will somewhen have a packet that long
                 //but whatever. 1MB is way enough.
                 if (length > 1048576) { //1024 Bytes * 1024 KiloBytes = (1 MB) 1048576 Bytes
-                    packetToSend.addCmd(PCKT_R_HACKING_ATTEMPT);
+                    packetToSend.add<CMD>(PCKT_X_HACKING_ATTEMPT);
                     socket << packetToSend;
                     socket.socket_close();
                     std::cerr << "[threadHandler] @ERROR: Length refused!" << std::endl;
@@ -99,19 +98,19 @@ void *threadHandler (void *ptr) {
                 //Okay now the interesting part
                 //is the [buffer data] (full size - packet header)
                 //greater OR equal the [capsule data] length we have been told earlier?
-                if (buffer.size()-6 >= length) {
+                if (buffer.size()-5 >= length) {
                     //Awesome we have enough bytes now :D
                     //Lets continue the "so waited" code part
-                    //Copy the 6+length first bytes from the buffer to 'capsule'.
+                    //Copy the 5+length first bytes from the buffer to 'capsule'.
                     ByteArray capsule;
-                    std::string substring = buffer.getRaw().substr(6, length);
-                    capsule.append(substring); //position to 6 and read length bytes
+                    std::string substring = buffer.getRaw().substr(5, length);
+                    capsule.append(substring); //position to 5 and read length bytes
                     //PROCESS THE CAPSULE (switch and stuff)
                     //-----------------------------------------------
                     #include "capsuleHandler.hpp"
                     //-----------------------------------------------
-                    //Delete the 6+length first bytes from the buffer
-                    buffer.erase(0, 6+length); //position to 0 and delete 6+length character
+                    //Delete the 5+length first bytes from the buffer
+                    buffer.erase(0, 5+length); //position to 0 and delete 5+length character
                     //We already processed it, we no need anymore. Anyway keeping it
                     //would totally screw up the code because the Seek is always set
                     //to the begening remember? So trust me, delete it >:D

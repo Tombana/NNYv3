@@ -43,12 +43,12 @@ int main() {
     "|         ~ NNYv3 Realm Server ~" << "\t\t|" << std::endl <<
     "|\t\t\t\t\t\t|" << std::endl <<
     "| Database supported: v" << CONFIG_DATABASE_SUPPORTED << "\t\t\t|" << std::endl <<
-    "|===============================================|" << std::endl <<
-    "| Recent modifications: \t\t\t|" << std::endl <<
-    "| + Realm Server is now fully working\t\t|" << std::endl <<
-    "| + capsuleHdl_sync is now done\t\t\t|" << std::endl <<
-    "| + capsuleHdl_updater is now done\t\t|" << std::endl <<
-    "| + A much cleaner capsuleHandler\t\t|" << std::endl <<
+    //"|===============================================|" << std::endl <<
+    //"| Recent modifications: \t\t\t|" << std::endl <<
+    //"| + Realm Server is now fully working\t\t|" << std::endl <<
+    //"| + capsuleHdl_sync is now done\t\t\t|" << std::endl <<
+    //"| + capsuleHdl_updater is now done\t\t|" << std::endl <<
+    //"| + A much cleaner capsuleHandler\t\t|" << std::endl <<
     //"| + updater:: has been removed from sources\t|" << std::endl <<
     //"| + Optimization; BYTE, WORD & DWORD added\t|" << std::endl <<
     //"| + Fixed threadHandler(); has been re-coded\t|" << std::endl <<

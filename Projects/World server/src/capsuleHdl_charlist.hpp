@@ -17,7 +17,7 @@ case PCKT_C_GETCHARLIST:
 
         //-------- FETCHING ENTRY IF ANY
         while (rows = g_database.fetch_row(results)) {
-            packet.addCmd(PCKT_W_CHARLIST_ADD);
+            packet.add<CMD>(PCKT_W_CHARLIST_ADD);
             packet.add<BYTE>((BYTE)atoi(rows[0])); //slot
             packet.addString(rows[1]); //name
             packet.add<BYTE>((BYTE)atoi(rows[2])); //level
@@ -29,7 +29,7 @@ case PCKT_C_GETCHARLIST:
         g_database.queryDone();
 
         //-------- SEND A REPLY (ACK) TO THE CLIENT
-        packet.addCmd(PCKT_W_CHARLIST_EOF);
+        packet.add<CMD>(PCKT_W_CHARLIST_EOF);
         td.socket << packet;
     } else {
         std::cerr << "Packet ignored; user isn't authenticated." << std::endl;
@@ -101,7 +101,7 @@ case PCKT_C_ENTER_WORLD:
         ByteArray    packet;
 
         //-------- PACKET ACK REPLY
-        packet.addCmd(PCKT_W_ENTER_WORLD_ACK);
+        packet.add<CMD>(PCKT_W_ENTER_WORLD_ACK);
         if (db_found) {
             //Kick ghost character if bool enabled
             if (kick) {
@@ -117,10 +117,10 @@ case PCKT_C_ENTER_WORLD:
             }
 
             if (db_online) {
-                packet.addAck(ACK_ALREADY); //character already inGame!
+                packet.add<ACK>(ACK_ALREADY); //character already inGame!
             } else {
                 //Here everything looks good! Let the char log in
-                    packet.addAck(ACK_SUCCESS);
+                    packet.add<ACK>(ACK_SUCCESS);
                 //Also mark the character as logged in
                     td.logged = true;
                 //And perform other needed taks that i'm too lazy to take care of now like:
@@ -146,7 +146,7 @@ case PCKT_C_ENTER_WORLD:
                         g_grid.subscribe(grid_hdl, td.map, grid_x+1, grid_y+1);
                     //TODO: Send a spawn packet to your grid so other players see you
                         ByteArray spawnPacket;
-                        spawnPacket.addCmd(PCKT_X_DEBUG);
+                        spawnPacket.add<CMD>(PCKT_X_DEBUG);
                         spawnPacket.addString("FUTURE_SPAWN_PACKET; New character is "+td.name);
                         g_grid.send(grid_hdl, spawnPacket);
                     //TODO: Also retrieve all entities around you and send them to the client
@@ -157,7 +157,7 @@ case PCKT_C_ENTER_WORLD:
                 std::cerr << "Character " << td.name << " has logged in!" << std::endl;
             }
         } else {
-            packet.addAck(ACK_NOT_FOUND); //character not found in database!
+            packet.add<ACK>(ACK_NOT_FOUND); //character not found in database!
         }
 
         //-------- Send packet to client

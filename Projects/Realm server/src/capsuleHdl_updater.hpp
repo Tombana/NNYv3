@@ -13,19 +13,19 @@ case PCKT_C_REVISION:
         DB_ROW rows;
         ByteArray packetToSend;
         while (rows = db_ptr->fetch_row(result)) {
-            packetToSend.addCmd(PCKT_R_DOWNLOAD);
+            packetToSend.add<CMD>(PCKT_R_DOWNLOAD);
             packetToSend.add<DWORD>(atoi(rows[0]));
             packetToSend.addString(rows[1]);
             packetToSend.addString(rows[2]);
         }
         db_ptr->queryDone();
-        packetToSend.addCmd(PCKT_R_DOWNLOAD_EOF);
+        packetToSend.add<CMD>(PCKT_R_DOWNLOAD_EOF);
         //------------
         Dispatcher::s_current_worldserver current = threadData.dispatcher->pickupCurrent();
         if (current.gone) {
-            packetToSend.addCmd(PCKT_R_SERVER_GONE);
+            packetToSend.add<CMD>(PCKT_R_SERVER_GONE);
         } else {
-            packetToSend.addCmd(PCKT_R_CONNECT);
+            packetToSend.add<CMD>(PCKT_R_CONNECT);
             packetToSend.addString(current.ipv4); //ip
             packetToSend.add<WORD>(current.port); //port
         }

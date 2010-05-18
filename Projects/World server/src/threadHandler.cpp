@@ -28,9 +28,9 @@ void threadHandler (SOCKET &m_socketID) {
     //Creating packet buffer
     ByteArray packetToSend;
     //Welcome packet
-    packetToSend.addCmd(PCKT_W_WELCOME);
+    packetToSend.add<CMD>(PCKT_W_WELCOME);
     //Debug packet
-    packetToSend.addCmd(PCKT_X_DEBUG);
+    packetToSend.add<CMD>(PCKT_X_DEBUG);
     packetToSend.addString("World server says hi :)");
     //Writing to socket
     td.socket << packetToSend;

@@ -6,7 +6,6 @@ ByteArray::ByteArray() {
 
 void ByteArray::init() {
     m_seek = 0;
-    m_nbCmd = 0;
     m_buffer = "";
 }
 
@@ -37,7 +36,6 @@ ByteArray::ByteArray(char *array, int &size) {
 ByteArray::ByteArray(const ByteArray &obj) {
     m_buffer = obj.m_buffer;
     m_seek = obj.m_seek;
-    m_nbCmd = obj.m_nbCmd;
 }
 
 ByteArray::~ByteArray() {
@@ -58,15 +56,6 @@ bool ByteArray::eof() {
     }
 }
 
-//! This function append a BYTE to the byte array
-void ByteArray::addAck(ACK ack) {
-    add<BYTE>(ack);
-}
-
-ACK ByteArray::readAck() {
-    return read<BYTE>();
-}
-
 //! This function append a DWORD and a const char* to the byte array
 void ByteArray::addString(const char *str) {
     std::string buffer = str;
@@ -83,7 +72,6 @@ void ByteArray::addString(std::string str) {
 //! Clear the byte array entirely
 void ByteArray::clear() {
     m_buffer.clear();
-    m_nbCmd = 0;
     m_seek = 0;
 }
 
@@ -113,17 +101,6 @@ BYTE ByteArray::operator[](int i) {
     return (BYTE)m_buffer[i];
 }
 
-//! This function append a \e WORD to the byte array
-/**
-* It basically performs a call to addWord() but \b also increment \e m_nbCmd. \n
-* This is usefull later on when we will generate a packet with our ByteArray
-* because we need to know how many \e commands has been appended.
-*/
-void ByteArray::addCmd(WORD hex) {
-    m_nbCmd++;
-    add<WORD>(hex);
-}
-
 //! [Harmful] This function append a raw std::string to the byte array
 void ByteArray::append(std::string &obj) {
     m_buffer.append(obj);
@@ -147,9 +124,6 @@ std::string ByteArray::genPacket() {
     //Packet size [DWORD]
     DWORD size = m_buffer.size();
     output.append(reinterpret_cast<char*>(&size), sizeof(DWORD));
-
-    //Packet nbCmd [Byte]
-    output.append(reinterpret_cast<char*>(&m_nbCmd), sizeof(BYTE));
 
     //Packet content
     output.append(m_buffer);

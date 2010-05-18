@@ -9,6 +9,9 @@
 #define PCKT_X_DEBUG                0x0009 //PCKT decimal = 9
 //Info: Send a string for debugging purpose
 //Params: [PSTR]Text
+#define PCKT_X_HACKING_ATTEMPT      0x000A //PCKT decimal = 10
+//Info: Hacking attempt detected!
+//Params: [None]
 
 /*****************************
         [C]lient packets
@@ -41,9 +44,6 @@
 /*****************************
         [R]ealm server
 *****************************/
-#define PCKT_R_HACKING_ATTEMPT  0x000A //PCKT decimal = 10
-//Info: Hacking attempt detected!
-//Params: [None]
 #define PCKT_R_WELCOME          0x0001 //PCKT decimal = 1
 //Info: Server signature sent by the realm server to every sockets
 //Additional: It doesnt send the server version anymore,
