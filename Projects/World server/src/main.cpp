@@ -40,8 +40,8 @@ void atomic_uint32_add(unsigned int &target, unsigned int modifier);
 
 int main() {
     std::cerr << "There you go!" << std::endl;
-    int target = 5;
-    int *ptr_target = &target;
+    unsigned int target = 5;
+    unsigned int *ptr_target = &target;
     atomic_uint32_add(target, 3);
     atomic_uint32_add(target, 2);
     atomic_uint32_add(*ptr_target , 5);
