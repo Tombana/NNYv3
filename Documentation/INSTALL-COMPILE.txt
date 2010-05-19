@@ -1,10 +1,11 @@
 ===========================
 IMPORTANT: Requirements on Linux
 ===========================
-=> IMPORTANT: Makefile do some calls to externals PHP tools! Please make sure you have php4 or higher installed first.
-# apt-get install php-cli5
-=> IMPORTANT: Program also needs MySQL library to work properly
+
+=> IMPORTANT: Program will MySQL library to work properly
 # apt-get install libmysqlclient15-dev
+
+=> You may also needs build-essential
 
 ===========================
 [Code::Blocks] How to compile on Windows:

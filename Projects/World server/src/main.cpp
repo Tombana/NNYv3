@@ -36,15 +36,15 @@ void atomic_uint32_add(unsigned int &target, unsigned int modifier) {
      );
 }
 
-void atomicAdd(int &target, int modifier);
+void atomic_uint32_add(unsigned int &target, unsigned int modifier);
 
 int main() {
     std::cerr << "There you go!" << std::endl;
     int target = 5;
     int *ptr_target = &target;
-    atomicAdd(target, 3);
-    atomicAdd(target, 2);
-    atomicAdd(ptr_target , 5);
+    atomic_uint32_add(target, 3);
+    atomic_uint32_add(target, 2);
+    atomic_uint32_add(*ptr_target , 5);
     std::cerr << "var: " << target << std::endl;
 
     //TODO (NitriX#): We need a log system!
