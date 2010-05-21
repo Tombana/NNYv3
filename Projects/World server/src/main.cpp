@@ -44,18 +44,6 @@ int main() {
     std::cout << "Using server protocol " << NNY_PROTOCOL_VERSION << std::endl << std::endl;
 
     //=========================================
-    //            REALM CONNECTOR
-    //=========================================
-    //create the realm connector object
-    ThreadRealmConnector threadRealmConnector;
-    //start the thread (it
-    threadRealmConnector.start();
-    //wait ACK from the realm to say we are online
-    while (threadRealmConnector.isOnlineACK() != ACK_SUCCESS) {
-        sleep(1000); //re-check every second from thread
-    }
-
-    //=========================================
     //            MYSQL DATABASE
     //=========================================
     std::cerr << "Connecting to MySQL database... ";
@@ -69,7 +57,8 @@ int main() {
     }
 
     //=========================================
-    //         CREATING MAP GRID
+    //               MAP GRID
+    // Create the Grid and the default map 0
     //=========================================
     std::cerr << "Creating map grid... ";
     g_grid.createMap(0); //default map
@@ -79,6 +68,8 @@ int main() {
     //          CREATING THREADPOOL
     //=========================================
     createNbThreadWorker(CONFIG_THREADPOOL_DEFAULT_WORKER);
+    //TODO: wait for some threads to be created?!
+    //there should be a check here
     std::cerr << "World server is ready!" << std::endl;
 
     //=========================================
@@ -92,6 +83,15 @@ int main() {
         std::cerr << "Failed!" << std::endl << "@ERROR: Unable to bind socket on port " << CONFIG_SERVER_PORT << std::endl;
         exit(EXIT_FAILURE);
     }
+
+    //=========================================
+    //            REALM CONNECTOR
+    //  Create a threaded class and start it
+    //=========================================
+    //create the realm connector object
+    ThreadRealmConnector threadRealmConnector;
+    //start the thread
+    threadRealmConnector.start();
 
     //=========================================
     //         WAITING FOR CONNECTIONS

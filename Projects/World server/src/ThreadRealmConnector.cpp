@@ -3,12 +3,6 @@
 ThreadRealmConnector::ThreadRealmConnector() {
     m_errorCounter = 0;
     m_socket.socket_create();
-    m_online = ACK_FAILURE;
-    std::cerr << "[ThreadRealmConnector] Object created!" << std::endl;
-}
-
-ACK ThreadRealmConnector::isOnlineACK() {
-    return m_online;
 }
 
 void ThreadRealmConnector::main() {
@@ -19,7 +13,7 @@ void ThreadRealmConnector::main() {
         //--------------------------
         // Connect to realm server
         //--------------------------
-        std::cerr << "[ThreadRealmConnector] Connecting..." << std::endl;
+        std::cout << "[ThreadRealmConnector] Connecting to the Realm Server..." << std::endl;
         if (m_socket.socket_connect(CONFIG_REALM_IP, CONFIG_REALM_PORT)) {
             ByteArray packetToSend;
             packetToSend.add<CMD>(PCKT_W_SYNC_KEY);
@@ -56,11 +50,15 @@ void ThreadRealmConnector::main() {
                         input.readString();
                         break;
                     case PCKT_R_SYNC_KEY_ACK:
-                        //Possible ACKs: ACK_SUCCESS(1) or ACK_FAILURE(0)
-                        m_online = input.read<ACK>();
+                        //Possible ACKs: ACK_SUCCESS or ACK_FAILURE
+                        if (input.read<ACK>() == ACK_SUCCESS) {
+                            std::cout << "[ThreadRealmConnector] We are now online!" << std::endl;
+                        } else {
+                            std::cout << "[ThreadRealmConnector] The realm explicitly refused our server!" << std::endl;
+                        }
                         break;
                     default:
-                        std::cerr << "[TreadRealmConnector] Unknow packet CMD!" << std::endl;
+                        std::cout << "[ThreadRealmConnector] Unknow packet CMD!" << std::endl;
                         input.setSeek(input.size()); //Goto EOF so it breaks to loop below (5 lines down)
                         break;
                 }
