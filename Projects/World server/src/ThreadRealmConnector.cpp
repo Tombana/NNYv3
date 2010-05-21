@@ -13,7 +13,6 @@ void ThreadRealmConnector::main() {
         //--------------------------
         // Connect to realm server
         //--------------------------
-        std::cout << "[ThreadRealmConnector] Connecting to the Realm Server..." << std::endl;
         if (m_socket.socket_connect(CONFIG_REALM_IP, CONFIG_REALM_PORT)) {
             ByteArray packetToSend;
             packetToSend.add<CMD>(PCKT_W_SYNC_KEY);

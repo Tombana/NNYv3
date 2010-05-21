@@ -79,13 +79,14 @@
   <ItemGroup>
     <ClCompile Include="..\Common\ByteArray.cpp" />
     <ClCompile Include="..\Common\ConfigFile.cpp" />
+    <ClCompile Include="..\Common\Thread.cpp" />
     <ClCompile Include="..\Common\ZSocket.cpp" />
     <ClCompile Include="src\Database.cpp" />
     <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\realmConnector.cpp" />
     <ClCompile Include="src\threadHandler.cpp" />
     <ClCompile Include="src\threadPoolHandler.cpp" />
+    <ClCompile Include="src\ThreadRealmConnector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Common\Atomic.hpp" />
@@ -93,6 +94,7 @@
     <ClInclude Include="..\Common\ConfigFile.h" />
     <ClInclude Include="..\Common\HashTable.hpp" />
     <ClInclude Include="..\Common\protocol.hpp" />
+    <ClInclude Include="..\Common\Thread.h" />
     <ClInclude Include="..\Common\ZSocket.h" />
     <ClInclude Include="src\capsuleHandler.hpp" />
     <ClInclude Include="src\capsuleHdl_default.hpp" />
@@ -101,10 +103,9 @@
     <ClInclude Include="src\Grid.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\packetHandler.hpp" />
-    <ClInclude Include="src\realmConnector.h" />
     <ClInclude Include="src\threadHandler.h" />
     <ClInclude Include="src\threadPoolHandler.h" />
-    <ClInclude Include="src\version.hpp" />
+    <ClInclude Include="src\ThreadRealmConnector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
