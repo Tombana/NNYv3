@@ -2,7 +2,7 @@
 
 extern pthread_mutex_t g_realmConnector_mutex; //MUTEX! :)
 extern pthread_cond_t  g_realmConnector_cond; //Protected with g_realmConnector_mutex
-extern bool            g_realmConnector_authorized; //Protected with g_realmConnector_mutex
+extern ACK             g_realmConnector_authorized; //Protected with g_realmConnector_mutex
 
 void *realmConnector (void *ptr) {
     unsigned int error = 0;

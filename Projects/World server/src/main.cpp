@@ -28,25 +28,7 @@ pthread_mutex_t g_onlineList_mutex            = PTHREAD_MUTEX_INITIALIZER; //MUT
 std::list<s_thread_data*> g_onlineList; //Protected with g_onlineList_mutex
 //-------------------------------------------------
 
-void atomic_uint32_add(unsigned int &target, unsigned int modifier) {
-     __asm__ __volatile__(
-          "lock addl %1,%0 ;\n"
-          : "=m"  (target)
-          : "ir"  (modifier), "m" (target)
-     );
-}
-
-void atomic_uint32_add(unsigned int &target, unsigned int modifier);
-
 int main() {
-    std::cerr << "There you go!" << std::endl;
-    unsigned int target = 5;
-    unsigned int *ptr_target = &target;
-    atomic_uint32_add(target, 3);
-    atomic_uint32_add(target, 2);
-    atomic_uint32_add(*ptr_target , 5);
-    std::cerr << "var: " << target << std::endl;
-
     //TODO (NitriX#): We need a log system!
     //=========================================
     //            STARTUP MESSAGE

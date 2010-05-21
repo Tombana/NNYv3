@@ -80,6 +80,7 @@
     <ClCompile Include="..\Common\ByteArray.cpp" />
     <ClCompile Include="..\Common\ConfigFile.cpp" />
     <ClCompile Include="..\Common\ZSocket.cpp" />
+    <ClCompile Include="src\Database.cpp" />
     <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\realmConnector.cpp" />
@@ -87,6 +88,7 @@
     <ClCompile Include="src\threadPoolHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Common\Atomic.hpp" />
     <ClInclude Include="..\Common\ByteArray.h" />
     <ClInclude Include="..\Common\ConfigFile.h" />
     <ClInclude Include="..\Common\HashTable.hpp" />
@@ -95,6 +97,7 @@
     <ClInclude Include="src\capsuleHandler.hpp" />
     <ClInclude Include="src\capsuleHdl_default.hpp" />
     <ClInclude Include="src\config.hpp" />
+    <ClInclude Include="src\Database.h" />
     <ClInclude Include="src\Grid.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\packetHandler.hpp" />

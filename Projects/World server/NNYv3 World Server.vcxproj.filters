@@ -48,6 +48,7 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Main</Filter>
     </ClCompile>
+    <ClCompile Include="src\Database.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\config.hpp">
@@ -92,11 +93,12 @@
     <ClInclude Include="src\Grid.h">
       <Filter>Grid system</Filter>
     </ClInclude>
-    <ClInclude Include="src\capsuleHdl_auth.hpp">
-      <Filter>Packet &amp; capsule handlers</Filter>
-    </ClInclude>
     <ClInclude Include="src\main.h">
       <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Database.h" />
+    <ClInclude Include="..\Common\Atomic.hpp">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
