@@ -9,9 +9,10 @@
 #endif
 #include "ByteArray.h"
 #include "config.hpp"
-#include "sharedModels.hpp"
+#include "sharedModels.h"
 #include "Database.h"
 #include <list>
+#include "protocol.h"
 
 //=============================
 //        THREAD DATA

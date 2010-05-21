@@ -4,8 +4,7 @@
 #include <iostream>
 #include <string.h>
 #include <math.h>
-#include "protocol.hpp"
-#include "sharedModels.hpp"
+#include "sharedModels.h"
 
 class ByteArray {
 public:

@@ -11,16 +11,16 @@
 #endif
 #include "config.hpp"
 #include "threadPoolHandler.h"
-#include "realmConnector.h"
-#include "sharedModels.hpp"
+#include "sharedModels.h"
 #include "Grid.h"
 #include "Database.h"
 #include <list>
 
+#include "Thread.h"
+#include "ThreadRealmConnector.h"
+
 int main();
-void printStartupMessage();
 void createNbThreadWorker(int amount);
-void genVersion();
 void checkDatabaseVersion();
 
 #ifdef WIN32

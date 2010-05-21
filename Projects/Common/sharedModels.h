@@ -1,5 +1,5 @@
-#ifndef H_GLOBAL_MODELS
-#define H_GLOBAL_MODELS
+#ifndef H_SHAREDMODELS
+#define H_SHAREDMODELS
 
 //=============================
 //     EASIERS TYPEDEFS

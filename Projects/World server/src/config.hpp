@@ -22,7 +22,7 @@
 //Realm configuration
 #define CONFIG_REALM_IP                             g_CONFIG.read<std::string>   ("REALM_IP")
 #define CONFIG_REALM_PORT                           g_CONFIG.read<unsigned int>  ("REALM_PORT")
-#define CONFIG_REALMCONNECTOR_RETRY                 g_CONFIG.read<unsigned int>  ("REALMCONNECTOR_RETRY")
+#define CONFIG_REALMCONNECTOR_MAX_RETRY             g_CONFIG.read<unsigned int>  ("REALMCONNECTOR_MAX_RETRY")
 #define CONFIG_REALMCONNECTOR_RETRY_SLEEP           g_CONFIG.read<unsigned int>  ("REALMCONNECTOR_RETRY_SLEEP")
 //MySQL informations
 #define CONFIG_MYSQL_SERVER                         g_CONFIG.read<std::string>  ("MYSQL_SERVER").c_str()
