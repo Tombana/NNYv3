@@ -5,6 +5,9 @@ ThreadRealmConnector::ThreadRealmConnector() {
     m_socket.socket_create();
 }
 
+/** Obviously the whole code is in a loop so it reconnects to
+* the server if the connection (\a m_socket) has been dropped.
+*/
 void ThreadRealmConnector::main() {
     //========================
     //  Main infinite loop
