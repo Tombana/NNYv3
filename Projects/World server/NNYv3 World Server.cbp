@@ -5,7 +5,7 @@
 		<Option title="NNYv3 World Server" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="Configuration\;Sources\;Headers\;PacketHandler &amp; capsules\;Thread handlers\;Realm connector\;Common &amp; shared\;Classes\;Main\;" />
+		<Option virtualFolders="Configuration\;Sources\;Headers\;PacketHandler &amp; capsules\;Thread handlers\;Common\;Classes\;Main\;Thread classes\;" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin\Debug\NNYv3 World Server" prefix_auto="1" extension_auto="1" />
@@ -48,31 +48,37 @@
 			<Add library="..\..\Dependencies\MySQL\lib\libmysql.lib" />
 		</Linker>
 		<Unit filename="..\Common\ByteArray.cpp">
-			<Option virtualFolder="Common &amp; shared\" />
+			<Option virtualFolder="Common\" />
 		</Unit>
 		<Unit filename="..\Common\ByteArray.h">
-			<Option virtualFolder="Common &amp; shared\" />
+			<Option virtualFolder="Common\" />
 		</Unit>
 		<Unit filename="..\Common\ConfigFile.cpp">
-			<Option virtualFolder="Common &amp; shared\" />
+			<Option virtualFolder="Common\" />
 		</Unit>
 		<Unit filename="..\Common\ConfigFile.h">
-			<Option virtualFolder="Common &amp; shared\" />
+			<Option virtualFolder="Common\" />
 		</Unit>
 		<Unit filename="..\Common\HashTable.hpp">
-			<Option virtualFolder="Common &amp; shared\" />
+			<Option virtualFolder="Common\" />
+		</Unit>
+		<Unit filename="..\Common\Thread.cpp">
+			<Option virtualFolder="Common\" />
+		</Unit>
+		<Unit filename="..\Common\Thread.h">
+			<Option virtualFolder="Common\" />
 		</Unit>
 		<Unit filename="..\Common\ZSocket.cpp">
-			<Option virtualFolder="Common &amp; shared\" />
+			<Option virtualFolder="Common\" />
 		</Unit>
 		<Unit filename="..\Common\ZSocket.h">
-			<Option virtualFolder="Common &amp; shared\" />
+			<Option virtualFolder="Common\" />
 		</Unit>
-		<Unit filename="..\Common\protocol.hpp">
-			<Option virtualFolder="Common &amp; shared\" />
+		<Unit filename="..\Common\protocol.h">
+			<Option virtualFolder="Common\" />
 		</Unit>
-		<Unit filename="..\Common\sharedModels.hpp">
-			<Option virtualFolder="Common &amp; shared\" />
+		<Unit filename="..\Common\sharedModels.h">
+			<Option virtualFolder="Common\" />
 		</Unit>
 		<Unit filename="src\Database.cpp">
 			<Option virtualFolder="Classes\" />
@@ -85,6 +91,12 @@
 		</Unit>
 		<Unit filename="src\Grid.h">
 			<Option virtualFolder="Classes\" />
+		</Unit>
+		<Unit filename="src\ThreadRealmConnector.cpp">
+			<Option virtualFolder="Thread classes\" />
+		</Unit>
+		<Unit filename="src\ThreadRealmConnector.h">
+			<Option virtualFolder="Thread classes\" />
 		</Unit>
 		<Unit filename="src\capsuleHandler.hpp">
 			<Option virtualFolder="PacketHandler &amp; capsules\" />
@@ -109,12 +121,6 @@
 		</Unit>
 		<Unit filename="src\packetHandler.hpp">
 			<Option virtualFolder="PacketHandler &amp; capsules\" />
-		</Unit>
-		<Unit filename="src\realmConnector.cpp">
-			<Option virtualFolder="Realm connector\" />
-		</Unit>
-		<Unit filename="src\realmConnector.h">
-			<Option virtualFolder="Realm connector\" />
 		</Unit>
 		<Unit filename="src\threadHandler.cpp">
 			<Option virtualFolder="Thread handlers\" />

@@ -28,7 +28,7 @@ int main() {
     //=========================================
     //               ALL TODOs
     //=========================================
-    //TODO (NitriX#): We need a log system!
+    /// \todo We need a log system!
 
     //=========================================
     //            STARTUP MESSAGE
