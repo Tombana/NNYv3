@@ -6,7 +6,6 @@ Thread::Thread() {
 Thread::~Thread() {
 }
 
-/// This function will create, start a new thread and detach it. The threaded function is the static member inner_main()
 bool Thread::start() {
     //Error var
     bool error = false;
@@ -45,7 +44,6 @@ bool Thread::stop(bool bForceKill) {
 }
 */
 
-/// By default it will print a error message if it haven't been overrided.
 void Thread::main() {
     std::cout << "Thread default main(); please override this function!" << std::endl;
 }

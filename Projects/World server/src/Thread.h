@@ -12,10 +12,16 @@ class Thread {
     public:
         Thread(); ///< Default constructor (empty)
         ~Thread(); ///< Default destructor (empty)
-        bool start (); ///< Start a new thread
+        /** This function will create, start a new thread and detach it. The threaded function is the static member inner_main()
+        * @brief Start a new thread
+        */
+        bool start ();
         //TODO: This function is bugged for some reasons
         //bool stop (bool bForceKill = false ); ///< Stops the thread (bugged)
-        virtual void main();     ///< Overrite this method; thread entry point.
+        /** Overrite this method; thread entry point.
+        * @note By default it will print a error message if it haven't been overrided.
+        */
+        virtual void main();
 
     public:
         /// This is the internal main function called by the pthread library.

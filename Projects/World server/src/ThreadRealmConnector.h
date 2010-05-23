@@ -13,7 +13,8 @@
 */
 class ThreadRealmConnector : public Thread {
     public:
-        ThreadRealmConnector();
+        ThreadRealmConnector(); ///< Constructor
+        ~ThreadRealmConnector(); ///< Destructor
     protected:
         virtual void main(); ///< This override parent member function -> Thread::main()
     private:

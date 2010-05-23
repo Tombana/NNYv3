@@ -7,6 +7,7 @@ ConfigFile g_CONFIG(CONFIG_FILENAME);
 // The threadpool over-abuse the same two vars all over: g_threadPool_mutex and g_threadPool_cond
 // We no need arrays or anything else.
 // Locks are cummulative, all threads can use thoses two same vars then :)
+/*
 SOCKET          g_threadStartupData_socketID; //Protected with g_threadPool_mutex
 pthread_mutex_t g_threadPool_callback_mutex   = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
 pthread_cond_t  g_threadPool_callback_cond    = PTHREAD_COND_INITIALIZER; //Protected with g_threadPool_callback_mutex
@@ -15,6 +16,7 @@ pthread_cond_t  g_threadPool_cond             = PTHREAD_COND_INITIALIZER; //Prot
 pthread_mutex_t g_threadPool_counter_mutex    = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
 unsigned int    g_threadPool_counter_thread   = 0; //Protected with g_threadPool_counter_mutex
 unsigned int    g_threadPool_counter_job      = 0; //Protected with g_threadPool_counter_mutex
+*/
 // == Grid class requirement ==
 Grid                      g_grid; //Grid object is thread-safe
 // == Database class requirement ==
@@ -67,36 +69,32 @@ int main() {
     //=========================================
     //          CREATING THREADPOOL
     //=========================================
-    createNbThreadWorker(CONFIG_THREADPOOL_DEFAULT_WORKER);
+    //createNbThreadWorker(CONFIG_THREADPOOL_DEFAULT_WORKER);
     //TODO: wait for some threads to be created?!
     //there should be a check here
     std::cerr << "World server is ready!" << std::endl;
 
     //=========================================
-    //          START LISTENING PORT
+    //                ACCEPTOR
+    // Note: NULL means the server will listen
+    //       on IP address 0.0.0.0
     //=========================================
-    std::cerr << "Listening on port " << CONFIG_SERVER_PORT << "... ";
-    ZSocket mainsocket; //Creating main server socket
-    if (mainsocket.socket_bind(CONFIG_SERVER_PORT)) {
-        std::cerr << "OK!" << std::endl;
-    } else {
-        std::cerr << "Failed!" << std::endl << "@ERROR: Unable to bind socket on port " << CONFIG_SERVER_PORT << std::endl;
-        exit(EXIT_FAILURE);
-    }
+    Acceptor acceptor(NULL, CONFIG_SERVER_PORT);
 
     //=========================================
     //            REALM CONNECTOR
     //  Create a threaded class and start it
     //=========================================
-    //create the realm connector object
+    //Create the realm connector object
     ThreadRealmConnector threadRealmConnector;
-    //start the thread
+    //Start the thread
     threadRealmConnector.start();
 
     //=========================================
     //         WAITING FOR CONNECTIONS
     //           [MAIN PROGRAM LOOP]
     //=========================================
+    /*
     std::cerr << "Waiting for connections..." << std::endl;
     while (true) {
         //IMPORTANT THREAD STARTUP DATA HERE!
@@ -138,6 +136,7 @@ int main() {
         //pthread_mutex_lock(&g_threadPool_mutex); //Try to acquire the lock (so wait until the thread really is done
         //pthread_mutex_unlock(&g_threadPool_mutex); //Release the lock
     }
+    */
 
     //===================================
     // Exit
@@ -145,6 +144,7 @@ int main() {
     return 0;
 }
 
+/*
 void createNbThreadWorker(int amount) {
     for (int i=0; i<amount; i++) { //we create as many worker we needs to
         //Create new thread
@@ -165,6 +165,7 @@ void createNbThreadWorker(int amount) {
         std::cerr << "[main] " << amount << " thread worker has been created!" << std::endl;
     #endif
 }
+*/
 
 void pauseServer() {
     while(true) {

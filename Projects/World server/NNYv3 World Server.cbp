@@ -5,7 +5,7 @@
 		<Option title="NNYv3 World Server" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="Configuration\;Sources\;Headers\;PacketHandler &amp; capsules\;Thread handlers\;Common\;Classes\;Main\;Threaded classes\;" />
+		<Option virtualFolders="Configuration\;Sources\;Headers\;PacketHandler &amp; capsules\;Thread handlers\;Common\;Demultiplexing classes\;Main\;Threaded classes\;Game classes\;" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin\Debug\NNYv3 World Server" prefix_auto="1" extension_auto="1" />
@@ -77,29 +77,29 @@
 		<Unit filename="..\Common\sharedModels.h">
 			<Option virtualFolder="Common\" />
 		</Unit>
-		<Unit filename="src\Address.cpp">
-			<Option virtualFolder="Classes\" />
+		<Unit filename="src\Acceptor.cpp">
+			<Option virtualFolder="Demultiplexing classes\" />
 		</Unit>
-		<Unit filename="src\Address.h">
-			<Option virtualFolder="Classes\" />
+		<Unit filename="src\Acceptor.h">
+			<Option virtualFolder="Demultiplexing classes\" />
 		</Unit>
 		<Unit filename="src\Database.cpp">
-			<Option virtualFolder="Classes\" />
+			<Option virtualFolder="Game classes\" />
 		</Unit>
 		<Unit filename="src\Database.h">
-			<Option virtualFolder="Classes\" />
+			<Option virtualFolder="Game classes\" />
 		</Unit>
 		<Unit filename="src\Grid.cpp">
-			<Option virtualFolder="Classes\" />
+			<Option virtualFolder="Game classes\" />
 		</Unit>
 		<Unit filename="src\Grid.h">
-			<Option virtualFolder="Classes\" />
+			<Option virtualFolder="Game classes\" />
 		</Unit>
 		<Unit filename="src\Thread.cpp">
-			<Option virtualFolder="Classes\" />
+			<Option virtualFolder="Threaded classes\" />
 		</Unit>
 		<Unit filename="src\Thread.h">
-			<Option virtualFolder="Classes\" />
+			<Option virtualFolder="Threaded classes\" />
 		</Unit>
 		<Unit filename="src\ThreadRealmConnector.cpp">
 			<Option virtualFolder="Threaded classes\" />
@@ -122,6 +122,9 @@
 		<Unit filename="src\config.hpp">
 			<Option virtualFolder="Configuration\" />
 		</Unit>
+		<Unit filename="src\config_static.h">
+			<Option virtualFolder="Configuration\" />
+		</Unit>
 		<Unit filename="src\main.cpp">
 			<Option virtualFolder="Main\" />
 		</Unit>
@@ -135,12 +138,6 @@
 			<Option virtualFolder="Thread handlers\" />
 		</Unit>
 		<Unit filename="src\threadHandler.h">
-			<Option virtualFolder="Thread handlers\" />
-		</Unit>
-		<Unit filename="src\threadPoolHandler.cpp">
-			<Option virtualFolder="Thread handlers\" />
-		</Unit>
-		<Unit filename="src\threadPoolHandler.h">
 			<Option virtualFolder="Thread handlers\" />
 		</Unit>
 		<Extensions>
