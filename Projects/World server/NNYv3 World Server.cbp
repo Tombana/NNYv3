@@ -5,7 +5,7 @@
 		<Option title="NNYv3 World Server" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="Configuration\;Sources\;Headers\;PacketHandler &amp; capsules\;Thread handlers\;Common\;Classes\;Main\;Thread classes\;" />
+		<Option virtualFolders="Configuration\;Sources\;Headers\;PacketHandler &amp; capsules\;Thread handlers\;Common\;Classes\;Main\;Threaded classes\;" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin\Debug\NNYv3 World Server" prefix_auto="1" extension_auto="1" />
@@ -30,6 +30,9 @@
 					<Add option="-s" />
 				</Linker>
 			</Target>
+			<Environment>
+				<Variable name="ACE_ROOT" value="dep\ACE_wrappers" />
+			</Environment>
 		</Build>
 		<Compiler>
 			<Add option="-O3" />
@@ -62,12 +65,6 @@
 		<Unit filename="..\Common\HashTable.hpp">
 			<Option virtualFolder="Common\" />
 		</Unit>
-		<Unit filename="..\Common\Thread.cpp">
-			<Option virtualFolder="Common\" />
-		</Unit>
-		<Unit filename="..\Common\Thread.h">
-			<Option virtualFolder="Common\" />
-		</Unit>
 		<Unit filename="..\Common\ZSocket.cpp">
 			<Option virtualFolder="Common\" />
 		</Unit>
@@ -79,6 +76,12 @@
 		</Unit>
 		<Unit filename="..\Common\sharedModels.h">
 			<Option virtualFolder="Common\" />
+		</Unit>
+		<Unit filename="src\Address.cpp">
+			<Option virtualFolder="Classes\" />
+		</Unit>
+		<Unit filename="src\Address.h">
+			<Option virtualFolder="Classes\" />
 		</Unit>
 		<Unit filename="src\Database.cpp">
 			<Option virtualFolder="Classes\" />
@@ -92,11 +95,17 @@
 		<Unit filename="src\Grid.h">
 			<Option virtualFolder="Classes\" />
 		</Unit>
+		<Unit filename="src\Thread.cpp">
+			<Option virtualFolder="Classes\" />
+		</Unit>
+		<Unit filename="src\Thread.h">
+			<Option virtualFolder="Classes\" />
+		</Unit>
 		<Unit filename="src\ThreadRealmConnector.cpp">
-			<Option virtualFolder="Thread classes\" />
+			<Option virtualFolder="Threaded classes\" />
 		</Unit>
 		<Unit filename="src\ThreadRealmConnector.h">
-			<Option virtualFolder="Thread classes\" />
+			<Option virtualFolder="Threaded classes\" />
 		</Unit>
 		<Unit filename="src\capsuleHandler.hpp">
 			<Option virtualFolder="PacketHandler &amp; capsules\" />
