@@ -1,38 +1,24 @@
 #include "main.h"
 
-//Loading configuration file CONFIG_FILENAME defined in config.hpp
-ConfigFile g_CONFIG(CONFIG_FILENAME);
+// As long as keepWorking is true, the spawned thread will keep printing to the screen.
+static bool keepWorking = true;
 
-// == THREADPOOL ==
-// The threadpool over-abuse the same two vars all over: g_threadPool_mutex and g_threadPool_cond
-// We no need arrays or anything else.
-// Locks are cummulative, all threads can use thoses two same vars then :)
-/*
-SOCKET          g_threadStartupData_socketID; //Protected with g_threadPool_mutex
-pthread_mutex_t g_threadPool_callback_mutex   = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
-pthread_cond_t  g_threadPool_callback_cond    = PTHREAD_COND_INITIALIZER; //Protected with g_threadPool_callback_mutex
-pthread_mutex_t g_threadPool_mutex            = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
-pthread_cond_t  g_threadPool_cond             = PTHREAD_COND_INITIALIZER; //Protected with g_threadPool_mutex
-pthread_mutex_t g_threadPool_counter_mutex    = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
-unsigned int    g_threadPool_counter_thread   = 0; //Protected with g_threadPool_counter_mutex
-unsigned int    g_threadPool_counter_job      = 0; //Protected with g_threadPool_counter_mutex
-*/
-// == Grid class requirement ==
-Grid                      g_grid; //Grid object is thread-safe
-// == Database class requirement ==
-Database                  g_database; //Database object is thread-safe
-// == Online (authenticated/logged) user list ==
-pthread_mutex_t g_onlineList_mutex            = PTHREAD_MUTEX_INITIALIZER; //MUTEX! :)
-std::list<s_thread_data*> g_onlineList; //Protected with g_onlineList_mutex
-//-------------------------------------------------
+// This is the function that will be running in the spawned thread.
+void* threadFunc(void *arg)
+{
+	ACE_OS::sleep(ACE_Time_Value(0, 5000)); // Add an initial delay of half a second
+	while(keepWorking)
+	{
+		std::cout << "Thread - yawn. That was a nice nap. I think I'll sleep a bit more." << std::endl;
+		ACE_OS::sleep(1);
+	}
 
-int main() {
-    //=========================================
-    //               ALL TODOs
-    //=========================================
-    /// \todo We need a log system!
+	std::cout << "Thread - I'm done working for you!" << std::endl;
+	return NULL;
+}
 
-    //=========================================
+int main(int argc, char **argv) {
+	//=========================================
     //            STARTUP MESSAGE
     //=========================================
     std::cout << "NN      NN  NN      NN NN    NN             "   << std::endl;
@@ -42,58 +28,85 @@ int main() {
     std::cout << "NN   NN NN  NN   NN NN    NN  NN   NN  NNN  "   << std::endl;
     std::cout << "NN    NNNN  NN    NNNN    NN   NN NN     NN "   << std::endl;
     std::cout << "NN     NNN  NN     NNN    NN    NNN   NNNN  "   << std::endl;
-    std::cout << "Using configuration file " << CONFIG_FILENAME   << std::endl;
+    //std::cout << "Using configuration file " << CONFIG_FILENAME   << std::endl;
     std::cout << "Using server protocol " << NNY_PROTOCOL_VERSION << std::endl << std::endl;
+
+	//=========================================
+    //              ACE TESTING
+    //=========================================
+	ACE_Thread_Manager threadManager;
+	ACE_thread_t threadId;
+	
+	// Create one thread running the thread function
+	if (threadManager.spawn((ACE_THR_FUNC)threadFunc, NULL, 0, &threadId) == -1)
+	{
+		std::cerr << "Error spawning thread" << std::endl;
+		return -1;
+	}
+
+	std::cout << "Main - thread spawned with thread id " << threadId << "." << std::endl;
+
+	// Sleep for 5 seconds and let the thread do some work.
+	ACE_OS::sleep(5);
+
+	// Now stop the thread and wait for it to exit.
+	keepWorking = false;
+	std::cout << "Main - end of work shift. Waiting for all threads to exit." << std::endl;
+	threadManager.wait();
+
+	std::cout << "Main - done." << std::endl;
+
+    //=========================================
+    //               ALL TODOs
+    //=========================================
+    /// \todo We need a log system!
 
     //=========================================
     //            MYSQL DATABASE
     //=========================================
-    std::cerr << "Connecting to MySQL database... ";
+    /*
+	std::cerr << "Connecting to MySQL database... ";
     if (g_database.connect(CONFIG_MYSQL_SERVER, CONFIG_MYSQL_USERNAME, CONFIG_MYSQL_PASSWORD, CONFIG_MYSQL_DATABASE)) {
         std::cerr << "OK!" << std::endl;
         checkDatabaseVersion();
     } else {
         std::cerr << "Failed!" << std::endl;
         std::cerr << "@ERROR: Unable to connect to the MySQL database! Please check world.conf file!" << std::endl;
-        pauseServer();
+        //pauseServer();
     }
+	*/
 
     //=========================================
     //               MAP GRID
     // Create the Grid and the default map 0
     //=========================================
-    std::cerr << "Creating map grid... ";
+    /*
+	std::cerr << "Creating map grid... ";
     g_grid.createMap(0); //default map
     std::cerr << "OK!" << std::endl;
-
-    //=========================================
-    //          CREATING THREADPOOL
-    //=========================================
-    //createNbThreadWorker(CONFIG_THREADPOOL_DEFAULT_WORKER);
-    //TODO: wait for some threads to be created?!
-    //there should be a check here
-    std::cerr << "World server is ready!" << std::endl;
+	*/
 
     //=========================================
     //                ACCEPTOR
     // Note: NULL means the server will listen
     //       on IP address 0.0.0.0
     //=========================================
-    Acceptor acceptor(NULL, CONFIG_SERVER_PORT);
-
+	//Acceptor acceptor(NULL, CONFIG_SERVER_PORT);
+	
     //=========================================
     //            REALM CONNECTOR
     //  Create a threaded class and start it
     //=========================================
     //Create the realm connector object
-    ThreadRealmConnector threadRealmConnector;
+    //ThreadRealmConnector threadRealmConnector;
     //Start the thread
-    threadRealmConnector.start();
+    //threadRealmConnector.start();
 
     //=========================================
     //         WAITING FOR CONNECTIONS
     //           [MAIN PROGRAM LOOP]
     //=========================================
+    std::cerr << "World server is ready!" << std::endl;
     /*
     std::cerr << "Waiting for connections..." << std::endl;
     while (true) {
@@ -126,7 +139,6 @@ int main() {
             } else {
                 //TODO (NitriX#): We reached the thread limit!
                 std::cerr << "We reached the maximum thread limit!" << std::endl;
-                pauseServer();
             }
         }
 
@@ -137,6 +149,12 @@ int main() {
         //pthread_mutex_unlock(&g_threadPool_mutex); //Release the lock
     }
     */
+
+    /*
+		while(true) {
+        sleep(5000); //5 seconds pause
+    }
+	*/
 
     //===================================
     // Exit
@@ -167,12 +185,7 @@ void createNbThreadWorker(int amount) {
 }
 */
 
-void pauseServer() {
-    while(true) {
-        sleep(5000); //5 seconds pause
-    }
-}
-
+/*
 void checkDatabaseVersion() {
     //----- Execute the query
     DB_RESULT *result = g_database.query(DB_USE_RESULT, "SELECT db_version FROM config");
@@ -192,3 +205,4 @@ void checkDatabaseVersion() {
         exit(EXIT_FAILURE);
     }
 }
+*/

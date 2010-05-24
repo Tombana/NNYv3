@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C++ Express 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NNYv3 World Server", "NNYv3 World Server.vcproj", "{728C534B-DBE5-4D20-84A2-5B0E8DF57343}"
+	ProjectSection(ProjectDependencies) = postProject
+		{15E52235-FECA-1BAD-6757-8A636331B92C} = {15E52235-FECA-1BAD-6757-8A636331B92C}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ACE_wrappers", "dep\ACE_wrappers\ace\ACE_wrappers.vcproj", "{15E52235-FECA-1BAD-6757-8A636331B92C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{728C534B-DBE5-4D20-84A2-5B0E8DF57343}.Debug|Win32.ActiveCfg = Debug|Win32
+		{728C534B-DBE5-4D20-84A2-5B0E8DF57343}.Debug|Win32.Build.0 = Debug|Win32
+		{728C534B-DBE5-4D20-84A2-5B0E8DF57343}.Release|Win32.ActiveCfg = Release|Win32
+		{728C534B-DBE5-4D20-84A2-5B0E8DF57343}.Release|Win32.Build.0 = Release|Win32
+		{15E52235-FECA-1BAD-6757-8A636331B92C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{15E52235-FECA-1BAD-6757-8A636331B92C}.Debug|Win32.Build.0 = Debug|Win32
+		{15E52235-FECA-1BAD-6757-8A636331B92C}.Release|Win32.ActiveCfg = Release|Win32
+		{15E52235-FECA-1BAD-6757-8A636331B92C}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

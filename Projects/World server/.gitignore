@@ -6,3 +6,5 @@
 *.exe
 *.depend
 *.layout
+*.ncb
+/lib/
