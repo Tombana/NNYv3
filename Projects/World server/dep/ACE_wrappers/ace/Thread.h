@@ -268,6 +268,12 @@ public:
 
 private:
   /// Ensure that we don't get instantiated.
+  //NOTE: Edited by NitriX
+  //The way ACE is creating threads is maybe the ugliest one ever.
+  //Coupled with pthread it gives you a horrible mixture of C and C++.
+  //I just cannot stand it at all; I want Threaded classes.
+  //POO all the way, sorry ACE.
+  
   //ACE_Thread (void);
 };
 
