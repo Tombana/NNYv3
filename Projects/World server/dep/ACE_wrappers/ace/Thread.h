@@ -268,7 +268,7 @@ public:
 
 private:
   /// Ensure that we don't get instantiated.
-  ACE_Thread (void);
+  //ACE_Thread (void);
 };
 
 ACE_END_VERSIONED_NAMESPACE_DECL

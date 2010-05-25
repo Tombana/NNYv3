@@ -1,15 +1,18 @@
 #ifndef H_MAIN
 #define H_MAIN
 
+//Ace libraries :3
 #include <iostream>
-#include "ace/Thread_Manager.h"
-#include "ace/Thread.h"
 #include "ace/OS.h"
+#include "ace/Thread.h"
 
+//Commons
 #include "sharedModels.h"
 #include "protocol.h"
 
-//#include "Thread.h"
-//#include "ThreadRealmConnector.h"
+//Threads started by main()
+#include "Threading.h"
+#include "Socket.h" //TODO: Testing
+//#include "RealmConnector.h"
 
 #endif

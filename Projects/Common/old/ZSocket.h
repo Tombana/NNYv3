@@ -3,11 +3,6 @@
 
 #include <iostream>
 #include <string.h>
-#if defined(WIN32)
-     #include "pthread.h"
-#else
-     #include <pthread.h>
-#endif
 #include "ByteArray.h"
 
 #if defined(WIN32)
@@ -69,7 +64,6 @@ private:
     bool             m_created; //Works!
     bool             m_connected; //Not quite sure yet
     bool             m_dataReceived;
-    pthread_mutex_t  m_mutex;
 };
 
 #endif

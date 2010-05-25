@@ -1,21 +1,27 @@
 #include "main.h"
 
-// As long as keepWorking is true, the spawned thread will keep printing to the screen.
-static bool keepWorking = true;
-
-// This is the function that will be running in the spawned thread.
-void* threadFunc(void *arg)
-{
-	ACE_OS::sleep(ACE_Time_Value(0, 5000)); // Add an initial delay of half a second
-	while(keepWorking)
-	{
-		std::cout << "Thread - yawn. That was a nice nap. I think I'll sleep a bit more." << std::endl;
-		ACE_OS::sleep(1);
+class TestRunnable : public Runnable {
+	void run(void) {
+		unsigned int counter = 0;
+		//--me having some fun with sockets--
+		Socket socket;
+		socket.connect("127.0.0.1", 5000);
+		//-----------------------------------
+		while (true) {
+			std::cerr << "Woohoo!" << std::endl;
+			//ACE_OS::sleep(ACE_Time_Value(NULL, 1000000)); //1'000'000 = 1 second
+			ACE_OS::sleep(1); //This is also 1 second
+			counter++;
+			//----- again the socket ----
+			Packet pckt;
+			pckt.add<CMD>(PCKT_X_DEBUG);
+			pckt.addString("Omg it works!");
+			socket.write(pckt);
+			------------------------------
+			if (counter == 30) break;
+		}
 	}
-
-	std::cout << "Thread - I'm done working for you!" << std::endl;
-	return NULL;
-}
+};
 
 int main(int argc, char **argv) {
 	//=========================================
@@ -31,32 +37,15 @@ int main(int argc, char **argv) {
     //std::cout << "Using configuration file " << CONFIG_FILENAME   << std::endl;
     std::cout << "Using server protocol " << NNY_PROTOCOL_VERSION << std::endl << std::endl;
 
+	//TODO: MUST terminate the reference counting, it's crucial if we don't want a memory leak
+	//Thread test(new TestRunnable);
+	//test.start();
+	//test.start();
+	//etc..
+	//where the TestRunnable object used by Thread constructor must delete the `new` object created
+	//when all threads are done, hence the reference counting.
+
 	//=========================================
-    //              ACE TESTING
-    //=========================================
-	ACE_Thread_Manager threadManager;
-	ACE_thread_t threadId;
-	
-	// Create one thread running the thread function
-	if (threadManager.spawn((ACE_THR_FUNC)threadFunc, NULL, 0, &threadId) == -1)
-	{
-		std::cerr << "Error spawning thread" << std::endl;
-		return -1;
-	}
-
-	std::cout << "Main - thread spawned with thread id " << threadId << "." << std::endl;
-
-	// Sleep for 5 seconds and let the thread do some work.
-	ACE_OS::sleep(5);
-
-	// Now stop the thread and wait for it to exit.
-	keepWorking = false;
-	std::cout << "Main - end of work shift. Waiting for all threads to exit." << std::endl;
-	threadManager.wait();
-
-	std::cout << "Main - done." << std::endl;
-
-    //=========================================
     //               ALL TODOs
     //=========================================
     /// \todo We need a log system!
@@ -107,6 +96,7 @@ int main(int argc, char **argv) {
     //           [MAIN PROGRAM LOOP]
     //=========================================
     std::cerr << "World server is ready!" << std::endl;
+	ACE_OS::sleep(100);
     /*
     std::cerr << "Waiting for connections..." << std::endl;
     while (true) {

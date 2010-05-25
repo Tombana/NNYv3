@@ -97,19 +97,17 @@ void ZSocket::operator<<(ByteArray &pckt) {
 }
 
 void ZSocket::operator<<(std::string output) {
-    pthread_mutex_lock(&m_mutex);
-        size_t TotalBytesSend = 0;
-        int BytesSend;
-        while( TotalBytesSend < output.size() ){
-            BytesSend = send(m_socket.id, output.c_str() + TotalBytesSend, output.size() - TotalBytesSend, 0);
-            if( BytesSend == SOCKET_ERROR || BytesSend == 0 ){
-                std::cerr << "[ZSocket] @ERROR: Failed to send all bytes" << std::endl;
-                socket_close();
-                break;
-            }
-            TotalBytesSend += BytesSend;
+    size_t TotalBytesSend = 0;
+    int BytesSend;
+    while( TotalBytesSend < output.size() ){
+        BytesSend = send(m_socket.id, output.c_str() + TotalBytesSend, output.size() - TotalBytesSend, 0);
+        if( BytesSend == SOCKET_ERROR || BytesSend == 0 ){
+            std::cerr << "[ZSocket] @ERROR: Failed to send all bytes" << std::endl;
+            socket_close();
+            break;
         }
-	pthread_mutex_unlock(&m_mutex);
+        TotalBytesSend += BytesSend;
+    }
 }
 
 void ZSocket::socket_close() {

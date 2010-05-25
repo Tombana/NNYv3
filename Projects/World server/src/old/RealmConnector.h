@@ -1,7 +1,6 @@
 #ifndef H_THREADREALMCONNECTOR
 #define H_THREADREALMCONNECTOR
 
-#include "Thread.h"
 #include <iostream>
 #include "protocol.h"
 #include "sharedModels.h"
