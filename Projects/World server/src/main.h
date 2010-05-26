@@ -1,18 +1,26 @@
 #ifndef H_MAIN
 #define H_MAIN
 
-//Ace libraries :3
+//STD library includes
 #include <iostream>
+
+//ACE library includes
 #include "ace/OS.h"
 #include "ace/Thread.h"
+#include "ace/INET_Addr.h"
+#include "ace/SOCK_Acceptor.h"
+#include "ace/Acceptor.h"
+#include "ace/Reactor.h"
 
-//Commons
+//Common shared files
 #include "sharedModels.h"
 #include "protocol.h"
 
-//Threads started by main()
-#include "Threading.h"
-#include "Socket.h" //TODO: Testing
-//#include "RealmConnector.h"
+//For all the threading; like the RealmConnector thread
+#include "Thread.h"
+
+//Things like the RealmConnector may need
+#include "Socket.h"
+#include "PacketHandler.h"
 
 #endif

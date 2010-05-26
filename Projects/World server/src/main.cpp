@@ -1,24 +1,26 @@
 #include "main.h"
 
-class TestRunnable : public Runnable {
+class TestRunnable : public Thread {
 	void run(void) {
 		unsigned int counter = 0;
 		//--me having some fun with sockets--
-		Socket socket;
-		socket.connect("127.0.0.1", 5000);
+		//Socket socket;
+		//socket.connect("127.0.0.1", 5000);
 		//-----------------------------------
 		while (true) {
-			std::cerr << "Woohoo!" << std::endl;
+			std::cerr << "Woohoo, spam from TestRunnable thread :D !" << std::endl;
 			//ACE_OS::sleep(ACE_Time_Value(NULL, 1000000)); //1'000'000 = 1 second
 			ACE_OS::sleep(1); //This is also 1 second
-			counter++;
+			//counter++;
 			//----- again the socket ----
+			/*
 			Packet pckt;
 			pckt.add<CMD>(PCKT_X_DEBUG);
 			pckt.addString("Omg it works!");
 			socket.write(pckt);
-			------------------------------
-			if (counter == 30) break;
+			*/
+			//------------------------------
+			//if (counter == 30) break;
 		}
 	}
 };
@@ -32,19 +34,14 @@ int main(int argc, char **argv) {
     std::cout << "NN NN   NN  NN NN   NN   NNNN            NN "   << std::endl;
     std::cout << "NN  NN  NN  NN  NN  NN    NN  NN    NN  NN  "   << std::endl;
     std::cout << "NN   NN NN  NN   NN NN    NN  NN   NN  NNN  "   << std::endl;
-    std::cout << "NN    NNNN  NN    NNNN    NN   NN NN     NN "   << std::endl;
-    std::cout << "NN     NNN  NN     NNN    NN    NNN   NNNN  "   << std::endl;
-    //std::cout << "Using configuration file " << CONFIG_FILENAME   << std::endl;
-    std::cout << "Using server protocol " << NNY_PROTOCOL_VERSION << std::endl << std::endl;
+	std::cout << "NN    NNNN  NN    NNNN    NN   NN NN     NN "   << std::endl;
+	std::cout << "NN     NNN  NN     NNN    NN    NNN   NNNN  "   << std::endl;
+	//std::cout << "Using configuration file " << CONFIG_FILENAME   << std::endl;
+	std::cout << "Using server protocol " << NNY_PROTOCOL_VERSION << std::endl << std::endl;
 
-	//TODO: MUST terminate the reference counting, it's crucial if we don't want a memory leak
-	//Thread test(new TestRunnable);
-	//test.start();
-	//test.start();
-	//etc..
-	//where the TestRunnable object used by Thread constructor must delete the `new` object created
-	//when all threads are done, hence the reference counting.
-
+	TestRunnable test;
+	test.start();
+	
 	//=========================================
     //               ALL TODOs
     //=========================================
@@ -96,7 +93,31 @@ int main(int argc, char **argv) {
     //           [MAIN PROGRAM LOOP]
     //=========================================
     std::cerr << "World server is ready!" << std::endl;
-	ACE_OS::sleep(100);
+	
+	// Server port number.
+	const u_short port = 6131;
+	ACE_INET_Addr server_addr(port);
+	
+	// Initialize server endpoint an register with the Dispatcher.
+	ACE_Acceptor<PacketHandler,ACE_SOCK_ACCEPTOR> acceptor(server_addr, ACE_Reactor::instance(), ACE_NONBLOCK);
+
+	// Main event loop that handles client
+	// logging records and connection requests.
+	while(true) {
+		// dont move this outside the loop, the reactor will modify it
+        //ACE_Time_Value interval(0, 100000);
+
+        //if (ACE_Reactor::instance()->run_reactor_event_loop(interval) == -1)
+		if (ACE_Reactor::instance()->run_reactor_event_loop() == -1) //when a client d/c it breaks just in case
+            break;
+
+		//std::cerr << "Waiting ;o" << std::endl;
+		
+		//ACE_Reactor::instance()->handle_events(); 
+	}
+
+	//ACE_OS::sleep(100);
+
     /*
     std::cerr << "Waiting for connections..." << std::endl;
     while (true) {

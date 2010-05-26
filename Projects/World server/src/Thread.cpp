@@ -1,16 +1,8 @@
-#include "Threading.h"
-
-Runnable::Runnable() {
-}
-
-Runnable::~Runnable() {
-}
+#include "Thread.h"
 
 Thread::Thread() {
-}
-
-Thread::Thread(Runnable* instance) : m_task(instance), m_thread_id(0), m_thread_handle(0) {
-    //start();
+	m_thread_id = 0;
+	m_thread_handle = 0;
 }
 
 Thread::~Thread() {
@@ -43,7 +35,7 @@ void Thread::resume() {
 }
 
 bool Thread::start() {
-	if (ACE_Thread::spawn(&Thread::threadTask, (void*)m_task, 0, &m_thread_id, &m_thread_handle) == 0) {
+	if (ACE_Thread::spawn(&Thread::threadTask, (void*)this, 0, &m_thread_id, &m_thread_handle) == 0) {
 		return true;
 	} else {
 		std::cout << "[Threading] @ERROR: ACE_Thread::spawn() failed!" << std::endl;
@@ -52,13 +44,7 @@ bool Thread::start() {
 }
 
 ACE_THR_FUNC_RETURN Thread::threadTask(void * param) {
-    Runnable * task = (Runnable*)param;
+    Thread * task = (Thread*)param;
     task->run();
     return (ACE_THR_FUNC_RETURN)0;
 }
-
-/*
-void Runnable::main() {
-    std::cout << "Thread default main(); please override this function!" << std::endl;
-}
-*/

@@ -182,11 +182,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\PacketHandler.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Socket.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Threading.cpp"
+				RelativePath=".\src\Thread.cpp"
 				>
 			</File>
 		</Filter>
@@ -204,11 +208,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\PacketHandler.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\Socket.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Threading.h"
+				RelativePath=".\src\Thread.h"
 				>
 			</File>
 		</Filter>
