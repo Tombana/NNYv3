@@ -7,5 +7,7 @@
 *.depend
 *.layout
 *.ncb
+*.pdb
+*.user
 /lib/
 /obj/
