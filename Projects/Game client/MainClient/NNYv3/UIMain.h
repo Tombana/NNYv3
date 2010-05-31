@@ -5,7 +5,7 @@
 #include "InputHandler.h"
 #include "GUIHandler.h"
 #include <Ogre.h>
-
+#include "ConsoleOverlay.h"
 
 class CUIMain : public Ogre::FrameListener, public CThreadMessages
 {
@@ -19,6 +19,8 @@ public:
 	//Called form main thread: To launch the whole GUI
 	int StartUI(void);
 	int WaitForExit(void); //When the main thread is done and this thread is not yet done.
+
+	void ToggleConsole(void){ mShowConsole = !mShowConsole; mConsoleOverlay->Show(mShowConsole); }
 
 private:
 	//Singleton
@@ -50,6 +52,10 @@ private:
 	int SetupOgre(void);
 	int CleanupOgre(void);
 	int LoadWorld(void);
+
+	//Console overlay
+	bool				mShowConsole;
+	ConsoleOverlay		*mConsoleOverlay;
 
 	//=============
 	// Login section

@@ -102,11 +102,20 @@ int CUIMain::SetupOgre(void)
 	mRoot->addFrameListener(mInputHandler);
 	mRoot->addFrameListener(this);
 
+	//=================
+	// Create the console overlay
+	//=================
+	mConsoleOverlay = new ConsoleOverlay();
+
 	return 1;
 }
 
 int CUIMain::CleanupOgre(void)
 {
+	//Clean up the console overlay
+	if( mConsoleOverlay ) delete mConsoleOverlay;
+	mConsoleOverlay = 0;
+
 	//Clean up the input system
 	if( mRoot ){
 		mRoot->removeFrameListener(this);

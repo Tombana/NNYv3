@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include <list>
+#include <queue>
 #include <string>
 #include "pthread.h"
 #include "Structures.h"
@@ -50,7 +50,7 @@ protected:
 
 private:
 	//When other threads notify this thread, the notification will be put in this list
-	std::list<CMessage*>	m_MessageQueue;
+	std::queue<CMessage*>	m_MessageQueue;
 	pthread_mutex_t			m_message_mutex;
 };
 

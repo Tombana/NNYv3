@@ -11,11 +11,11 @@ CMainClient::CMainClient(void) :
 	m_ui(),
 	m_Username(), m_Password(), m_Characters()
 {
+	if( mSingleton == 0 ) mSingleton = this;
 	m_RealmServers.push_back("127.0.0.1");
 	m_RealmServers.push_back("ceres.dlinkddns.com");
 	pthread_mutex_init(&m_networkthread_mutex, NULL);
 	pthread_cond_init(&m_networkthread_cond, NULL);
-	if( mSingleton == 0 ) mSingleton = this;
 }
 
 CMainClient::~CMainClient(void)

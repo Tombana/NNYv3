@@ -177,7 +177,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\LocalPlayer.cpp"
+				RelativePath=".\Log.cpp"
 				>
 			</File>
 			<File
@@ -224,11 +224,19 @@
 				Name="UI"
 				>
 				<File
+					RelativePath=".\ConsoleOverlay.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\GUIHandler.cpp"
 					>
 				</File>
 				<File
 					RelativePath=".\InputHandler.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\OgreOverlayText.cpp"
 					>
 				</File>
 				<File
@@ -256,6 +264,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\LocalPlayer.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Monster.cpp"
 					>
 				</File>
@@ -279,7 +291,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\LocalPlayer.h"
+				RelativePath=".\Log.h"
 				>
 			</File>
 			<File
@@ -322,6 +334,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\ConsoleOverlay.h"
+					>
+				</File>
+				<File
 					RelativePath=".\GUIHandler.h"
 					>
 				</File>
@@ -331,6 +347,10 @@
 				</File>
 				<File
 					RelativePath=".\OgreCEGUIRenderer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\OgreOverlayText.h"
 					>
 				</File>
 				<File
@@ -351,6 +371,10 @@
 				</File>
 				<File
 					RelativePath=".\Item.h"
+					>
+				</File>
+				<File
+					RelativePath=".\LocalPlayer.h"
 					>
 				</File>
 				<File

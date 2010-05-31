@@ -60,6 +60,9 @@ bool CInputHandler::keyPressed(const OIS::KeyEvent &arg)
 		case OIS::KC_ESCAPE:
 			CMainClient::getSingleton().SendThreadMessage(Message_Quit);
             break;
+		case OIS::KC_GRAVE:
+			CUIMain::getSingleton().ToggleConsole();
+			break;
 		default:
 			break;
 	}
