@@ -39,8 +39,8 @@ int main(int argc, char **argv) {
 	//std::cout << "Using configuration file " << CONFIG_FILENAME   << std::endl;
 	std::cout << "Using server protocol " << NNY_PROTOCOL_VERSION << std::endl << std::endl;
 
-	TestRunnable test;
-	test.start();
+	//TestRunnable test;
+	//test.start();
 	
 	//=========================================
     //               ALL TODOs
