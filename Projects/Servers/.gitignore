@@ -1,4 +1,6 @@
 /ipch/
+/lib/
+/obj/
 /*.opensdf
 *.sdf
 *.suo
@@ -9,5 +11,3 @@
 *.ncb
 *.pdb
 *.user
-/lib/
-/obj/

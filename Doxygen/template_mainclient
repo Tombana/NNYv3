@@ -26,7 +26,7 @@ DOXYFILE_ENCODING      = UTF-8
 # The PROJECT_NAME tag is a single word (or a sequence of words surrounded
 # by quotes) that should identify the project.
 
-PROJECT_NAME           = "NNYv3 Main Client"
+PROJECT_NAME           = "Main Client"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number.
 # This could be handy for archiving the generated documentation or
@@ -575,7 +575,7 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories
 # with spaces.
 
-INPUT                  = "../Projects/Game client/MainClient/NNYv3" ../Projects/Common
+INPUT                  = ../Projects/Clients/MainClient/NNYv3 ../Projects/Servers/src/Common
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is

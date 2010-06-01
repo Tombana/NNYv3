@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="bin/"
-			IntermediateDirectory="obj/"
+			OutputDirectory="../../bin/"
+			IntermediateDirectory="../../obj/World"
 			ConfigurationType="1"
 			CharacterSet="2"
 			>
@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="dep\ACE_wrappers;..\..\Dependencies\MySQL\include;..\Common"
+				AdditionalIncludeDirectories="..\..\dep\ACE_wrappers;..\..\dep\MySQL\include;..\Common"
 				PreprocessorDefinitions="ACE_AS_STATIC_LIBS;_DEBUG;WIN32;_CONSOLE;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;MPC_LIB_MODIFIER=\&quot;s\&quot;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,9 +61,9 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="ACEsd.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_debug.exe"
-				AdditionalLibraryDirectories="lib;..\..\Dependencies\winsocks2\lib;..\..\Dependencies\MySQL\lib"
+				AdditionalLibraryDirectories="..\..\lib;..\..\dep\MySQL\lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)\$(ProjectName).pdb"
+				ProgramDatabaseFile="$(IntDir)\$(ProjectName).pdb"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -90,8 +90,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="bin/"
-			IntermediateDirectory="obj/"
+			OutputDirectory="../../bin/"
+			IntermediateDirectory="../../obj/World"
 			ConfigurationType="1"
 			CharacterSet="2"
 			WholeProgramOptimization="1"
@@ -116,7 +116,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="0"
-				AdditionalIncludeDirectories="dep\ACE_wrappers;..\..\Dependencies\MySQL\include;..\Common"
+				AdditionalIncludeDirectories="..\..\dep\ACE_wrappers;..\..\dep\MySQL\include;..\Common"
 				PreprocessorDefinitions="ACE_AS_STATIC_LIBS;NDEBUG;WIN32;_CONSOLE;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;MPC_LIB_MODIFIER=\&quot;s\&quot;"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -135,9 +135,9 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ACEs.lib"
-				AdditionalLibraryDirectories="lib;..\..\Dependencies\winsocks2\lib;..\..\Dependencies\MySQL\lib"
+				AdditionalLibraryDirectories="..\..\lib;..\..\dep\MySQL\lib"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(OutDir)\$(ProjectName).pdb"
+				ProgramDatabaseFile="$(IntDir)\$(ProjectName).pdb"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -174,23 +174,23 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\src\main.cpp"
+				RelativePath=".\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Packet.cpp"
+				RelativePath=".\Packet.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\PacketHandler.cpp"
+				RelativePath=".\PacketHandler.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Socket.cpp"
+				RelativePath=".\Socket.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Thread.cpp"
+				RelativePath=".\Thread.cpp"
 				>
 			</File>
 		</Filter>
@@ -200,23 +200,23 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\src\main.h"
+				RelativePath=".\main.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Packet.h"
+				RelativePath=".\Packet.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\PacketHandler.h"
+				RelativePath=".\PacketHandler.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Socket.h"
+				RelativePath=".\Socket.h"
 				>
 			</File>
 			<File
-				RelativePath=".\src\Thread.h"
+				RelativePath=".\Thread.h"
 				>
 			</File>
 		</Filter>
