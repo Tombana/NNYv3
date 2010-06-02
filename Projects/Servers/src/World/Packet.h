@@ -3,7 +3,7 @@
 
 #include <iostream> //TODO temp printHex()
 #include <string>
-#include "sharedModels.h"
+#include "resTypedef.h"
 
 class Packet {
 public:

@@ -12,9 +12,9 @@
 #include "ace/Acceptor.h"
 #include "ace/Reactor.h"
 
-//Common shared files
-#include "sharedModels.h"
-#include "protocol.h"
+//Common resource files
+#include "resTypedef.h"
+#include "resProtocol.h"
 
 //For all the threading; like the RealmConnector thread
 #include "Thread.h"
