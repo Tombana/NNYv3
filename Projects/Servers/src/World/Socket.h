@@ -1,10 +1,10 @@
-#ifndef H_ZSOCKET
-#define H_ZSOCKET
+#ifndef H_SOCKET
+#define H_SOCKET
 
 #include "Packet.h"
 #include "ace/SOCK_Stream.h"
 #include "ace/SOCK_Connector.h"
-#include "ace/Log_Msg.h"
+//#include "ace/Log_Msg.h"
 
 #define SOCKET_READ_BUFFER_SIZE 1024
 #define SOCKET_TIMEOUT 10
