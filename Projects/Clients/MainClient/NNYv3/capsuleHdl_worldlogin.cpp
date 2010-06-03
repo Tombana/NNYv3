@@ -38,7 +38,7 @@ int CMainClient::HandleWorldLogin(WORD Cmd, ByteArray& capsule)
 					ret = -1; //Close connection
 					m_state = State_LoginScreen;
 				}
-				m_ui.SendThreadMessage(new CMessageLoginResponse(code));
+				this->SendThreadMessage(new CMessageLoginResponse(code));
 			}
 			break;
 		//=====================================
@@ -61,8 +61,8 @@ int CMainClient::HandleWorldLogin(WORD Cmd, ByteArray& capsule)
 		case PCKT_W_CHARLIST_EOF:
 			{
 				m_state = State_CharSelectScreen;
-				m_ui.SendThreadMessage(new CMessageDisplayCharSelect(m_Characters));
-				m_ui.SendThreadMessage(Message_CloseWaitScreen);
+				this->SendThreadMessage(new CMessageDisplayCharSelect(m_Characters));
+				this->SendThreadMessage(Message_CloseWaitScreen);
 			}
 			break;
 		default:

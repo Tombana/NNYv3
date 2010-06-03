@@ -1,20 +1,20 @@
 #pragma once
 
+// Taken from
+// http://msmvps.com/blogs/vandooren/archive/2007/01/05/creating-a-thread-safe-producer-consumer-queue-in-c-without-using-locks.aspx
+// IMPORTANT: there may be only one reader thread and one writer thread
+// The reading thread class uses CThreadMessages as base class.
+// The reading thread can use GetThreadMessage to check for messages.
+// The writing thread can call SendThreadMessage to send a message.
+// The writing thread must allocate the message (which must be based on CMessage) and
+// the reading thread must deallocate it.
+//
+
+
 #include <vector>
-#include <queue>
 #include <string>
-#include "pthread.h"
 #include "Structures.h"
 #include "Callback.h"
-
-//
-// Tombana's thread message system. Probably crappy and there are probably better systems out there
-// A class that needs to receive messages uses CThreadMessages as base class.
-// The class can use GetThreadMessage to check for messages.
-// Other threads can call SendThreadMessage to send a message.
-// Other threads must allocate the message (which must be based on CMessage) and
-// the class that receives the message must deallocate it.
-//
 
 
 //Base class for all thread messages
@@ -26,6 +26,8 @@ public:
 	const int ID;
 };
 
+typedef CMessage* PCMessage;
+
 
 //Base class for classes that other threads need to communicate with
 class CThreadMessages
@@ -34,25 +36,30 @@ public:
 	CThreadMessages(void);
 	virtual ~CThreadMessages(void);
 
-	//When other threads want to notify the this thread of something they call this function
+	//Called by the writing thread
+	//Returns zero if the queue was full (message not placed in queue)
 	//Example usage: SendThreadMessage(new CMessageLogin("username", "password"));
-	int SendThreadMessage(CMessage* Message);
-
+	bool SendThreadMessage(PCMessage Message);
 	//When the message only has an identifier without additional data this might be easier:
-	int SendThreadMessage(int Identifier);
+	bool SendThreadMessage(int Identifier);
 
 protected:
-	//Retrieves the next message in the list.
+	//For the reading thread: retrieves the next message in the list.
 	//Returns zero if there are no messages.
 	//VERY IMPORTANT: delete the memory when you're done
 	//THE CALLER IS RESPONSIBLE FOR DELETING THE MEMORY!!
-	CMessage* GetThreadMessage(void);
+	bool GetThreadMessage(PCMessage& Message);
 
 private:
 	//When other threads notify this thread, the notification will be put in this list
-	std::queue<CMessage*>	m_MessageQueue;
-	pthread_mutex_t			m_message_mutex;
+	//std::queue<CMessage*>	m_MessageQueue;
+	//pthread_mutex_t			m_message_mutex;
+	volatile int m_Read;
+	volatile int m_Write;
+	static const int Size = 20;
+	volatile PCMessage m_Data[Size];
 };
+
 
 
 //==================================

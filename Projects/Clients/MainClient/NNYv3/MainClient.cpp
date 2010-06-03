@@ -66,8 +66,10 @@ int CMainClient::Run(void)
 
 	while( m_state != State_Quitting ){
 		sleep(50);
-		CMessage* msg = GetThreadMessage();
+		CMessage* msg = 0;
+		GetThreadMessage(msg);
 		if( msg ){ //If there are messages from other threads to process
+			bool DeleteMsg = true;
 			switch(msg->ID){
 				case Message_Quit:
 					m_state = State_Quitting;
@@ -108,10 +110,20 @@ int CMainClient::Run(void)
 					m_state = State_SelectingChar;
 					StartNetworkThread();
 					break;
+				//
+				//Forwards: (Since threadmessages are 1-reader-1-writer the network thread can't send directly to gui thread)
+				//
+				case Message_NoWorld:
+				case Message_CloseWaitScreen:
+				case Message_LoginResponse:
+				case Message_DisplayCharSelect:
+					m_ui.SendThreadMessage(msg);
+					DeleteMsg = false;
+					break;
 				default:
 					break;
 			}
-			delete msg;
+			if( DeleteMsg) delete msg;
 		}
 		//TODO: Do other actions that need to be peformed every now and then.
 	}
@@ -157,7 +169,7 @@ void* CMainClient::NetworkThread(void)
 		case State_LoggingIn:
 			if( m_WorldIP.empty() || !m_WorldPort || !m_mainsocket.socket_connect(m_WorldIP, m_WorldPort)){
 				m_state = State_LoginScreen;
-				m_ui.SendThreadMessage(Message_NoWorld);
+				this->SendThreadMessage(Message_NoWorld);
 			}
 			break;
 		default:

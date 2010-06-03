@@ -78,7 +78,8 @@ void* CUIMain::UIThread(void)
 bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
 	bool ContinueRendering = true;
-	CMessage* msg = GetThreadMessage();
+	CMessage* msg = 0;
+	GetThreadMessage(msg);
 	if( msg ){ //If there are messages from other threads to process
 		switch(msg->ID){
 			//=================
