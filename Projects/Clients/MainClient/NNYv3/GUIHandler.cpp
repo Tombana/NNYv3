@@ -278,7 +278,7 @@ bool CGUIHandler::LoginBtnClick(const CEGUI::EventArgs &e)
 			LoginWindow->setEnabled(false);
 		}catch(CEGUI::UnknownObjectException){}
 		//Send login message
-		CMainClient::getSingleton().SendThreadMessage(new CMessageLogin(Username, Password));
+		CMainClient::getSingleton().SendThreadMessage(new CMessageParamsLogin(Username, Password));
 	}
 	return true;
 }

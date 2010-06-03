@@ -1,5 +1,6 @@
 #include "MainClient.h"
 #include <iostream>
+#include "protocol.h"
 
 CMainClient* CMainClient::mSingleton = 0;
 
@@ -56,75 +57,73 @@ int CMainClient::Run(void)
 	pthread_mutex_unlock(&m_networkthread_mutex);
 
 	if( m_WorldIP.empty() || !m_WorldPort )
-		m_ui.SendThreadMessage(new CMessageMsgBox("Could not get world server info from realm server!", "Error"));
+		m_ui.SendThreadMessage(new CMessageParamsMsgBox("Could not get world server info from realm server!", "Error"));
 
 	//==============
 	//Signal 'Done Loading' to GUI and so on
 	//==============
 	m_state = State_LoginScreen;
-	m_ui.SendThreadMessage(new CMessageDisplayLoginScreen(m_Username));
+	m_ui.SendThreadMessage(new CMessageParamsDisplayLoginScreen(m_Username));
 
 	while( m_state != State_Quitting ){
 		sleep(50);
-		CMessage* msg = 0;
+		MESSAGE msg = {0};
 		GetThreadMessage(msg);
-		if( msg ){ //If there are messages from other threads to process
-			bool DeleteMsg = true;
-			switch(msg->ID){
-				case Message_Quit:
-					m_state = State_Quitting;
-					//TODO: Show unloading screen
-					m_mainsocket.socket_close(); //This should make any receiver thread that is busy receiving quit
-					break;
-				case Message_Login:
-					{
-						CMessageLogin* loginmsg = (CMessageLogin*)msg;
-						if( m_state != State_LoginScreen ) break;
-						m_Username = loginmsg->Username;
-						m_Password = loginmsg->Password;
-						m_state = State_LoggingIn;
-						m_ui.SendThreadMessage(new CMessageDisplayWaitScreen("Logging in..."));
-						StartNetworkThread();
-					}
-					break;
-				case Message_KickAccount:
-					{
-						CMessageKickAccount* kickmsg = (CMessageKickAccount*)msg;
-						if( kickmsg->DoKick == false ){
-							m_state = State_LoginScreen;
-							m_ui.SendThreadMessage(new CMessageDisplayLoginScreen(m_Username));
-							m_mainsocket.socket_close();
-						}else{
-							//Log in again with kick set to true
-							ByteArray LoginPacket;
-							LoginPacket.addCmd(PCKT_C_AUTH);
-							LoginPacket.addString(m_Username);
-							LoginPacket.addString(m_Password);
-							LoginPacket.addBool(true); //Wether to kick the account that is logged in.
-							m_mainsocket << LoginPacket;
-						}
-					}
-					break;
-				case Message_CharSelect:
-					if( m_state != State_CharSelectScreen ) break;
-					m_state = State_SelectingChar;
+		bool DeleteMsg = true;
+		switch(msg.ID){
+			case Message_Quit:
+				m_state = State_Quitting;
+				//TODO: Show unloading screen
+				m_mainsocket.socket_close(); //This should make any receiver thread that is busy receiving quit
+				break;
+			case Message_Login:
+				{
+					CMessageParamsLogin* loginmsg = (CMessageParamsLogin*)msg.params;
+					if( m_state != State_LoginScreen ) break;
+					m_Username = loginmsg->Username;
+					m_Password = loginmsg->Password;
+					m_state = State_LoggingIn;
+					m_ui.SendThreadMessage(new CMessageParamsDisplayWaitScreen("Logging in..."));
 					StartNetworkThread();
-					break;
-				//
-				//Forwards: (Since threadmessages are 1-reader-1-writer the network thread can't send directly to gui thread)
-				//
-				case Message_NoWorld:
-				case Message_CloseWaitScreen:
-				case Message_LoginResponse:
-				case Message_DisplayCharSelect:
-					m_ui.SendThreadMessage(msg);
-					DeleteMsg = false;
-					break;
-				default:
-					break;
-			}
-			if( DeleteMsg) delete msg;
+				}
+				break;
+			case Message_KickAccount:
+				{
+					CMessageParamsKickAccount* kickmsg = (CMessageParamsKickAccount*)msg.params;
+					if( kickmsg->DoKick == false ){
+						m_state = State_LoginScreen;
+						m_ui.SendThreadMessage(new CMessageParamsDisplayLoginScreen(m_Username));
+						m_mainsocket.socket_close();
+					}else{
+						//Log in again with kick set to true
+						ByteArray LoginPacket;
+						LoginPacket.addCmd(PCKT_C_AUTH);
+						LoginPacket.addString(m_Username);
+						LoginPacket.addString(m_Password);
+						LoginPacket.addBool(true); //Wether to kick the account that is logged in.
+						m_mainsocket << LoginPacket;
+					}
+				}
+				break;
+			case Message_CharSelect:
+				if( m_state != State_CharSelectScreen ) break;
+				m_state = State_SelectingChar;
+				StartNetworkThread();
+				break;
+			//
+			//Forwards: (Since threadmessages are 1-reader-1-writer the network thread can't send directly to gui thread)
+			//
+			case Message_NoWorld:
+			case Message_CloseWaitScreen:
+			case Message_LoginResponse:
+			case Message_DisplayCharSelect:
+				m_ui.SendThreadMessage(msg);
+				DeleteMsg = false;
+				break;
+			default:
+				break;
 		}
+		if( DeleteMsg ) delete msg.params;
 		//TODO: Do other actions that need to be peformed every now and then.
 	}
 

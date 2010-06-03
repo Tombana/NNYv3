@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\..\Common;..\..\..\..\Dependencies\pthread\include;..\..\..\..\Dependencies\MySQL\include;..\include;$(OGRE_HOME)\include"
+				AdditionalIncludeDirectories="..\Common;..\Dependencies\pthread\include;&quot;$(OGRE_HOME)\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -63,7 +63,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="pthreadVCE2.lib ws2_32.lib OgreMain_d.lib OIS_d.lib CEGUIBase_d.lib OgreGUIRenderer_d.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="..\..\..\..\Dependencies\pthread\lib;..\..\..\..\Dependencies\MySQL\lib;$(OGRE_HOME)\lib"
+				AdditionalLibraryDirectories="..\Dependencies\pthread\lib;&quot;$(OGRE_HOME)\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				TargetMachine="1"
@@ -117,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\..\..\Common;..\..\..\..\Dependencies\pthread\include;..\..\..\..\Dependencies\MySQL\include;..\include;$(OGRE_HOME)\include"
+				AdditionalIncludeDirectories="..\Common;..\Dependencies\pthread\include;&quot;$(OGRE_HOME)\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -138,7 +138,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="pthreadVCE2.lib ws2_32.lib OgreMain.lib OIS.lib CEGUIBase.lib OgreGUIRenderer.lib"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\..\Dependencies\pthread\lib;..\..\..\..\Dependencies\MySQL\lib;$(OGRE_HOME)\lib"
+				AdditionalLibraryDirectories="..\Dependencies\pthread\lib;&quot;$(OGRE_HOME)\lib&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -196,7 +196,7 @@
 				Name="Network"
 				>
 				<File
-					RelativePath="..\..\..\Common\ByteArray.cpp"
+					RelativePath="..\Common\ByteArray.cpp"
 					>
 				</File>
 				<File
@@ -216,7 +216,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\Common\ZSocket.cpp"
+					RelativePath="..\Common\ZSocket.cpp"
 					>
 				</File>
 			</Filter>
@@ -299,10 +299,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Common\sharedModels.hpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Structures.h"
 				>
 			</File>
@@ -314,15 +310,19 @@
 				Name="Network"
 				>
 				<File
-					RelativePath="..\..\..\Common\ByteArray.h"
+					RelativePath="..\Common\ByteArray.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\Common\protocol.hpp"
+					RelativePath="..\Common\protocol.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\Common\ZSocket.h"
+					RelativePath="..\Common\sharedModels.h"
+					>
+				</File>
+				<File
+					RelativePath="..\Common\ZSocket.h"
 					>
 				</File>
 			</Filter>
