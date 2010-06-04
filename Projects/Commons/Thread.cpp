@@ -38,7 +38,7 @@ bool Thread::start() {
 	if (ACE_Thread::spawn(&Thread::threadTask, (void*)this, 0, &m_thread_id, &m_thread_handle) == 0) {
 		return true;
 	} else {
-		std::cout << "[Threading] @ERROR: ACE_Thread::spawn() failed!" << std::endl;
+		std::cout << "[Thread] @ERROR: ACE_Thread::spawn() failed!" << std::endl;
 		return false;
 	}
 }

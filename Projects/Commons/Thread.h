@@ -1,5 +1,5 @@
-#ifndef H_THREADING
-#define H_THREADING
+#ifndef H_THREAD
+#define H_THREAD
 
 #include <iostream>
 #include "ace/Thread.h"
@@ -8,7 +8,8 @@ class Thread {
 public:
 	Thread();
 	~Thread();
-   /** This function will create, start a new thread and detach it. The threaded function is the static member inner_main()
+   /** This function will create, start a new thread and detach it.
+    * The threaded function is the static member threadTask() that inafter will call virtual run()
     * @brief Start a new thread
     */
 	virtual void run() = 0;
