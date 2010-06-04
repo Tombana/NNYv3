@@ -1,6 +1,6 @@
 #include "MainClient.h"
 #include <iostream>
-#include "protocol.h"
+#include "resProtocol.h"
 
 CMainClient* CMainClient::mSingleton = 0;
 

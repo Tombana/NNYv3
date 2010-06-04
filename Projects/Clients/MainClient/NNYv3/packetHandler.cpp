@@ -1,5 +1,5 @@
 #include "MainClient.h"
-#include "protocol.h"
+#include "resProtocol.h"
 #include <iostream>
 
 void CMainClient::HandlePackets(void)

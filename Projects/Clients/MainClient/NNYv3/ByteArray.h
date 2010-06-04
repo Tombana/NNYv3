@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string.h>
 #include <math.h>
-#include "sharedModels.h"
+#include "resTypedef.h"
 
 #define readAck read<BYTE>
 #define addCmd add<WORD>

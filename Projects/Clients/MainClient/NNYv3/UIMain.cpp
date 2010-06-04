@@ -1,7 +1,7 @@
 #include "UIMain.h"
 #include "MainClient.h"
 #include "GUIHandler.h"
-#include "protocol.h"
+#include "resProtocol.h"
 #include <iostream>
 
 CUIMain* CUIMain::mSingleton = 0;

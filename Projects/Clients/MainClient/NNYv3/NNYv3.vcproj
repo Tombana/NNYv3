@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\Common;..\Dependencies\pthread\include;&quot;$(OGRE_HOME)\include&quot;"
+				AdditionalIncludeDirectories="..\..\..\Resources;..\Dependencies\pthread\include;&quot;$(OGRE_HOME)\include&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -117,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="..\Common;..\Dependencies\pthread\include;&quot;$(OGRE_HOME)\include&quot;"
+				AdditionalIncludeDirectories="..\..\..\Resources;..\Dependencies\pthread\include;&quot;$(OGRE_HOME)\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -196,7 +196,7 @@
 				Name="Network"
 				>
 				<File
-					RelativePath="..\Common\ByteArray.cpp"
+					RelativePath=".\ByteArray.cpp"
 					>
 				</File>
 				<File
@@ -216,7 +216,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\Common\ZSocket.cpp"
+					RelativePath=".\ZSocket.cpp"
 					>
 				</File>
 			</Filter>
@@ -310,19 +310,11 @@
 				Name="Network"
 				>
 				<File
-					RelativePath="..\Common\ByteArray.h"
+					RelativePath="..\..\..\Resources\resProtocol.h"
 					>
 				</File>
 				<File
-					RelativePath="..\Common\protocol.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Common\sharedModels.h"
-					>
-				</File>
-				<File
-					RelativePath="..\Common\ZSocket.h"
+					RelativePath="..\..\..\Resources\resTypedef.h"
 					>
 				</File>
 			</Filter>
