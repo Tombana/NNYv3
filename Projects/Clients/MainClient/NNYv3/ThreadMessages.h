@@ -1,30 +1,36 @@
 #pragma once
 
+// Taken from
+// http://msmvps.com/blogs/vandooren/archive/2007/01/05/creating-a-thread-safe-producer-consumer-queue-in-c-without-using-locks.aspx
+// IMPORTANT: there may be only one reader thread and one writer thread
+// The reading thread class uses CThreadMessages as base class.
+// The reading thread can use GetThreadMessage to check for messages.
+// The writing thread can call SendThreadMessage to send a message.
+// The writing thread must allocate the message (which must be based on CMessageParams) and
+// the reading thread must deallocate it.
+//
+
+
 #include <vector>
-#include <queue>
 #include <string>
-#include "pthread.h"
 #include "Structures.h"
 #include "Callback.h"
 
-//
-// Tombana's thread message system. Probably crappy and there are probably better systems out there
-// A class that needs to receive messages uses CThreadMessages as base class.
-// The class can use GetThreadMessage to check for messages.
-// Other threads can call SendThreadMessage to send a message.
-// Other threads must allocate the message (which must be based on CMessage) and
-// the class that receives the message must deallocate it.
-//
 
-
-//Base class for all thread messages
-class CMessage{
+//Base class for all thread messages that have parameters
+typedef class CMessageParams{
 public:
-	CMessage(int MessageID) : ID(MessageID){}
-	virtual ~CMessage(void){}
+	CMessageParams(int MessageID) : ID(MessageID){}
+	virtual ~CMessageParams(void){}
 	//The message identifier
 	const int ID;
-};
+} *PCMessageParams;
+
+//If a message has parameters, it has a pointer, otherwise, it is zero.
+typedef struct MESSAGE{
+	int ID;
+	PCMessageParams params;
+} *PMESSAGE;
 
 
 //Base class for classes that other threads need to communicate with
@@ -34,25 +40,35 @@ public:
 	CThreadMessages(void);
 	virtual ~CThreadMessages(void);
 
-	//When other threads want to notify the this thread of something they call this function
-	//Example usage: SendThreadMessage(new CMessageLogin("username", "password"));
-	int SendThreadMessage(CMessage* Message);
-
-	//When the message only has an identifier without additional data this might be easier:
-	int SendThreadMessage(int Identifier);
+	//
+	//Called by the writing thread to send a message
+	//Returns zero if the queue was full (message not placed in queue)
+	//
+	//When the message only has an identifier without additional parameters:
+	bool SendThreadMessage(int Identifier);
+	//When the caller has already constructed the MESSAGE
+	bool SendThreadMessage(MESSAGE& Message);
+	//When the message has parameters:
+	//Example usage: SendThreadMessage(new CMessageParamsLogin("username", "password"));
+	bool SendThreadMessage(PCMessageParams Message);
 
 protected:
-	//Retrieves the next message in the list.
+	//For the reading thread: retrieves the next message in the list.
 	//Returns zero if there are no messages.
-	//VERY IMPORTANT: delete the memory when you're done
+	//VERY IMPORTANT: deallocate the message.params when it is not zero
 	//THE CALLER IS RESPONSIBLE FOR DELETING THE MEMORY!!
-	CMessage* GetThreadMessage(void);
+	//So after parsing the message:
+	//	if( Message.params ) delete Message.params;
+	bool GetThreadMessage(MESSAGE& Message);
 
 private:
 	//When other threads notify this thread, the notification will be put in this list
-	std::queue<CMessage*>	m_MessageQueue;
-	pthread_mutex_t			m_message_mutex;
+	volatile int m_Read;
+	volatile int m_Write;
+	static const int Size = 20;
+	volatile MESSAGE m_Data[Size];
 };
+
 
 
 //==================================
@@ -92,26 +108,26 @@ static const int	MsgBoxBtnsYesNo	= 1;
 //
 //Messages to the main thread
 //
-class CMessageLogin : public CMessage{
+class CMessageParamsLogin : public CMessageParams{
 public:
-	CMessageLogin(std::string username, std::string password) : CMessage(Message_Login),
+	CMessageParamsLogin(std::string username, std::string password) : CMessageParams(Message_Login),
 		Username(username), Password(password) {}
 	std::string	Username;
 	std::string Password;
 };
 
-class CMessageKickAccount : public CMessage{
+class CMessageParamsKickAccount : public CMessageParams{
 public:
-	CMessageKickAccount(bool Kick) : CMessage(Message_KickAccount), DoKick(Kick) {};
+	CMessageParamsKickAccount(bool Kick) : CMessageParams(Message_KickAccount), DoKick(Kick) {};
 	bool DoKick;
 };
 
 //
 // Messages to the GUI thread
 //
-class CMessageMsgBox : public CMessage{ //See Callback.h for explanation on the callback parameter
+class CMessageParamsMsgBox : public CMessageParams{ //See Callback.h for explanation on the callback parameter
 public:
-	CMessageMsgBox(std::string text, std::string title, int buttons = MsgBoxBtnsOk, CallbackFunction* callback = 0, std::string windowname = "") : CMessage(Message_MsgBox),
+	CMessageParamsMsgBox(std::string text, std::string title, int buttons = MsgBoxBtnsOk, CallbackFunction* callback = 0, std::string windowname = "") : CMessageParams(Message_MsgBox),
 		Text(text), Title(title), Buttons(buttons), Callback(callback), WindowName(windowname) {}
 	std::string Text;
 	std::string	Title;
@@ -120,29 +136,29 @@ public:
 	std::string WindowName;
 };
 
-class CMessageDisplayWaitScreen : public CMessage{
+class CMessageParamsDisplayWaitScreen : public CMessageParams{
 public:
-	CMessageDisplayWaitScreen(std::string text) : CMessage(Message_DisplayWaitScreen), Text(text) {}
+	CMessageParamsDisplayWaitScreen(std::string text) : CMessageParams(Message_DisplayWaitScreen), Text(text) {}
 	std::string Text;
 };
 
 // Login procedure
 
-class CMessageDisplayLoginScreen : public CMessage{
+class CMessageParamsDisplayLoginScreen : public CMessageParams{
 public:
-	CMessageDisplayLoginScreen(std::string rememberedusername) : CMessage(Message_DisplayLoginScreen), RememberedUsername(rememberedusername) {}
+	CMessageParamsDisplayLoginScreen(std::string rememberedusername) : CMessageParams(Message_DisplayLoginScreen), RememberedUsername(rememberedusername) {}
 	std::string	RememberedUsername;
 };
 
-class CMessageLoginResponse : public CMessage{
+class CMessageParamsLoginResponse : public CMessageParams{
 public:
-	CMessageLoginResponse(int code) : CMessage(Message_LoginResponse), Code(code) {}
+	CMessageParamsLoginResponse(int code) : CMessageParams(Message_LoginResponse), Code(code) {}
 	int Code;
 };
 
-class CMessageDisplayCharSelect : public CMessage{
+class CMessageParamsDisplayCharSelect : public CMessageParams{
 public:
-	CMessageDisplayCharSelect(const std::vector<CharacterInfo>& charinfo, int LastSelectedChar = 0) : CMessage(Message_DisplayCharSelect),
+	CMessageParamsDisplayCharSelect(const std::vector<CharacterInfo>& charinfo, int LastSelectedChar = 0) : CMessageParams(Message_DisplayCharSelect),
 		CharInfo(charinfo), SelectedChar(LastSelectedChar) {}
 	std::vector<CharacterInfo> CharInfo;
 	int SelectedChar;

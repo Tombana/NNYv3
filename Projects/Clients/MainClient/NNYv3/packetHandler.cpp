@@ -1,5 +1,5 @@
 #include "MainClient.h"
-#include "protocol.hpp"
+#include "protocol.h"
 #include <iostream>
 
 void CMainClient::HandlePackets(void)
@@ -47,7 +47,7 @@ void CMainClient::HandlePackets(void)
 				//but whatever. 1MB is way enough.
 				if (length > 1048576) { //1024 Bytes * 1024 KiloBytes = (1 MB) 1048576 Bytes
 					ByteArray packetToSend;
-					packetToSend.addCmd(PCKT_R_HACKING_ATTEMPT);
+					packetToSend.addCmd(PCKT_X_HACKING_ATTEMPT);
 					m_mainsocket << packetToSend;
 					CloseSocket = true;
 					#if CONFIG_VERBOSE >= CONFIG_VERBOSE_IMPORTANT

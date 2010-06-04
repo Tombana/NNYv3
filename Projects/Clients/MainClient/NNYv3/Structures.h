@@ -1,10 +1,9 @@
 #pragma once
 
-#include "sharedModels.hpp"
 #include <string>
 
 struct CharacterInfo{
-	BYTE			Slot;
+	unsigned char	Slot;
 	std::string		Name;
 	int				Level;
 	bool			Gender;	//0=male;1=female

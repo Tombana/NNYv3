@@ -1,5 +1,5 @@
 #include "MainClient.h"
-#include "protocol.hpp"
+#include "protocol.h"
 
 int CMainClient::HandleRealm(WORD Cmd, ByteArray& capsule)
 {
