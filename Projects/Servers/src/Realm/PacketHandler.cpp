@@ -10,6 +10,9 @@ PacketHandler::~PacketHandler() {
 
 int PacketHandler::open(void*){ 
 	std::cout << "Connection established" << std::endl;
+	std::cout << "Connection handle: " << get_handle() << std::endl;
+	unsigned int handleID = (unsigned int)get_handle() / sizeof(ACE_HANDLE);
+	std::cout << "Connection handleID ("<<get_handle()<<"/"<<sizeof(ACE_HANDLE)<< "): " << handleID << std::endl;
 	//Register the service handler with the reactor 
 	ACE_Reactor::instance()->register_handler(this, ACE_Event_Handler::READ_MASK);
 	//Keep yourself registered with the reactor
@@ -23,7 +26,7 @@ int PacketHandler::open(void*){
 //Return -1 = This will call handle_close() wich close our handle
 int PacketHandler::handle_input(ACE_HANDLE handle) { 
 
-	std::cerr << "Handle: " << handle << std::endl;
+	std::cout << "Handle: " << handle << std::endl;
 	int readBytes = peer().recv(m_data,BUFFER_SIZE);
 
 	std::string tempInput(m_data, readBytes);

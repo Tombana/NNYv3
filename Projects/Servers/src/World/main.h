@@ -5,7 +5,7 @@
 #include <iostream>
 
 //ACE library includes
-#include "ace/OS.h"
+//#include "ace/OS.h"
 #include "ace/Thread.h"
 #include "ace/INET_Addr.h"
 #include "ace/SOCK_Acceptor.h"
@@ -16,11 +16,13 @@
 #include "resTypedef.h"
 #include "resProtocol.h"
 
-//For all the threading; like the RealmConnector thread
-#include "Thread.h"
+//TestRunnable
+//#include "Thread.h"
 
-//Things like the RealmConnector may need
-#include "Socket.h"
+//For all the threading; like the RealmConnector thread
+//#include "RealmConnector.h"
+
+//Things the server needs
 #include "PacketHandler.h"
 
 #endif
