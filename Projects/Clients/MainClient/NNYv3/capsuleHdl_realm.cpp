@@ -45,6 +45,7 @@ int CMainClient::HandleRealm(WORD Cmd, ByteArray& capsule)
 			m_WorldPort = capsule.read<WORD>();
 			std::cout << "[capsuleHandler] We can connect to " << m_WorldIP.c_str() << ":" << m_WorldPort << std::endl;
 			m_state = State_LoginScreen;
+			this->SendThreadMessage(Message_RealmLoaded);
 			}
 			break;
 		//=====================================
@@ -53,6 +54,7 @@ int CMainClient::HandleRealm(WORD Cmd, ByteArray& capsule)
 		case PCKT_R_SERVER_GONE:
 			std::cout << "[capsuleHandler] There are currently no world servers online!\n";
 			m_state = State_LoginScreen;
+			this->SendThreadMessage(Message_RealmLoaded);
 			break;
 		default:
 			return 0;

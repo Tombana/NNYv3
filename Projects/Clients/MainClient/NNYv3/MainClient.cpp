@@ -5,9 +5,9 @@
 CMainClient* CMainClient::mSingleton = 0;
 
 CMainClient::CMainClient(void) :
-	m_state(State_Loading), m_mainsocket(), m_networkthread(), NetworkThreadRunning(0),
-	m_networkthread_mutex(PTHREAD_MUTEX_INITIALIZER),
-	m_networkthread_cond(PTHREAD_COND_INITIALIZER),
+	m_state(State_Loading), m_mainsocket(), m_networkthread_id(0), m_networkthread_handle(0), NetworkThreadRunning(0),
+	//m_networkthread_mutex(PTHREAD_MUTEX_INITIALIZER),
+	//m_networkthread_cond(PTHREAD_COND_INITIALIZER),
 	m_RealmServers(),m_Revision(0), m_WorldIP(), m_WorldPort(0),
 	m_ui(),
 	m_Username(), m_Password(), m_Characters()
@@ -15,14 +15,14 @@ CMainClient::CMainClient(void) :
 	if( mSingleton == 0 ) mSingleton = this;
 	m_RealmServers.push_back("127.0.0.1");
 	m_RealmServers.push_back("ceres.dlinkddns.com");
-	pthread_mutex_init(&m_networkthread_mutex, NULL);
-	pthread_cond_init(&m_networkthread_cond, NULL);
+	//pthread_mutex_init(&m_networkthread_mutex, NULL);
+	//pthread_cond_init(&m_networkthread_cond, NULL);
 }
 
 CMainClient::~CMainClient(void)
 {
-	pthread_mutex_destroy(&m_networkthread_mutex);
-	pthread_cond_destroy(&m_networkthread_cond);
+	//pthread_mutex_destroy(&m_networkthread_mutex);
+	//pthread_cond_destroy(&m_networkthread_cond);
 	if( mSingleton == this ) mSingleton = 0;
 }
 
@@ -50,20 +50,8 @@ int CMainClient::Run(void)
 	//==============
 	m_state = State_LoggingInRealm;
 	//Start the network thread and
-	//wait for the it to complete the realm server stuff
+	//wait for the it to complete the realm server stuff (it will send a message when done)
 	StartNetworkThread();
-	pthread_mutex_lock(&m_networkthread_mutex);
-	pthread_cond_wait(&m_networkthread_cond, &m_networkthread_mutex);
-	pthread_mutex_unlock(&m_networkthread_mutex);
-
-	if( m_WorldIP.empty() || !m_WorldPort )
-		m_ui.SendThreadMessage(new CMessageParamsMsgBox("Could not get world server info from realm server!", "Error"));
-
-	//==============
-	//Signal 'Done Loading' to GUI and so on
-	//==============
-	m_state = State_LoginScreen;
-	m_ui.SendThreadMessage(new CMessageParamsDisplayLoginScreen(m_Username));
 
 	while( m_state != State_Quitting ){
 		sleep(50);
@@ -75,6 +63,13 @@ int CMainClient::Run(void)
 				m_state = State_Quitting;
 				//TODO: Show unloading screen
 				m_mainsocket.socket_close(); //This should make any receiver thread that is busy receiving quit
+				break;
+			case Message_RealmLoaded:
+				if( m_WorldIP.empty() || !m_WorldPort )
+					m_ui.SendThreadMessage(new CMessageParamsMsgBox("Could not get world server info from realm server!", "Error"));
+				//Signal 'Done Loading' to GUI and so on
+				m_state = State_LoginScreen;
+				m_ui.SendThreadMessage(new CMessageParamsDisplayLoginScreen(m_Username));
 				break;
 			case Message_Login:
 				{
@@ -137,17 +132,20 @@ int CMainClient::Run(void)
 int	CMainClient::StartNetworkThread(void)
 {
 	//Wait for the thread to terminate if it was still running
-	pthread_join(m_networkthread, NULL);
+	ACE_THR_FUNC_RETURN return_value = 0;
+	ACE_Thread::join(m_networkthread_handle, &return_value);
 	//Create the new thread
-	if( pthread_create(&m_networkthread, NULL, NetworkThreadStarter, this) ){
-		std::cout << "[ERROR] pthread: pthread_create() failed!" << std::endl;
+	if (ACE_Thread::spawn(&NetworkThreadStarter, (void*)this, 0, &m_networkthread_id, &m_networkthread_handle) != 0) {
+		std::cout << "[ERROR] ACE_Thread::spawn() failed!" << std::endl;
 		return 0;
 	}
 	return 1;
 }
 
-void* NetworkThreadStarter(void* class_pointer){
-	return ((CMainClient*)class_pointer)->NetworkThread();
+ACE_THR_FUNC_RETURN CMainClient::NetworkThreadStarter(void* class_pointer)
+{
+	((CMainClient*)class_pointer)->NetworkThread();
+	return 0;
 }
 
 void* CMainClient::NetworkThread(void)
@@ -163,7 +161,10 @@ void* CMainClient::NetworkThread(void)
 					break;
 				}
 			}
-			if( !m_mainsocket.isConnected() ) std::cout << "[ERROR] Could not connect to a realm server.\n";
+			if( !m_mainsocket.isConnected() ){
+				this->SendThreadMessage(Message_RealmLoaded);
+				std::cout << "[ERROR] Could not connect to a realm server.\n";
+			}
 			break;
 		case State_LoggingIn:
 			if( m_WorldIP.empty() || !m_WorldPort || !m_mainsocket.socket_connect(m_WorldIP, m_WorldPort)){
@@ -181,7 +182,5 @@ void* CMainClient::NetworkThread(void)
 	}
 
 	--NetworkThreadRunning;
-	//Disconnected. Signal the main thread
-	pthread_cond_signal(&m_networkthread_cond); //Signal the main thread that this thread is done
 	return 0;
 }

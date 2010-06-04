@@ -1,7 +1,11 @@
 #pragma once
 
+#pragma warning( push )
+#pragma warning( disable : 4996 ) //Bla bla function may be unsafe
+#include "ace/Thread.h"
+#pragma warning( pop ) 
+
 #include "ThreadMessages.h"
-#include "pthread.h"
 #include "InputHandler.h"
 #include "GUIHandler.h"
 #include <Ogre.h>
@@ -30,9 +34,10 @@ private:
 	//=============
 	// Thread related
 	//=============
-	pthread_t	m_uithread;
-	friend		void* UIThreadStarter(void* class_pointer); //Helper function to give the created thread the right class pointer
-	void*		UIThread(void);
+	ACE_thread_t   m_thread_id;
+	ACE_hthread_t  m_thread_handle;
+	static ACE_THR_FUNC_RETURN UIThreadStarter(void* class_pointer); //Helper function to give the created thread the right class pointer
+	int UIThread(void);
 
 	//=============
 	// Ogre related

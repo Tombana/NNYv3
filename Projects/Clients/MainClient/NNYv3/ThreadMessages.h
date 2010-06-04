@@ -82,6 +82,7 @@ static const int	Message_Quit		=	100;	//The user pressed close. This does not ne
 //
 //To the main thread
 //
+static const int	Message_RealmLoaded	=	 999;	//parameters: none
 static const int	Message_Login		=	1000;	//parameters: Username, Password
 static const int	Message_KickAccount	=	1001;	//parameters: bool (true kicks and continues, false will close connection)
 static const int	Message_CharSelect	=	1002;	//parameters: slot
