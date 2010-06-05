@@ -189,6 +189,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\Commons\Thread.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ThreadMessages.cpp"
 				>
 			</File>
@@ -300,6 +304,10 @@
 			</File>
 			<File
 				RelativePath=".\Structures.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Commons\Thread.h"
 				>
 			</File>
 			<File

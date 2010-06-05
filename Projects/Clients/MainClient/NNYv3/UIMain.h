@@ -1,17 +1,13 @@
 #pragma once
 
-#pragma warning( push )
-#pragma warning( disable : 4996 ) //Bla bla function may be unsafe
-#include "ace/Thread.h"
-#pragma warning( pop ) 
-
+#include "Thread.h"
 #include "ThreadMessages.h"
 #include "InputHandler.h"
 #include "GUIHandler.h"
 #include <Ogre.h>
 #include "ConsoleOverlay.h"
 
-class CUIMain : public Ogre::FrameListener, public CThreadMessages
+class CUIMain : public Ogre::FrameListener, public CThreadMessages, public Thread
 {
 public:
 	CUIMain(void);
@@ -34,9 +30,7 @@ private:
 	//=============
 	// Thread related
 	//=============
-	ACE_thread_t   m_thread_id;
-	ACE_hthread_t  m_thread_handle;
-	static ACE_THR_FUNC_RETURN UIThreadStarter(void* class_pointer); //Helper function to give the created thread the right class pointer
+	void run(void){ UIThread(); }
 	int UIThread(void);
 
 	//=============

@@ -3,14 +3,10 @@
 #include <list>
 #include <vector>
 
-#pragma warning( push )
-#pragma warning( disable : 4996 ) //Bla bla function may be unsafe
-#include "ace/Thread.h"
-#pragma warning( pop ) 
-
 #include "ZSocket.h"
 #include "Structures.h"
 #include "UIMain.h"
+#include "Thread.h"
 #include "ThreadMessages.h"
 
 #ifdef WIN32
@@ -22,7 +18,7 @@
 #endif
 
 
-class CMainClient : public CThreadMessages
+class CMainClient : public CThreadMessages, public Thread
 {
 public:
 	CMainClient(void);
@@ -55,14 +51,10 @@ private:
 	// Network related
 	//============
 	ZSocket		m_mainsocket;
-	ACE_thread_t   m_networkthread_id;
-	ACE_hthread_t  m_networkthread_handle;
-	static ACE_THR_FUNC_RETURN NetworkThreadStarter(void* class_pointer); //Helper function to give the created thread the right class pointer
 	volatile int NetworkThreadRunning; //If the network thread is currently running. No true/false but instead increment/decrement when a thread starts/stops to prevent overlap.
 	int			StartNetworkThread(void); //Call this from the main thread
+	void run(){ NetworkThread(); }
 	void*		NetworkThread(void); //The network thread
-	//pthread_mutex_t	m_networkthread_mutex;
-	//pthread_cond_t	m_networkthread_cond;
 
 
 	//The main packet handler

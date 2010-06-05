@@ -6,8 +6,8 @@
 
 CUIMain* CUIMain::mSingleton = 0;
 
-CUIMain::CUIMain(void) : Ogre::FrameListener(), CThreadMessages(),
-	Started(false), m_thread_id(0), m_thread_handle(0),
+CUIMain::CUIMain(void) : Ogre::FrameListener(), CThreadMessages(), Thread(),
+	Started(false),
 	mRoot(0), mCamera(0), mSceneMgr(0), mWindow(0), mRaySceneQuery(0),
 	mInputHandler(0), mGUIHandler(0), mShowConsole(false)
 {
@@ -24,34 +24,14 @@ int CUIMain::StartUI(void)
 {
 	if( Started ) return 1;
 	Started = true;
-
-	//Note: I first wanted to set up Ogre here so if there
-	//were any errors then I could return 0 so that
-	//the main thread would not continue.
-	//However: Everything with Ogre should be done from the
-	//same thread, so thats why the setup also happens in the seperate thread.
-
-	//Create the ui thread
-	if (ACE_Thread::spawn(&UIThreadStarter, (void*)this, 0, &m_thread_id, &m_thread_handle) != 0) {
-		std::cout << "[ERROR] ACE_Thread::spawn() failed!" << std::endl;
-		return 0;
-	}
-
+	if( !start() ) return 0;
 	return 1;
 }
 
 int CUIMain::WaitForExit(void)
 {
-	ACE_THR_FUNC_RETURN return_value = 0;
-	ACE_Thread::join(m_thread_handle, &return_value);
-	//pthread_join(m_uithread, NULL);
+	wait();
 	return 1;
-}
-
-ACE_THR_FUNC_RETURN CUIMain::UIThreadStarter(void* class_pointer)
-{
-	((CUIMain*)class_pointer)->UIThread();
-	return 0;
 }
 
 int CUIMain::UIThread(void)

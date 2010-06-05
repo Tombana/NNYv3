@@ -4,10 +4,8 @@
 
 CMainClient* CMainClient::mSingleton = 0;
 
-CMainClient::CMainClient(void) :
-	m_state(State_Loading), m_mainsocket(), m_networkthread_id(0), m_networkthread_handle(0), NetworkThreadRunning(0),
-	//m_networkthread_mutex(PTHREAD_MUTEX_INITIALIZER),
-	//m_networkthread_cond(PTHREAD_COND_INITIALIZER),
+CMainClient::CMainClient(void) : CThreadMessages(), Thread(),
+	m_state(State_Loading), m_mainsocket(), NetworkThreadRunning(0),
 	m_RealmServers(),m_Revision(0), m_WorldIP(), m_WorldPort(0),
 	m_ui(),
 	m_Username(), m_Password(), m_Characters()
@@ -15,14 +13,10 @@ CMainClient::CMainClient(void) :
 	if( mSingleton == 0 ) mSingleton = this;
 	m_RealmServers.push_back("127.0.0.1");
 	m_RealmServers.push_back("ceres.dlinkddns.com");
-	//pthread_mutex_init(&m_networkthread_mutex, NULL);
-	//pthread_cond_init(&m_networkthread_cond, NULL);
 }
 
 CMainClient::~CMainClient(void)
 {
-	//pthread_mutex_destroy(&m_networkthread_mutex);
-	//pthread_cond_destroy(&m_networkthread_cond);
 	if( mSingleton == this ) mSingleton = 0;
 }
 
@@ -132,20 +126,9 @@ int CMainClient::Run(void)
 int	CMainClient::StartNetworkThread(void)
 {
 	//Wait for the thread to terminate if it was still running
-	ACE_THR_FUNC_RETURN return_value = 0;
-	ACE_Thread::join(m_networkthread_handle, &return_value);
+	wait();
 	//Create the new thread
-	if (ACE_Thread::spawn(&NetworkThreadStarter, (void*)this, 0, &m_networkthread_id, &m_networkthread_handle) != 0) {
-		std::cout << "[ERROR] ACE_Thread::spawn() failed!" << std::endl;
-		return 0;
-	}
-	return 1;
-}
-
-ACE_THR_FUNC_RETURN CMainClient::NetworkThreadStarter(void* class_pointer)
-{
-	((CMainClient*)class_pointer)->NetworkThread();
-	return 0;
+	return (start() == true);
 }
 
 void* CMainClient::NetworkThread(void)
