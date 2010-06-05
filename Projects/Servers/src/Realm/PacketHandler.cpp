@@ -9,10 +9,14 @@ PacketHandler::~PacketHandler() {
 }
 
 int PacketHandler::open(void*){ 
+	//Print a message
 	std::cout << "Connection established" << std::endl;
-	std::cout << "Connection handle: " << get_handle() << std::endl;
-	unsigned int handleID = (unsigned int)get_handle() / sizeof(ACE_HANDLE);
-	std::cout << "Connection handleID ("<<get_handle()<<"/"<<sizeof(ACE_HANDLE)<< "): " << handleID << std::endl;
+	//Save the handle for now
+	ACE_HANDLE handle = get_handle();
+	//Print the handle
+	std::cout << "Handle: " << handle << std::endl;
+	//Add new session to the session manager
+	m_sessionMgr.addSession(handle);	
 	//Register the service handler with the reactor 
 	ACE_Reactor::instance()->register_handler(this, ACE_Event_Handler::READ_MASK);
 	//Keep yourself registered with the reactor
@@ -24,18 +28,26 @@ int PacketHandler::open(void*){
 //array and then printed out.
 //Return  0 = Keep you registered with the reactor
 //Return -1 = This will call handle_close() wich close our handle
-int PacketHandler::handle_input(ACE_HANDLE handle) { 
+int PacketHandler::handle_input(ACE_HANDLE handle) {
+	//Retrieve the session; it is pointer and can be used like the following:
+	//session->username = "Blabla";		   //->username is an object of type `std::string`
+	//session->inventory.newItem(1234);    //->iventory is an object of type `Inventory`
+	SessionMgr::s_session* session = m_sessionMgr.getSession(handle);
 
+	//Print the handle
 	std::cout << "Handle: " << handle << std::endl;
-	int readBytes = peer().recv(m_data,BUFFER_SIZE);
-
+	
+	//Receive packets and print the input
+	int readBytes = peer_.recv(m_data,BUFFER_SIZE);
 	std::string tempInput(m_data, readBytes);
 	std::cout << "Input: " << tempInput << std::endl;
 
+	//The recv() function blocks until it have received data.
+	//If the function unblock with 0 byte read, the client logged out.
 	if (readBytes == 0) {
 		std::cerr << "Client logged out!" << std::endl;
 		return -1;
 	}
 	
 	return 0; 
- } 
+ }

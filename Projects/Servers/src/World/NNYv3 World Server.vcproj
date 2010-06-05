@@ -181,6 +181,10 @@
 				RelativePath=".\PacketHandler.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\SessionMgr.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -193,6 +197,10 @@
 			</File>
 			<File
 				RelativePath=".\PacketHandler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SessionMgr.h"
 				>
 			</File>
 		</Filter>

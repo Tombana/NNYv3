@@ -6,6 +6,7 @@
 #include "ace/SOCK_Stream.h"
 #include "ace/Svc_Handler.h"
 #include "ace/Synch.h"
+#include "SessionMgr.h"
 
 #define BUFFER_SIZE 1024
 
@@ -17,7 +18,8 @@ public:
 	int open(void*);
 	int handle_input(ACE_HANDLE);
 private:
-	char* m_data;
+	char*		m_data;
+	SessionMgr	m_sessionMgr;
 };
 
 #endif

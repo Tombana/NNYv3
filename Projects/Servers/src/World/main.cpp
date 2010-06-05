@@ -98,7 +98,7 @@ int main(int argc, char **argv) {
     std::cout << "Setting up acceptor..." << std::endl;
 	
 	// Server port number.
-	const u_short port = 6131;
+	const u_short port = 6132;
 	ACE_INET_Addr server_addr(port);
 	
 	// Initialize server endpoint an register with the Reactor.
