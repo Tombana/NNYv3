@@ -22,7 +22,7 @@
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="../../../obj/ACE"
+			IntermediateDirectory="../obj"
 			ConfigurationType="4"
 			CharacterSet="0"
 			>
@@ -75,7 +75,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="../../../lib/ACEsd.lib"
+				OutputFile="../lib/ACEsd.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -96,7 +96,7 @@
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="../../../obj/ACE"
+			IntermediateDirectory="../obj"
 			ConfigurationType="4"
 			CharacterSet="0"
 			>
@@ -146,7 +146,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="../../../lib/ACEs.lib"
+				OutputFile="../lib/ACEs.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -2807,11 +2807,11 @@
 				>
 			</File>
 			<File
-				RelativePath="OS_Errno.h"
+				RelativePath="os_include\os_errno.h"
 				>
 			</File>
 			<File
-				RelativePath="os_include\os_errno.h"
+				RelativePath="OS_Errno.h"
 				>
 			</File>
 			<File
@@ -3195,11 +3195,11 @@
 				>
 			</File>
 			<File
-				RelativePath="OS_String.h"
+				RelativePath="os_include\os_string.h"
 				>
 			</File>
 			<File
-				RelativePath="os_include\os_string.h"
+				RelativePath="OS_String.h"
 				>
 			</File>
 			<File
@@ -3243,11 +3243,11 @@
 				>
 			</File>
 			<File
-				RelativePath="os_include\os_time.h"
+				RelativePath="os_include\sys\os_time.h"
 				>
 			</File>
 			<File
-				RelativePath="os_include\sys\os_time.h"
+				RelativePath="os_include\os_time.h"
 				>
 			</File>
 			<File
