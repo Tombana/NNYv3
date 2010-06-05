@@ -40,7 +40,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\dep\ACE_wrappers;..\..\dep\MySQL\include;..\Common;..\..\..\Resources"
+				AdditionalIncludeDirectories="..\..\..\Dependencies\ACE_wrappers;..\..\..\Dependencies\MySQL\include;..\..\..\Commons;..\..\..\Resources"
 				PreprocessorDefinitions="ACE_AS_STATIC_LIBS;_DEBUG;WIN32;_CONSOLE;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;MPC_LIB_MODIFIER=\&quot;s\&quot;"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,7 +61,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="ACEsd.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_debug.exe"
-				AdditionalLibraryDirectories="..\..\lib;..\..\dep\MySQL\lib"
+				AdditionalLibraryDirectories="..\..\..\Dependencies\ACE_wrappers\lib;..\..\..\Dependencies\MySQL\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)\$(ProjectName).pdb"
 				TargetMachine="1"
@@ -116,7 +116,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="0"
-				AdditionalIncludeDirectories="..\..\dep\ACE_wrappers;..\..\dep\MySQL\include;..\Common;..\..\..\Resources"
+				AdditionalIncludeDirectories="..\..\..\Dependencies\ACE_wrappers;..\..\..\Dependencies\MySQL\include;..\..\..\Commons;..\..\..\Resources"
 				PreprocessorDefinitions="ACE_AS_STATIC_LIBS;NDEBUG;WIN32;_CONSOLE;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;MPC_LIB_MODIFIER=\&quot;s\&quot;"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -135,7 +135,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="ACEs.lib"
-				AdditionalLibraryDirectories="..\..\lib;..\..\dep\MySQL\lib"
+				AdditionalLibraryDirectories="..\..\..\Dependencies\ACE_wrappers\lib;..\..\..\Dependencies\MySQL\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)\$(ProjectName).pdb"
 				OptimizeReferences="2"
@@ -202,14 +202,6 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\Common\Packet.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\Common\Packet.h"
-				>
-			</File>
-			<File
 				RelativePath="..\Common\resProtocol.h"
 				>
 			</File>
@@ -217,20 +209,32 @@
 				RelativePath="..\Common\resTypedef.h"
 				>
 			</File>
+		</Filter>
+		<Filter
+			Name="Common Files"
+			>
 			<File
-				RelativePath="..\Common\Socket.cpp"
+				RelativePath="..\..\..\Commons\Packet.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Common\Socket.h"
+				RelativePath="..\..\..\Commons\Packet.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Common\Thread.cpp"
+				RelativePath="..\..\..\Commons\Socket.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\Common\Thread.h"
+				RelativePath="..\..\..\Commons\Socket.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Commons\Thread.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Commons\Thread.h"
 				>
 			</File>
 		</Filter>
