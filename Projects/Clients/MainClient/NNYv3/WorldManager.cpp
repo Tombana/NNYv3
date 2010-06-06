@@ -1,11 +1,15 @@
 #include "WorldManager.h"
 
-CWorldManager::CWorldManager(void) : mEntities()
+CWorldManager::CWorldManager(void) : mEntities(), LocalPlayer(0)
 {
 }
 
 CWorldManager::~CWorldManager(void)
 {
+	for( EntityList::iterator ent = mEntities.begin(); ent != mEntities.end(); ++ent ){
+		delete *ent;
+	}
+	mEntities.clear();
 }
 
 CItem* CWorldManager::CreateItem(unsigned int Identifier)

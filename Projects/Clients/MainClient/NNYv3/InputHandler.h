@@ -6,10 +6,12 @@
 
 #include <CEGUI/CEGUI.h>
 
+class CWorldManager;
+
 class CInputHandler : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener
 {
 public:
-	CInputHandler(Ogre::RenderWindow *window, Ogre::Camera *Cam, Ogre::SceneManager *SceneMgr, Ogre::RaySceneQuery *RaySceneQuery);
+	CInputHandler(CWorldManager& World, Ogre::RenderWindow *window, Ogre::Camera *Cam, Ogre::SceneManager *SceneMgr, Ogre::RaySceneQuery *RaySceneQuery);
 	~CInputHandler(void);
 	
 	bool frameRenderingQueued(const Ogre::FrameEvent& evt);
@@ -28,6 +30,7 @@ public:
 	void windowClosed(Ogre::RenderWindow* rw);
 
 private:
+	CWorldManager&		mWorld;
 	Ogre::RenderWindow	*mWindow;
 	Ogre::Camera		*mCamera;
 	Ogre::SceneManager	*mSceneMgr;

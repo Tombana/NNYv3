@@ -26,10 +26,13 @@ public:
 
 	CEntity* GetEntityFromIdentifier(unsigned int Identifier);
 
-private:
 	//TODO: Should this be optimized to a binary-searchable list?
 	//TODO: Should the entity list have mutex protection?
 	typedef std::list<CEntity*> EntityList;
 	EntityList	mEntities;
+	CPlayer* LocalPlayer;
+
+private:
+
 	CEntity* CreateEntity(EntityType Type, unsigned int Identifier);
 };

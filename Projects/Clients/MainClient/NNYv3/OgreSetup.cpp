@@ -98,7 +98,7 @@ int CUIMain::SetupOgre(void)
 	//=================
 	// Create the input handler
 	//=================
-	mInputHandler = new CInputHandler(mWindow, mCamera, mSceneMgr, mRaySceneQuery);
+	mInputHandler = new CInputHandler(mWorld, mWindow, mCamera, mSceneMgr, mRaySceneQuery);
 	mRoot->addFrameListener(mInputHandler);
 	mRoot->addFrameListener(this);
 
@@ -148,5 +148,8 @@ int CUIMain::LoadWorld(void)
 	Ogre::Entity *head = mSceneMgr->createEntity("OgreHead", "ogrehead.mesh");
 	Ogre::SceneNode *headnode = mSceneMgr->getRootSceneNode()->createChildSceneNode("LocalPlayerNode", Ogre::Vector3(0,10,0));
 	headnode->attachObject(head);
+	mWorld.LocalPlayer = mWorld.CreatePlayer(-1);
+	mWorld.LocalPlayer->SetSceneNode(headnode);
+	mWorld.LocalPlayer->SetMoveSpeed(40);
 	return 1;
 }

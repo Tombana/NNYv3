@@ -1,8 +1,8 @@
 #include "InputHandler.h"
 #include "MainClient.h"
 
-CInputHandler::CInputHandler(Ogre::RenderWindow *window, Ogre::Camera *Cam, Ogre::SceneManager *SceneMgr, Ogre::RaySceneQuery *RaySceneQuery) :
-	mWindow(window), mCamera(Cam), mSceneMgr(SceneMgr), mRaySceneQuery(RaySceneQuery),
+CInputHandler::CInputHandler(CWorldManager& World, Ogre::RenderWindow *window, Ogre::Camera *Cam, Ogre::SceneManager *SceneMgr, Ogre::RaySceneQuery *RaySceneQuery) :
+	mWorld(World), mWindow(window), mCamera(Cam), mSceneMgr(SceneMgr), mRaySceneQuery(RaySceneQuery),
 		mInputManager(0), mKeyboard(0), mMouse(0), mGUISystem(CEGUI::System::getSingletonPtr()),
 		mCamNode(0), mCamDist(200), MinCamDist(100), MaxCamDist(800)
 {
@@ -126,11 +126,11 @@ bool CInputHandler::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 		Ogre::RaySceneQueryResult::iterator it = qryResult.begin();
 		if( it != qryResult.end() ){
 			Ogre::Vector3 Collision = ray.getPoint(it->distance);
-			if( mSceneMgr->hasSceneNode("LocalPlayerNode") ){
-				Ogre::SceneNode *node = mSceneMgr->getSceneNode("LocalPlayerNode");
-				node->setPosition(Collision.x, Collision.y + 10, Collision.z);
-				mCamNode->setPosition(Collision.x, Collision.y + 20, Collision.z);
+			Collision.y += 10; //A little above click-point
+			if( mWorld.LocalPlayer ){
+				mWorld.LocalPlayer->AddDestination(Collision);
 			}
+			mCamNode->setPosition(Collision.x, Collision.y + 20, Collision.z);
 		}
 	}
 	return true;

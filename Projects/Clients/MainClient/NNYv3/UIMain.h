@@ -6,6 +6,7 @@
 #include "GUIHandler.h"
 #include <Ogre.h>
 #include "ConsoleOverlay.h"
+#include "WorldManager.h"
 
 class CUIMain : public Ogre::FrameListener, public CThreadMessages, public Thread
 {
@@ -27,15 +28,15 @@ private:
 	static CUIMain	*mSingleton;
 
 	bool		Started;
-	//=============
+	//================
 	// Thread related
-	//=============
+	//================
 	void run(void){ UIThread(); }
 	int UIThread(void);
 
-	//=============
+	//==============
 	// Ogre related
-	//=============
+	//==============
 	Ogre::Root			*mRoot;
 	Ogre::Camera		*mCamera;
 	Ogre::SceneManager	*mSceneMgr;
@@ -60,4 +61,9 @@ private:
 	// Login section
 	//=============
 	bool MsgBoxKickCallback(void* Param);
+
+	//================
+	// InGame related
+	//================
+	CWorldManager mWorld;
 };

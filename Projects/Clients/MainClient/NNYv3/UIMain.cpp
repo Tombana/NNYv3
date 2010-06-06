@@ -9,7 +9,8 @@ CUIMain* CUIMain::mSingleton = 0;
 CUIMain::CUIMain(void) : Ogre::FrameListener(), CThreadMessages(), Thread(),
 	Started(false),
 	mRoot(0), mCamera(0), mSceneMgr(0), mWindow(0), mRaySceneQuery(0),
-	mInputHandler(0), mGUIHandler(0), mShowConsole(false)
+	mInputHandler(0), mGUIHandler(0), mShowConsole(false),
+	mWorld()
 {
 	if( mSingleton == 0 ) mSingleton = this;
 }
@@ -62,6 +63,35 @@ int CUIMain::UIThread(void)
 bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
 	bool ContinueRendering = true;
+	//=================================
+	// Update entities (movement, animations, effects)
+	//=================================
+	for(CWorldManager::EntityList::iterator ent = mWorld.mEntities.begin(); ent != mWorld.mEntities.end(); ++ent ){
+		CEntity *Entity = *ent;
+		if( Entity == 0 ) continue; //Shouldn't happen but for safety
+		if( Entity->IsMoving() ){
+			Ogre::SceneNode *SceneNode = Entity->GetSceneNode();
+			Ogre::Real LenghtLeftToGo = (Entity->GetDestination() - Entity->GetPosition()).length();
+			Ogre::Vector3 CorrectedMovement = ( Entity->GetMovement() * evt.timeSinceLastFrame );
+			if( CorrectedMovement.length() < LenghtLeftToGo ){
+				SceneNode->translate( CorrectedMovement );
+			}else{ //Arrived at destination
+				SceneNode->setPosition( Entity->GetDestination() );
+				Entity->ReachedDestination();
+				//TODO: If there is a next destination then go there with the frametime left of this movement.
+				//(Loop till all frametime is used for movement)
+				//Example: if there are 3 destinations left, and the first 2 will be reached
+				//in 2 seconds.
+				//If the user has a slow computer that updates the frame every 2,5 seconds,
+				//then it should first use x seconds to reach destination one, then check
+				//for how many seconds left, and use those to go to the next node and so on.
+			}
+		}
+	}
+
+	//=================================
+	// Messages sent to the gui thread
+	//=================================
 	MESSAGE msg = {0};
 	GetThreadMessage(msg);
 	switch(msg.ID){
