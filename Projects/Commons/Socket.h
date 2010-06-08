@@ -13,7 +13,9 @@
 class Socket {
 public:
 	Socket();
+	Socket(ACE_SOCK_STREAM &stream);
 	~Socket();
+	void		setSocket(ACE_SOCK_STREAM &stream);
 	bool		connect(const char *host, unsigned short port);
 	void		close();
 	bool		write(Packet &data);
@@ -21,6 +23,7 @@ public:
 private:
 	ACE_SOCK_Connector  m_connector;
 	ACE_SOCK_Stream		m_socket;
+	BYTE*				m_buffer;
 };
 
 #endif

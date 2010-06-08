@@ -196,7 +196,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Functionoid.h"
+				RelativePath=".\Capsule.h"
 				>
 			</File>
 			<File
@@ -259,10 +259,10 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Fonctionoids"
+			Name="Capsules"
 			>
 			<File
-				RelativePath=".\functionoids\Revision.h"
+				RelativePath=".\Capsules\CapsuleRevision.h"
 				>
 			</File>
 		</Filter>

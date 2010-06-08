@@ -20,7 +20,6 @@ bool Socket::writeRaw(ByteArray &data) {
 
 bool Socket::write(Packet &data) {
 	ACE_Time_Value timeout(SOCKET_TIMEOUT);
-	data.printHex();
 	//Return true if ssize_t is not 0 nor 1 (because both are error codes)
 	//Possible returns:
 	//	 len  The complete number of bytes transferred.
@@ -31,18 +30,32 @@ bool Socket::write(Packet &data) {
 	return (m_socket.send_n(data.genStringPacket().c_str(), data.size()+5, &timeout) > 0);
 }
 
+//Read SOCKET_READ_BUFFER_SIZE bytes, return Packet object;
 Packet Socket::read() {
-	BYTE* buf = new BYTE[SOCKET_READ_BUFFER_SIZE];
 	ssize_t bc ;
-	if ((bc = m_socket.recv (buf, 1024)) > 0) {
-		return Packet(buf, bc); //Create a byte array (packet) with BYTEs `buf` of size `bc`
+	if ((bc = m_socket.recv(m_buffer, SOCKET_READ_BUFFER_SIZE)) > 0) {
+		return Packet(m_buffer, bc); //Create a byte array (packet) with BYTEs `buf` of size `bc`
 	} else {
 		return Packet(NULL, 0); //Special invalid constructor
 	}
 }
 
-Socket::Socket() {
+//Set socket in-after
+void Socket::setSocket(ACE_SOCK_STREAM &stream) {
+	m_socket = stream;
 }
 
+//Normal contructor
+Socket::Socket() {
+	m_buffer = new BYTE[SOCKET_READ_BUFFER_SIZE];
+}
+
+//Set socket while being constructed
+Socket::Socket(ACE_SOCK_STREAM &stream) : m_socket(stream) {
+	Socket();
+}
+
+//Destructor
 Socket::~Socket() {
+	delete[] m_buffer;
 }

@@ -3,7 +3,7 @@
 $REMOTE_IP = '127.0.0.1';
 $REMOTE_PORT = 6131;
 $PROTOCOL_HPP_FILE = '../../Resources/resProtocol.h';
-$REVISION = 0;
+$REVISION = 1234;
 $VERBOSE = False;
 $USERNAME = 'nitrix';
 $PASSWORD = 'test';
@@ -21,6 +21,7 @@ socket_set_option($mainsock, SOL_SOCKET,SO_REUSEADDR, 1);
 //socket_bind($mainsock, '0', 5000) or die('Could not bind to address');
 //socket_listen($mainsock);
 
+$BA = new ByteArray();
 $clients=Array();
 $compteur=0;
 echo 'Connecting...'."\n";
@@ -35,12 +36,6 @@ $nb=count($clients);
 $clients[$nb]['SOCKET']=$socket;
 $clients[$nb]['UID']=$compteur;
 $clients[$nb]['BUFFER']=new ByteArray();
-
-$BA = new ByteArray();
-$BA->addCmd(PCKT_C_REVISION);
-$BA->addDword($REVISION);
-socket_write($socket, $BA->getPacket());
-$BA->clear();
 
 while(true){
 $toread=Array();
@@ -223,6 +218,10 @@ while (true) {
 					//-------------------------
 					case PCKT_R_WELCOME:
 						echo '[capsuleHandler] Realm server welcome packet'."\n";
+						$BA->addCmd(PCKT_C_REVISION);
+						$BA->addDword($REVISION);
+						socket_write($SOCKET, $BA->getPacket());
+						$BA->clear();
 						break;
 					//-------------------------
 					case PCKT_W_WELCOME:

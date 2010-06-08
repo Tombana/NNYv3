@@ -1,24 +1,28 @@
 #include "PacketHandler.h"
 
 PacketHandler::PacketHandler() {
-	m_data = new char[BUFFER_SIZE];
 }
 
 PacketHandler::~PacketHandler() {
-	delete[] m_data;
 }
 
 int PacketHandler::open(void*){ 
-	//Print a message
-	std::cout << "Connection established" << std::endl;
 	//Save the handle for now
 	ACE_HANDLE handle = get_handle();
-	//Print the handle
-	std::cout << "Handle: " << handle << std::endl;
-	//Add new session to the session manager
-	m_sessionMgr.addSession(handle);	
+	//Print a message
+	std::cout << "New session " << handle << " created!" << std::endl;
 	//Register the service handler with the reactor 
 	ACE_Reactor::instance()->register_handler(this, ACE_Event_Handler::READ_MASK);
+	//Add new session to the session manager
+	SESSIONMGR::instance()->addSession(handle);	
+	//Save the session for now
+	SessionMgr::s_session* session = SESSIONMGR::instance()->getSession(handle);
+	//Set the session's objects with the information we have
+	session->socket.setSocket(peer_);
+	//Prepare & send welcome packet
+	Packet welcomePacket;
+	welcomePacket.add<CMD>(PCKT_R_WELCOME);
+	session->socket.write(welcomePacket);		
 	//Keep yourself registered with the reactor
 	return 0;
 }
@@ -29,13 +33,10 @@ int PacketHandler::open(void*){
 //Return  0 = Keep you registered with the reactor
 //Return -1 = This will call handle_close() wich close our handle
 int PacketHandler::handle_input(ACE_HANDLE handle) {
-	//Print the handle
-	std::cout << "Handle: " << handle << std::endl;
-	
 	//Retrieve the session; it is pointer and can be used like the following:
 	//session->username = "Blabla";		   //->username is an object of type `std::string`
 	//session->inventory.newItem(1234);    //->iventory is an object of type `Inventory`
-	SessionMgr::s_session* session = m_sessionMgr.getSession(handle);
+	SessionMgr::s_session* session = SESSIONMGR::instance()->getSession(handle);
 
 	//===== Here the famous packet parser!
 	//+++ so all the code following must be put in the section that receive/process incoming packets +++
@@ -43,21 +44,23 @@ int PacketHandler::handle_input(ACE_HANDLE handle) {
 
 	//===== Input buffer
 	//here we have read all bytes from the socket and put it into 'input'
-	int readBytes = peer_.recv(m_data,BUFFER_SIZE);
-	
+	Packet input = session->socket.read();
+
 	//===== Check if socket isn't closed
 	//The recv() function blocks until it receives data.
 	//If the function unblock with 0 byte read, the client logged out.
-	if (readBytes <= 0) {
-			std::cerr << "Client logged out!" << std::endl;
-			m_sessionMgr.delSession(handle);
+	if (input.size() == 0) {
+			std::cerr << "Session " << handle << " destroyed!" << std::endl;
+			SESSIONMGR::instance()->delSession(handle);
 			return -1;
 	}
 
 	//'buffer' is a special Packet class to read/write a byte array.
 	//This object is unique to all clients and is never destroyed.
 	//(well its actually destroyed when the socket disconnect but yeah)
-	session->buffer.append(std::string(m_data,readBytes));
+	session->buffer.append(input);
+	//Print the handle
+	std::cout << "(Input from " << handle << ")" << std::endl;
 	//Print hex packets to help us a little
 	session->buffer.printHex();
 
@@ -88,7 +91,7 @@ int PacketHandler::handle_input(ACE_HANDLE handle) {
 				//td.socket.socket_close();
 				std::cerr << "[packetHandler] @ERROR: Length refused!" << std::endl;
 				std::cerr << "[PacketHandler] @ERROR: Socket closed for security reasons." << std::endl;
-				m_sessionMgr.delSession(handle);
+				SESSIONMGR::instance()->delSession(handle);
 				return -1; //break ACE_Svn_Handle and close the socket
 			}
 
@@ -98,12 +101,17 @@ int PacketHandler::handle_input(ACE_HANDLE handle) {
 			if (session->buffer.size()-5 >= length) {
 				//Awesome we have enough bytes now :D
 				//Lets continue the "so waited" code part
-				//Copy the 5+length first bytes from the buffer to 'capsule'.
-				Packet capsule;
-				capsule.append(session->buffer.getStringRaw().substr(5, length)); //position to 5 and read length bytes
+				//Copy the 5+length first bytes from the buffer to 'inputCapsules'.
+				Packet inputCapsules;
+				inputCapsules.append(session->buffer.getStringRaw().substr(5, length)); //position to 5 and read length bytes
+				std::cerr << "(Printing input for capsules)" << std::endl;
+				inputCapsules.printHex();
 				//-----------------------------------------------
-				//PROCESS (DISPTACH IN OUR CASE) THE CAPSULE
-				//PACKETDISPATCHER::instance()->dispatch(packetCmd);
+				//PROCESS (DISPTACH IN OUR CASE) TO THE CAPSULES
+				while (true) { //a loop to parse all CMDs in the packet
+					PACKETDISPATCHER::instance()->dispatch(inputCapsules.read<CMD>(), inputCapsules);
+					if (inputCapsules.eof()) break; //break the loop, no more CMDs
+				}
 				//-----------------------------------------------
 				//Delete the 5+length first bytes from the buffer
 				session->buffer.erase(0, 5+length); //position to 0 and delete 5+length character
@@ -138,7 +146,7 @@ int PacketHandler::handle_input(ACE_HANDLE handle) {
 			std::cerr << "[PacketHandler] @ERROR: Packets are corrupted!" << std::endl;
 			std::cerr << "[PacketHandler] @ERROR: There is another capsule in this packet, not starting with 0x7E!" << std::endl;
 			std::cerr << "[PacketHandler] @ERROR: Socket closed for security reasons." << std::endl;
-			m_sessionMgr.delSession(handle);
+			SESSIONMGR::instance()->delSession(handle);
 			return -1; //break ACE_Svc_Handler, close the socket as well
 		}
 	}

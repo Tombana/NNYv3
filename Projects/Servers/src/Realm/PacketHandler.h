@@ -8,6 +8,7 @@
 #include "ace/Synch.h"
 #include "SessionMgr.h"
 #include "PacketDispatcher.h"
+#include "Socket.h"
 
 #define BUFFER_SIZE 1024
 
@@ -18,9 +19,6 @@ public:
 	~PacketHandler();
 	int open(void*);
 	int handle_input(ACE_HANDLE);
-private:
-	char*		m_data;
-	SessionMgr	m_sessionMgr;
 };
 
 #endif
