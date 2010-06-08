@@ -1,6 +1,9 @@
-//Next available PCKT CODE is       0x0014 //PCKT decimal = 20
-
-#define NNY_PROTOCOL_VERSION        37
+/*****************************
+IMPORTANT, KEEP IT UP-TO-DATE
+*****************************/
+#define NNY_PROTOCOL_VERSION        37	   //Protocol version, useful when debugging
+#define NNY_PROTOCOL_RANGE			0x0013 //Packet range from 0x00 to 0x13 are defined here
+//Next available PCKT CODE is       0x0014 //Usualy the next after NNY_PROTOCOL_RANGE
 
 /*****************************
         [X] Multi-directional

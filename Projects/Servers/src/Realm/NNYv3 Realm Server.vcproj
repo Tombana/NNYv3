@@ -178,6 +178,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PacketDispatcher.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\PacketHandler.cpp"
 				>
 			</File>
@@ -192,7 +196,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\Functionoid.h"
+				>
+			</File>
+			<File
 				RelativePath=".\main.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PacketDispatcher.h"
 				>
 			</File>
 			<File
@@ -210,11 +222,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\Common\resProtocol.h"
+				RelativePath="..\..\..\Resources\resProtocol.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Common\resTypedef.h"
+				RelativePath="..\..\..\Resources\resTypedef.h"
 				>
 			</File>
 		</Filter>
@@ -243,6 +255,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Commons\Thread.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Fonctionoids"
+			>
+			<File
+				RelativePath=".\functionoids\Revision.h"
 				>
 			</File>
 		</Filter>

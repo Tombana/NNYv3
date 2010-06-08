@@ -7,6 +7,7 @@
 #include "ace/Svc_Handler.h"
 #include "ace/Synch.h"
 #include "SessionMgr.h"
+#include "PacketDispatcher.h"
 
 #define BUFFER_SIZE 1024
 

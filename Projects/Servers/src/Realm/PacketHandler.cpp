@@ -47,6 +47,9 @@ int PacketHandler::handle_input(ACE_HANDLE handle) {
 	if (readBytes == 0) {
 		std::cerr << "Client logged out!" << std::endl;
 		return -1;
+	} else {
+		//Dispatch packet
+		//PACKETDISPATCHER::instance()->dispatch(packetCmd);
 	}
 	
 	return 0; 
