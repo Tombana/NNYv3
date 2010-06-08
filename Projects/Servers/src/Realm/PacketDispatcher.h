@@ -12,6 +12,7 @@
 #include "Capsule.h"
 //Needed to setup the table of interest
 #include "Capsules/CapsuleRevision.h"
+#include "Capsules/CapsuleDebug.h"
 
 //Note: This class is a singleton and so can only be used through calls like this:
 //PACKETDISPATCHER::instance()->dispatch(CMD);

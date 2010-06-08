@@ -9,6 +9,7 @@ PacketDispatcher::PacketDispatcher() {
 	//Now fill the table with our packets of interest
 	//================== TABLE OF INTEREST =======================
 	m_table[PCKT_C_REVISION]		= new CapsuleRevision;
+	m_table[PCKT_X_DEBUG]			= new CapsuleDebug;
 	//============================================================
 }
 PacketDispatcher::~PacketDispatcher() {
