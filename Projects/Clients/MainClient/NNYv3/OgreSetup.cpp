@@ -148,6 +148,8 @@ int CUIMain::LoadWorld(void)
 	Ogre::Entity *head = mSceneMgr->createEntity("OgreHead", "ogrehead.mesh");
 	Ogre::SceneNode *headnode = mSceneMgr->getRootSceneNode()->createChildSceneNode("LocalPlayerNode", Ogre::Vector3(0,10,0));
 	headnode->attachObject(head);
+	headnode->setDirection(Ogre::Vector3::UNIT_Z);
+	headnode->setFixedYawAxis(true);
 	mWorld.LocalPlayer = mWorld.CreatePlayer(-1);
 	mWorld.LocalPlayer->SetSceneNode(headnode);
 	mWorld.LocalPlayer->SetMoveSpeed(40);

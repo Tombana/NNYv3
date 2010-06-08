@@ -71,8 +71,11 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		if( Entity == 0 ) continue; //Shouldn't happen but for safety
 		if( Entity->IsMoving() ){
 			Ogre::SceneNode *SceneNode = Entity->GetSceneNode();
+
 			Ogre::Real LenghtLeftToGo = (Entity->GetDestination() - Entity->GetPosition()).length();
-			Ogre::Vector3 CorrectedMovement = ( Entity->GetMovement() * evt.timeSinceLastFrame );
+			Ogre::Vector3 Movement = Entity->GetMovement();
+			Ogre::Vector3 CorrectedMovement = ( Movement * evt.timeSinceLastFrame );
+			SceneNode->lookAt( Entity->GetDestination(), Ogre::Node::TransformSpace::TS_WORLD );
 			if( CorrectedMovement.length() < LenghtLeftToGo ){
 				SceneNode->translate( CorrectedMovement );
 			}else{ //Arrived at destination
