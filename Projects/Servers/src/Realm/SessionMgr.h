@@ -5,10 +5,14 @@
 #include "ace/Svc_Handler.h"
 //Our session container
 #include <map>
+//Packet buffer
+#include "Packet.h"
 
 class SessionMgr {
 public:
 	struct s_session {
+		//Socket buffer
+		Packet			buffer;
 		//Authentification
 		unsigned int    accountID; //Database account ID; needed for SQL queries and stuff like that
 		bool            authenticated; //Flag : is the character authenticated (login/password)
