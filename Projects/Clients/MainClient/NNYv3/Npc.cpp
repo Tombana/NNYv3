@@ -1,6 +1,6 @@
 #include "Npc.h"
 
-CNpc::CNpc(void) : CEntity(EntityType_NPC)
+CNpc::CNpc(Ogre::SceneNode *Node) : CEntity(EntityType_NPC, Node)
 {
 }
 

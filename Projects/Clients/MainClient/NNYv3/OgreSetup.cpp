@@ -145,13 +145,26 @@ int CUIMain::LoadWorld(void)
 	GroundEnt->setMaterialName("Rockwall");
 	mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(GroundEnt);
 
-	Ogre::Entity *head = mSceneMgr->createEntity("OgreHead", "ogrehead.mesh");
-	Ogre::SceneNode *headnode = mSceneMgr->getRootSceneNode()->createChildSceneNode("LocalPlayerNode", Ogre::Vector3(0,10,0));
+
+	Ogre::SceneNode *LocalPlayerNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Node-LocalPlayer", Ogre::Vector3(0,0,-100));
+	Ogre::SceneNode *bodynode = LocalPlayerNode->createChildSceneNode("Node-PlayerBody");
+	Ogre::SceneNode *headnode = LocalPlayerNode->createChildSceneNode("Node-PlayerHead");
+	Ogre::Entity *body = mSceneMgr->createEntity("Ent-PlayerBody", "robot.mesh");
+	Ogre::Entity *head = mSceneMgr->createEntity("Ent-PlayerHead", "ogrehead.mesh");
+	bodynode->attachObject(body);
 	headnode->attachObject(head);
-	headnode->setDirection(Ogre::Vector3::UNIT_Z);
-	headnode->setFixedYawAxis(true);
-	mWorld.LocalPlayer = mWorld.CreatePlayer(-1);
-	mWorld.LocalPlayer->SetSceneNode(headnode);
-	mWorld.LocalPlayer->SetMoveSpeed(40);
+	headnode->yaw(Ogre::Degree(180));
+	bodynode->yaw(Ogre::Degree(90));
+	headnode->scale(0.3,0.3,0.3);
+	headnode->setPosition(0, 80, -5);
+
+	LocalPlayerNode->setFixedYawAxis(true);
+
+	mWorld.LocalPlayer = mWorld.CreatePlayer(-1, LocalPlayerNode);
+	mWorld.LocalPlayer->SetMoveSpeed(50);
+	mWorld.LocalPlayer->AnimIdle = body->getAnimationState("Idle");
+	mWorld.LocalPlayer->AnimWalk = body->getAnimationState("Walk");
+	mWorld.LocalPlayer->SetState(State_Idle);
+
 	return 1;
 }

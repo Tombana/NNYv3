@@ -1,6 +1,6 @@
 #include "CombatEntity.h"
 
-CCombatEntity::CCombatEntity( EntityType Type ) : CEntity(Type)
+CCombatEntity::CCombatEntity( EntityType Type, Ogre::SceneNode *Node ) : CEntity(Type, Node)
 {
 }
 

@@ -1,6 +1,6 @@
 #include "Player.h"
 
-CPlayer::CPlayer(void) : CCombatEntity( EntityType_Player )
+CPlayer::CPlayer(Ogre::SceneNode *Node) : CCombatEntity( EntityType_Player, Node )
 {
 }
 

@@ -128,9 +128,10 @@ bool CInputHandler::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 			Ogre::Vector3 Collision = ray.getPoint(it->distance);
 			Collision.y += 10; //A little above click-point
 			if( mWorld.LocalPlayer ){
-				mWorld.LocalPlayer->AddDestination(Collision);
+				//mWorld.LocalPlayer->AddDestination(Collision);
+				mWorld.LocalPlayer->SetSingleDestination(Collision);
 			}
-			mCamNode->setPosition(Collision.x, Collision.y + 20, Collision.z);
+			//mCamNode->setPosition(Collision.x, Collision.y + 20, Collision.z);
 		}
 	}
 	return true;

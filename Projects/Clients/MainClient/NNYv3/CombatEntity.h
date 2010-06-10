@@ -5,6 +5,6 @@ class CCombatEntity :
 	public CEntity
 {
 public:
-	CCombatEntity( EntityType Type );
+	CCombatEntity( EntityType Type, Ogre::SceneNode *Node );
 	virtual ~CCombatEntity(void);
 };

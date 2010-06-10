@@ -264,6 +264,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\Entity.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\Item.cpp"
 					>
 				</File>

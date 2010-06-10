@@ -5,6 +5,6 @@ class CItem :
 	public CEntity
 {
 public:
-	CItem(void);
+	CItem(Ogre::SceneNode *Node);
 	virtual ~CItem(void);
 };

@@ -5,6 +5,6 @@ class CLocalPlayer :
 	public CPlayer
 {
 public:
-	CLocalPlayer(void);
+	CLocalPlayer(Ogre::SceneNode *Node);
 	virtual ~CLocalPlayer(void);
 };

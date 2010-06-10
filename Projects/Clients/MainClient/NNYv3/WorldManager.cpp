@@ -12,43 +12,43 @@ CWorldManager::~CWorldManager(void)
 	mEntities.clear();
 }
 
-CItem* CWorldManager::CreateItem(unsigned int Identifier)
+CItem* CWorldManager::CreateItem(unsigned int Identifier, Ogre::SceneNode *Node)
 {
-	return (CItem*)CreateEntity(EntityType_Item, Identifier);
+	return (CItem*)CreateEntity(EntityType_Item, Identifier, Node);
 }
 
-CPlayer* CWorldManager::CreatePlayer(unsigned int Identifier)
+CPlayer* CWorldManager::CreatePlayer(unsigned int Identifier, Ogre::SceneNode *Node)
 {
-	return (CPlayer*)CreateEntity(EntityType_Player, Identifier);
+	return (CPlayer*)CreateEntity(EntityType_Player, Identifier, Node);
 }
 
-CMonster* CWorldManager::CreateMonster(unsigned int Identifier)
+CMonster* CWorldManager::CreateMonster(unsigned int Identifier, Ogre::SceneNode *Node)
 {
-	return (CMonster*)CreateEntity(EntityType_Monster, Identifier);
+	return (CMonster*)CreateEntity(EntityType_Monster, Identifier, Node);
 }
 
-CNpc* CWorldManager::CreateNPC(unsigned int Identifier)
+CNpc* CWorldManager::CreateNPC(unsigned int Identifier, Ogre::SceneNode *Node)
 {
-	return (CNpc*)CreateEntity(EntityType_NPC, Identifier);
+	return (CNpc*)CreateEntity(EntityType_NPC, Identifier, Node);
 }
 
-CEntity* CWorldManager::CreateEntity(EntityType Type, unsigned int Identifier)
+CEntity* CWorldManager::CreateEntity(EntityType Type, unsigned int Identifier, Ogre::SceneNode *Node)
 {
 	//Check if it already exists
 	if( GetEntityFromIdentifier(Identifier) ) return 0;
 	CEntity* ret = 0;
 	switch(Type){
 		case EntityType_Item:
-			ret = new CItem();
+			ret = new CItem(Node);
 			break;
 		case EntityType_Player:
-			ret = new CPlayer();
+			ret = new CPlayer(Node);
 			break;
 		case EntityType_Monster:
-			ret = new CMonster();
+			ret = new CMonster(Node);
 			break;
 		case EntityType_NPC:
-			ret = new CNpc();
+			ret = new CNpc(Node);
 			break;
 		default:
 			break;

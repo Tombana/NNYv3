@@ -5,6 +5,6 @@ class CMonster :
 	public CCombatEntity
 {
 public:
-	CMonster(void);
+	CMonster(Ogre::SceneNode *Node);
 	virtual ~CMonster(void);
 };

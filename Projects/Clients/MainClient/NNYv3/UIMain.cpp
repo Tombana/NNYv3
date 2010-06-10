@@ -67,8 +67,8 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	// Update entities (movement, animations, effects)
 	// Every entity is updated individually
 	// 1. If it is moving, its position is updated
-	// 2. Its animation is changed if neccesary
-	// 3. Its virtual Update() method is called with elapsed time
+	// 2. Its virtual Update() method is called with elapsed time
+	// 3. Its animation is updated (advanced to next frame)
 	//=================================
 	for(CWorldManager::EntityList::iterator ent = mWorld.mEntities.begin(); ent != mWorld.mEntities.end(); ++ent ){
 		CEntity *Entity = *ent;
@@ -76,47 +76,15 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		//
 		// 1. Update position if moving
 		//
-		if( Entity->IsMoving() ){
-			Ogre::SceneNode *SceneNode = Entity->GetSceneNode();
-
-			Ogre::Real LenghtLeftToGo = (Entity->GetDestination() - Entity->GetPosition()).length();
-			Ogre::Vector3 Movement = Entity->GetMovement();
-			Ogre::Vector3 CorrectedMovement = ( Movement * evt.timeSinceLastFrame );
-
-			//Set the right angle for the entity
-			SceneNode->lookAt( Entity->GetDestination(), Ogre::Node::TransformSpace::TS_WORLD );
-
-			if( CorrectedMovement.length() < LenghtLeftToGo ){ //Not at destination yet, just move
-				SceneNode->translate( CorrectedMovement );
-			}else{ //Arrived at destination
-				SceneNode->setPosition( Entity->GetDestination() );
-				Entity->ReachedDestination();
-				//TODO: If there is a next destination then go there with the frametime left of this movement.
-				//(Loop till all frametime is used for movement)
-				//Example: if there are 3 destinations left, and the first 2 will be reached
-				//in 2 seconds.
-				//If the user has a slow computer that updates the frame every 2,5 seconds,
-				//then it should first use x seconds to reach destination one, then check
-				//for how many seconds left, and use those to go to the next node and so on.
-			}
-		}
+		Entity->UpdateMovement(evt.timeSinceLastFrame);
 		//
-		// 2. Update animation of every animated mesh that belongs to this entity
-		//    Somehow check if we need to switch from "walk" to "slash" animation for example
-		
-		//
-		// 3. Call the Update() method
+		// 2. Call the Update() method
 		//
 		Entity->Update(evt.timeSinceLastFrame);
-	}
-	//
-	// Update all animations (advance the animations to the next frame)
-	//
-	Ogre::AnimationStateIterator anim_it = mSceneMgr->getAnimationStateIterator();
-	while( anim_it.hasMoreElements() ){
-		Ogre::AnimationState *animstate = anim_it.getNext();
-		if( animstate->getEnabled() && !animstate->hasEnded() )
-			animstate->addTime(evt.timeSinceLastFrame);
+		//
+		// 3. Update animations
+		//
+		Entity->UpdateAnimations(evt.timeSinceLastFrame);
 	}
 
 	//=================================

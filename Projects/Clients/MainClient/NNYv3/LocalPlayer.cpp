@@ -1,6 +1,6 @@
 #include "LocalPlayer.h"
 
-CLocalPlayer::CLocalPlayer(void)
+CLocalPlayer::CLocalPlayer(Ogre::SceneNode *Node) : CPlayer(Node)
 {
 }
 
