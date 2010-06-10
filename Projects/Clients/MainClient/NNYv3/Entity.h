@@ -37,6 +37,8 @@ public:
 		//}
 	}
 
+	virtual void Update(Ogre::Real ElapsedTime){};
+
 	inline void SetSceneNode(Ogre::SceneNode* Node){ mNode = Node; }
 	inline Ogre::SceneNode* GetSceneNode(void){ return mNode; }
 
