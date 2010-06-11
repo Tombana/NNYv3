@@ -124,14 +124,17 @@ bool CInputHandler::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 		mRaySceneQuery->setRay(ray);
 		Ogre::RaySceneQueryResult& qryResult = mRaySceneQuery->execute();
 		Ogre::RaySceneQueryResult::iterator it = qryResult.begin();
-		if( it != qryResult.end() ){
-			Ogre::Vector3 Collision = ray.getPoint(it->distance);
-			Collision.y += 10; //A little above click-point
-			if( mWorld.LocalPlayer ){
-				//mWorld.LocalPlayer->AddDestination(Collision);
-				mWorld.LocalPlayer->SetSingleDestination(Collision);
+		while( it != qryResult.end() ){
+			if( it->worldFragment ){ //It was a collision with the world, not entity
+				Ogre::Vector3 Collision = ray.getPoint(it->distance);
+				Collision.y += 10; //A little above click-point
+				if( mWorld.LocalPlayer ){
+					//mWorld.LocalPlayer->AddDestination(Collision);
+					mWorld.LocalPlayer->SetSingleDestination(Collision);
+				}
+				//mCamNode->setPosition(Collision.x, Collision.y + 20, Collision.z);
+				break;
 			}
-			//mCamNode->setPosition(Collision.x, Collision.y + 20, Collision.z);
 		}
 	}
 	return true;
