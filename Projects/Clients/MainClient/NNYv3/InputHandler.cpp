@@ -80,13 +80,13 @@ bool CInputHandler::mouseMoved(const OIS::MouseEvent &arg)
 	}
 	//Zoom using scroll wheel
 	if( arg.state.Z.rel ){
-		mCamera.mCamZoomSpeed -= 0.5 * Ogre::Real(arg.state.Z.rel);
+		mCamera.mCamZoomSpeed -= 1.2 * Ogre::Real(arg.state.Z.rel);
 	}
 	//Look around when right mouse button is down (regardless of wether the mouse is on a window)
 	if (arg.state.buttonDown(OIS::MB_Right))
 	{
-		mCamera.mCamYawSpeed -= 0.4 * arg.state.X.rel;
-		mCamera.mCamPitchSpeed -= 0.4 * arg.state.Y.rel;
+		mCamera.mCamYawSpeed -= 1.2 * Ogre::Real(arg.state.X.rel);
+		mCamera.mCamPitchSpeed -= 1.2 * Ogre::Real(arg.state.Y.rel);
 	}
 	return true;
 }

@@ -52,7 +52,7 @@ void CCamera::Update(Ogre::Real ElapsedTime, Ogre::Vector3 PlayerPosition)
 			mCamNode->setPosition(PlayerPosition);
 		}else{ //Normal distance, so move camera with normal speed
 			//Speed depends on distance
-			CamPos += ToMove * (Dist * 0.01f * ElapsedTime);
+			CamPos += ToMove * (Dist * 0.05f * ElapsedTime);
 			mCamNode->setPosition(CamPos);
 		}
 	}
@@ -61,12 +61,12 @@ void CCamera::Update(Ogre::Real ElapsedTime, Ogre::Vector3 PlayerPosition)
 	if( mCamYawSpeed ){
 		mCamNode->yaw(Ogre::Degree(mCamYawSpeed * ElapsedTime), Ogre::Node::TS_WORLD);
 		//Decrease the speed (which causes a natural 'slow down')
-		DeAccelerate(mCamYawSpeed, 40 * ElapsedTime); //Deacceleration of 40 degrees per second per second
+		DeAccelerate(mCamYawSpeed, 200 * ElapsedTime); //Deacceleration of 200 degrees per second per second
 	}
 	if( mCamPitchSpeed ){
 		mCamNode->pitch(Ogre::Degree(mCamPitchSpeed * ElapsedTime), Ogre::Node::TS_LOCAL);
 		//Decrease the speed (which causes a natural 'slow down')
-		DeAccelerate(mCamPitchSpeed, 40 * ElapsedTime); //Deacceleration of 40 degrees per second per second
+		DeAccelerate(mCamPitchSpeed, 200 * ElapsedTime); //Deacceleration of 200 degrees per second per second
 	}
 
 	//3. Camera zoom
@@ -77,7 +77,7 @@ void CCamera::Update(Ogre::Real ElapsedTime, Ogre::Vector3 PlayerPosition)
 		if( mCamDist < MinCamDist ){ mCamDist = MinCamDist; mCamZoomSpeed = 0; }
 		else if( mCamDist > MaxCamDist ){ mCamDist = MaxCamDist; mCamZoomSpeed = 0; }
 		//Decrease the speed (which causes a natural 'slow down')
-		DeAccelerate(mCamZoomSpeed, 100 * ElapsedTime); //Deacceleration of 100 units per second per second
+		DeAccelerate(mCamZoomSpeed, 500 * ElapsedTime); //Deacceleration of 500 units per second per second
 		//Apply the new zoom distance
 		mCamera->setPosition(Ogre::Vector3(0,0,mCamDist));
 	}
