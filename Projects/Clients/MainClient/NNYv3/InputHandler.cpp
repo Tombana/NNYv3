@@ -1,10 +1,11 @@
 #include "InputHandler.h"
 #include "MainClient.h"
+#include "WorldManager.h"
+#include "Camera.h"
 
-CInputHandler::CInputHandler(CWorldManager& World, Ogre::RenderWindow *window, Ogre::Camera *Cam, Ogre::SceneManager *SceneMgr, Ogre::RaySceneQuery *RaySceneQuery) :
-	mWorld(World), mWindow(window), mCamera(Cam), mSceneMgr(SceneMgr), mRaySceneQuery(RaySceneQuery),
-		mInputManager(0), mKeyboard(0), mMouse(0), mGUISystem(CEGUI::System::getSingletonPtr()),
-		mCamNode(0), mCamDist(200), MinCamDist(100), MaxCamDist(800)
+CInputHandler::CInputHandler(CWorldManager& World, CCamera& Camera, Ogre::RenderWindow *window, Ogre::SceneManager *SceneMgr, Ogre::RaySceneQuery *RaySceneQuery) :
+	mWorld(World), mCamera(Camera), mWindow(window), mSceneMgr(SceneMgr), mRaySceneQuery(RaySceneQuery),
+		mInputManager(0), mKeyboard(0), mMouse(0), mGUISystem(CEGUI::System::getSingletonPtr())
 {
 	size_t windowHnd = 0;
 	mWindow->getCustomAttribute("WINDOW", &windowHnd);
@@ -26,12 +27,6 @@ CInputHandler::CInputHandler(CWorldManager& World, Ogre::RenderWindow *window, O
 
 	//Register this class as a Window listener
 	Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
-
-	//The CamNode will be the point that the camera rotates around, so a point at the player
-	mCamNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("CameraNode");
-	mCamNode->attachObject(mCamera);
-	mCamera->setPosition(Ogre::Vector3(0,0,mCamDist)); //Set the camera 100 units in front the node
-	mCamera->lookAt(Ogre::Vector3(0,0,0)); //Look at the node
 }
 
 CInputHandler::~CInputHandler(void)
@@ -85,16 +80,13 @@ bool CInputHandler::mouseMoved(const OIS::MouseEvent &arg)
 	}
 	//Zoom using scroll wheel
 	if( arg.state.Z.rel ){
-		mCamDist -= Ogre::Real(arg.state.Z.rel) / 15.0f;
-		if( mCamDist < MinCamDist ) mCamDist = MinCamDist;
-		else if( mCamDist > MaxCamDist ) mCamDist = MaxCamDist;
-		mCamera->setPosition(Ogre::Vector3(0,0,mCamDist));
+		mCamera.mCamZoomSpeed -= 0.5 * Ogre::Real(arg.state.Z.rel);
 	}
 	//Look around when right mouse button is down (regardless of wether the mouse is on a window)
 	if (arg.state.buttonDown(OIS::MB_Right))
 	{
-		mCamNode->yaw(Ogre::Degree(-0.1 * arg.state.X.rel), Ogre::Node::TS_WORLD);
-		mCamNode->pitch(Ogre::Degree(-0.1 * arg.state.Y.rel), Ogre::Node::TS_LOCAL);
+		mCamera.mCamYawSpeed -= 0.4 * arg.state.X.rel;
+		mCamera.mCamPitchSpeed -= 0.4 * arg.state.Y.rel;
 	}
 	return true;
 }
@@ -120,21 +112,18 @@ bool CInputHandler::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 
 	if( id == OIS::MB_Left ){
 		CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getDisplayIndependantPosition();
-		Ogre::Ray ray(mCamera->getCameraToViewportRay(mousePos.d_x, mousePos.d_y));
+		Ogre::Ray ray(mCamera.GetCamera()->getCameraToViewportRay(mousePos.d_x, mousePos.d_y));
 		mRaySceneQuery->setRay(ray);
 		Ogre::RaySceneQueryResult& qryResult = mRaySceneQuery->execute();
-		Ogre::RaySceneQueryResult::iterator it = qryResult.begin();
-		while( it != qryResult.end() ){
-			if( it->worldFragment ){ //It was a collision with the world, not entity
-				Ogre::Vector3 Collision = ray.getPoint(it->distance);
-				Collision.y += 10; //A little above click-point
-				if( mWorld.LocalPlayer ){
-					//mWorld.LocalPlayer->AddDestination(Collision);
-					mWorld.LocalPlayer->SetSingleDestination(Collision);
-				}
-				//mCamNode->setPosition(Collision.x, Collision.y + 20, Collision.z);
-				break;
+		for( Ogre::RaySceneQueryResult::iterator it = qryResult.begin(); it != qryResult.end(); ++it ){
+			//TODO: Test whether it is an entity or the ground.
+			Ogre::Vector3 Collision = ray.getPoint(it->distance);
+			Collision.y += 10; //A little above click-point
+			if( mWorld.LocalPlayer ){
+				//mWorld.LocalPlayer->AddDestination(Collision);
+				mWorld.LocalPlayer->SetSingleDestination(Collision);
 			}
+			break;
 		}
 	}
 	return true;

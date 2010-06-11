@@ -70,15 +70,14 @@ int CUIMain::SetupOgre(void)
 	//=================
 	mSceneMgr = mRoot->createSceneManager(Ogre::ST_EXTERIOR_CLOSE); //ST_EXTERIOR_CLOSE allows rendering terrain
 
-	mCamera = mSceneMgr->createCamera("PlayerCam");
-	mCamera->setNearClipDistance(5);
-	
-	Ogre::Viewport* vp = mWindow->addViewport(mCamera);
+	mCamera.Initialize(mSceneMgr);
+
+	Ogre::Viewport* vp = mWindow->addViewport(mCamera.GetCamera());
 	vp->setBackgroundColour(Ogre::ColourValue(0.9,0.9,0.9));
 	//Fog will not work with sky ;)
 	//mSceneMgr->setFog(Ogre::FOG_LINEAR, Ogre::ColourValue(0.9,0.9,0.9), 0.0, 50, 500);
 
-	mCamera->setAspectRatio(Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
+	mCamera.GetCamera()->setAspectRatio(Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
 	
 	//Set a moving cloud texture as background
 	mSceneMgr->setSkyDome(true, "CloudySky", 5, 8);
@@ -98,7 +97,7 @@ int CUIMain::SetupOgre(void)
 	//=================
 	// Create the input handler
 	//=================
-	mInputHandler = new CInputHandler(mWorld, mWindow, mCamera, mSceneMgr, mRaySceneQuery);
+	mInputHandler = new CInputHandler(mWorld, mCamera, mWindow, mSceneMgr, mRaySceneQuery);
 	mRoot->addFrameListener(mInputHandler);
 	mRoot->addFrameListener(this);
 
@@ -127,6 +126,8 @@ int CUIMain::CleanupOgre(void)
 	//Clean up CEGUI
 	if( mGUIHandler ) delete mGUIHandler;
 	mGUIHandler = 0;
+
+	mCamera.Shutdown();
 
 	//Clean up the main Ogre system
 	//Deleting the root object will also clean up all other created classes

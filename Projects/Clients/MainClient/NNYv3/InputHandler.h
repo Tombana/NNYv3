@@ -7,11 +7,12 @@
 #include <CEGUI/CEGUI.h>
 
 class CWorldManager;
+class CCamera;
 
 class CInputHandler : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener
 {
 public:
-	CInputHandler(CWorldManager& World, Ogre::RenderWindow *window, Ogre::Camera *Cam, Ogre::SceneManager *SceneMgr, Ogre::RaySceneQuery *RaySceneQuery);
+	CInputHandler(CWorldManager& World, CCamera& Camera, Ogre::RenderWindow *window, Ogre::SceneManager *SceneMgr, Ogre::RaySceneQuery *RaySceneQuery);
 	~CInputHandler(void);
 	
 	bool frameRenderingQueued(const Ogre::FrameEvent& evt);
@@ -31,18 +32,12 @@ public:
 
 private:
 	CWorldManager&		mWorld;
+	CCamera&			mCamera;
 	Ogre::RenderWindow	*mWindow;
-	Ogre::Camera		*mCamera;
 	Ogre::SceneManager	*mSceneMgr;
 	Ogre::RaySceneQuery *mRaySceneQuery;
 	OIS::InputManager	*mInputManager;
 	OIS::Keyboard		*mKeyboard;
 	OIS::Mouse			*mMouse;
 	CEGUI::System		*mGUISystem;
-
-	//Camera related
-	Ogre::SceneNode		*mCamNode;
-	Ogre::Real			mCamDist; //Zoom. Higher means further away
-	Ogre::Real			MinCamDist;
-	Ogre::Real			MaxCamDist;
 };

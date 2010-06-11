@@ -4,6 +4,7 @@
 #include "ThreadMessages.h"
 #include "InputHandler.h"
 #include "GUIHandler.h"
+#include "Camera.h"
 #include <Ogre.h>
 #include "ConsoleOverlay.h"
 #include "WorldManager.h"
@@ -38,13 +39,14 @@ private:
 	// Ogre related
 	//==============
 	Ogre::Root			*mRoot;
-	Ogre::Camera		*mCamera;
 	Ogre::SceneManager	*mSceneMgr;
 	Ogre::RenderWindow	*mWindow;
 	Ogre::RaySceneQuery	*mRaySceneQuery;
 	CInputHandler		*mInputHandler;
 	// CEGUI related
 	CGUIHandler			*mGUIHandler;
+	//Camera related
+	CCamera				mCamera;
 
 	//This will be called every frame
 	bool frameRenderingQueued(const Ogre::FrameEvent& evt);

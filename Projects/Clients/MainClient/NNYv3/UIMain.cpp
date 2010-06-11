@@ -8,7 +8,7 @@ CUIMain* CUIMain::mSingleton = 0;
 
 CUIMain::CUIMain(void) : Ogre::FrameListener(), CThreadMessages(), Thread(),
 	Started(false),
-	mRoot(0), mCamera(0), mSceneMgr(0), mWindow(0), mRaySceneQuery(0),
+	mRoot(0), mSceneMgr(0), mWindow(0), mRaySceneQuery(0), mCamera(),
 	mInputHandler(0), mGUIHandler(0), mShowConsole(false),
 	mWorld()
 {
@@ -63,6 +63,9 @@ int CUIMain::UIThread(void)
 bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
 	bool ContinueRendering = true;
+
+	Ogre::Real ElapsedTime = evt.timeSinceLastFrame;
+
 	//=================================
 	// Update entities (movement, animations, effects)
 	// Every entity is updated individually
@@ -76,16 +79,21 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		//
 		// 1. Update position if moving
 		//
-		Entity->UpdateMovement(evt.timeSinceLastFrame);
+		Entity->UpdateMovement(ElapsedTime);
 		//
 		// 2. Call the Update() method
 		//
-		Entity->Update(evt.timeSinceLastFrame);
+		Entity->Update(ElapsedTime);
 		//
 		// 3. Update animations
 		//
-		Entity->UpdateAnimations(evt.timeSinceLastFrame);
+		Entity->UpdateAnimations(ElapsedTime);
 	}
+
+	//=================================
+	// Update camera position, smooth scrolling and zooming
+	//=================================
+	mCamera.Update(ElapsedTime, mWorld.LocalPlayer->GetPosition());
 
 	//=================================
 	// Messages sent to the gui thread
