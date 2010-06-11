@@ -139,7 +139,7 @@ int CUIMain::CleanupOgre(void)
 
 int CUIMain::LoadWorld(void)
 {
-	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, -10); //10 under the ground
+	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, -1); //1 unit under the ground
 	Ogre::MeshManager::getSingleton().createPlane("ground", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane,
 		2000,2000,20,20,true,1,5,5,Ogre::Vector3::UNIT_Z);
 	Ogre::Entity *GroundEnt = mSceneMgr->createEntity("GroundEntity", "ground");

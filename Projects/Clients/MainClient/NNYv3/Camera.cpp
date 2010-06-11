@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-CCamera::CCamera(void) : mSceneManager(0), mCamera(0), mCamNode(0), mCamDist(200), MinCamDist(100), MaxCamDist(800), mCamZoomSpeed(0), mCamYawSpeed(0), mCamPitchSpeed(0)
+CCamera::CCamera(void) : mSceneManager(0), mCamera(0), mCamNode(0), mCamDist(200), MinCamDist(100), MaxCamDist(800), mCamZoomSpeed(0), mCamYawSpeed(0), mCamPitchSpeed()
 {
 }
 
@@ -19,6 +19,7 @@ void CCamera::Initialize(Ogre::SceneManager* SceneManager)
 		//The CamNode will be the point that the camera rotates around, so a point at the player
 		mCamNode = mSceneManager->getRootSceneNode()->createChildSceneNode("CameraNode");
 		mCamNode->attachObject(mCamera);
+		mCamNode->pitch(Ogre::Degree(-20));
 		mCamera->setPosition(Ogre::Vector3(0,0,mCamDist)); //Set the camera 100 units in front the node
 		mCamera->lookAt(Ogre::Vector3(0,0,0)); //Look at the node
 	}

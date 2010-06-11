@@ -118,11 +118,7 @@ bool CInputHandler::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 		for( Ogre::RaySceneQueryResult::iterator it = qryResult.begin(); it != qryResult.end(); ++it ){
 			//TODO: Test whether it is an entity or the ground.
 			Ogre::Vector3 Collision = ray.getPoint(it->distance);
-			Collision.y += 10; //A little above click-point
-			if( mWorld.LocalPlayer ){
-				//mWorld.LocalPlayer->AddDestination(Collision);
-				mWorld.LocalPlayer->SetSingleDestination(Collision);
-			}
+			if( mWorld.LocalPlayer ) mWorld.LocalPlayer->SetSingleDestination(Collision);
 			break;
 		}
 	}
