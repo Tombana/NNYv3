@@ -1,0 +1,33 @@
+
+material Console/Border
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+			texture_unit
+			{
+				texture ConsoleBorder.png
+			}
+		}
+	}
+}
+material Console/Center
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_check off
+			texture_unit
+			{
+				texture ConsoleCenter.png
+			}
+		}
+	}
+}
