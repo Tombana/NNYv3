@@ -1,5 +1,9 @@
 #include "SessionMgr.h"
 
+SessionMgr::SessionMgr() {}
+
+SessionMgr::~SessionMgr() {}
+
 SessionMgr::s_session*	SessionMgr::getSession(ACE_HANDLE handle) {
 	return m_sessions[handle]; //std::map objects are s_session* already, no need type conversion
 }

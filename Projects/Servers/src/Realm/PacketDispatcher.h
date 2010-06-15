@@ -14,18 +14,26 @@
 #include "Capsules/CapsuleRevision.h"
 #include "Capsules/CapsuleDebug.h"
 
-//Note: This class is a singleton and so can only be used through calls like this:
-//PACKETDISPATCHER::instance()->dispatch(CMD);
+/**
+* @brief Once a capsule is received, this will perform a quick check and dispatch it to the right capsule functionoid.
+* @class PacketDispatcher
+* @note This class is a singleton and so can only be used through calls like this: PACKETDISPATCHER::instance()->dispatch(CMD,Packet);
+**/
 class PacketDispatcher {
+	///This make our class a singleton; read the notes below if you need help using it.
 	friend class ACE_Singleton<PacketDispatcher, ACE_Null_Mutex>;
+	
 	public:
+		///Check the @a packetCmd in @a capsule and dispatch it to the right functionoid using @a m_table.
 		void dispatch(CMD packetCmd, Packet &capsule);
+	
 	private:
-		//Member variables
+		///An array of pointers to all capsule functionoids
 		Capsule* m_table[NNY_PROTOCOL_RANGE];
-		//contructor/destructor are privates, so the class can only be constructed
-		//with the ACE_Singleton typedef just below: PACKETDISPATCHER
+		//contructor/destructor are privates, so the class can only be constructed with the ACE_Singleton typedef define below (PACKETDISPATCHER)
+		///Create and fill the @a m_table array with @a packetCmd@zs were are interested to (hard-coded).
 		PacketDispatcher();
+		///Free and delete the @a m_table array.
 		~PacketDispatcher();
 };
 

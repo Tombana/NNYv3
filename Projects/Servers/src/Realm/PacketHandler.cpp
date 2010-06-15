@@ -1,11 +1,5 @@
 #include "PacketHandler.h"
 
-PacketHandler::PacketHandler() {
-}
-
-PacketHandler::~PacketHandler() {
-}
-
 int PacketHandler::open(void*){ 
 	//Save the handle for now
 	ACE_HANDLE handle = get_handle();
@@ -16,7 +10,7 @@ int PacketHandler::open(void*){
 	//Add new session to the session manager
 	SESSIONMGR::instance()->addSession(handle);	
 	//Save the session for now
-	SessionMgr::s_session* session = SESSIONMGR::instance()->getSession(handle);
+	SESSION session = SESSIONMGR::instance()->getSession(handle);
 	//Set the session's objects with the information we have
 	session->socket.setSocket(peer_);
 	//Prepare & send welcome packet
@@ -36,7 +30,7 @@ int PacketHandler::handle_input(ACE_HANDLE handle) {
 	//Retrieve the session; it is pointer and can be used like the following:
 	//session->username = "Blabla";		   //->username is an object of type `std::string`
 	//session->inventory.newItem(1234);    //->iventory is an object of type `Inventory`
-	SessionMgr::s_session* session = SESSIONMGR::instance()->getSession(handle);
+	SESSION session = SESSIONMGR::instance()->getSession(handle);
 
 	//===== Here the famous packet parser!
 	//+++ so all the code following must be put in the section that receive/process incoming packets +++

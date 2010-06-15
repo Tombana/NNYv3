@@ -3,6 +3,7 @@
 
 #include "Packet.h"
 
+///Abstract class and functionoid.
 class Capsule {
 public:
 	virtual void doit(Packet& capsule) = 0;

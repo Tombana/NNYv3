@@ -1,8 +1,12 @@
 #include "main.h"
 
+//Obviously, this is the main program.
+//At first it prints the welcome screen, bind the server port and start the ACE_Reator coupled with ACE_Acceptor.
+//Then it will call ACE_Reactor::run_reactor_event_loop() in a infinite loop (it breaks if ACE returns any error).
+
 int main(int argc, char **argv) {
 	//=========================================
-    //            STARTUP MESSAGE
+    // STARTUP MESSAGE
     //=========================================
     std::cout << "NN      NN  NN      NN NN    NN             "   << std::endl;
     std::cout << "NNNN    NN  NNNN    NN  NN  NN        NNNNN "   << std::endl;
@@ -18,8 +22,7 @@ int main(int argc, char **argv) {
 	std::cout << "-------------------------------"				  << std::endl;
 	
 	//=========================================
-    //         WAITING FOR CONNECTIONS
-    //           [MAIN PROGRAM LOOP]
+    // SETTING UP : `ACE_Acceptor`
     //=========================================
     std::cout << "Setting up acceptor..." << std::endl;
 	
@@ -30,6 +33,11 @@ int main(int argc, char **argv) {
 	// Initialize server endpoint an register with the Reactor.
 	ACE_Acceptor<PacketHandler,ACE_SOCK_ACCEPTOR> acceptor(server_addr, ACE_Reactor::instance(), ACE_NONBLOCK);
 
+	//=========================================
+    // MAIN PROGRAM LOOP : `ACE_Reactor`
+    // It handles ACE_Acceptor events (like connections/deconnections) and incoming packets.
+    //=========================================
+	
 	// Main event loop that handles packets
 	std::cout << "Server is now running!" << std::endl;
 	while(true) {
@@ -45,7 +53,7 @@ int main(int argc, char **argv) {
 	}
 
     //===================================
-    // Exit
+    // EXIT
     //===================================
     return 0;
 }
