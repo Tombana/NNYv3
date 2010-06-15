@@ -111,6 +111,8 @@ int CUIMain::SetupOgre(void)
 
 int CUIMain::CleanupOgre(void)
 {
+	mWorld.Cleanup();
+
 	//Clean up the console overlay
 	if( mConsoleOverlay ) delete mConsoleOverlay;
 	mConsoleOverlay = 0;
@@ -161,11 +163,20 @@ int CUIMain::LoadWorld(void)
 
 	LocalPlayerNode->setFixedYawAxis(true);
 
-	mWorld.LocalPlayer = mWorld.CreatePlayer(-1, LocalPlayerNode);
+	mWorld.LocalPlayer = mWorld.CreateLocalPlayer(LocalPlayerNode);
 	mWorld.LocalPlayer->SetMoveSpeed(50);
 	mWorld.LocalPlayer->AnimIdle = body->getAnimationState("Idle");
 	mWorld.LocalPlayer->AnimWalk = body->getAnimationState("Walk");
 	mWorld.LocalPlayer->SetState(State_Idle);
 
+	Ogre::SceneNode *DestMarkerNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+	Ogre::SceneNode *DestMarkerSubNode = DestMarkerNode->createChildSceneNode();
+	Ogre::Entity *DestMarker = mSceneMgr->createEntity("Ent-DestMarker", "geosphere4500.mesh");
+	DestMarkerSubNode->attachObject(DestMarker);
+	DestMarkerSubNode->scale(0.05, 0.05, 0.05);
+	DestMarkerSubNode->setPosition(0,10,0);
+	DestMarkerNode->setVisible(false);
+	mWorld.LocalPlayer->SetDestinationMarker(DestMarkerNode, DestMarker);
+	
 	return 1;
 }

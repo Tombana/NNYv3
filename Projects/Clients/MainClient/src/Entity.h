@@ -19,7 +19,7 @@ typedef enum EntityType{	EntityType_Unkown = 0,
 							EntityType_Monster,
 							EntityType_NPC };
 
-typedef enum EntityState{ State_Disabled = 0, State_Idle, State_Walking, State_Fighting } ;
+typedef enum EntityState{ State_Disabled = 0, State_Idle, State_Moving, State_Fighting } ;
 
 //The base class for all entities.
 //The entity can be a visible object.
@@ -42,27 +42,25 @@ public:
 	EntityState SetState(EntityState NewState);
 	EntityState GetState(void){ return mState; }
 
-	//TODO: Implement this function
-	virtual void Update(Ogre::Real ElapsedTime){};
-
-	//This is only to be called by CUIMain
-	void UpdateMovement(Ogre::Real ElapsedTime);
-	//This is only to be called by CUIMain
-	void UpdateAnimations(Ogre::Real ElapsedTime);
-
 	inline Ogre::SceneNode* GetSceneNode(void){ return mNode; }
 
+	//Move speed
 	void SetMoveSpeed(Ogre::Real Speed){ mMoveSpeed = Speed; }
 	Ogre::Real GetMoveSpeed(void){ return mMoveSpeed; }
 
+	//Position
 	inline const Ogre::Vector3 & GetPosition(void) const { return mNode->getPosition(); }
 
+	//Movement
 	Ogre::Vector3 GetMovement(void);
-	bool IsMoving(void){ return (mState == State_Walking); }
+	bool IsMoving(void){ return (mState == State_Moving); }
+	Ogre::Real GetDistanceLeft(void);
+	Ogre::Real GetMoveTimeLeft(void);
 
-	void AddDestination(Ogre::Vector3 Destination);
-	void ReachedDestination(void);
-	void ClearAllDestinations(void){ while( !mDestinations.empty() ){ mDestinations.pop(); } }
+	//Change movement
+	virtual void AddDestination(Ogre::Vector3 Destination);
+	virtual void ReachedDestination(void);
+	virtual void ClearAllDestinations(void){ while( !mDestinations.empty() ){ mDestinations.pop(); } }
 	void SetSingleDestination(Ogre::Vector3 Destination){ ClearAllDestinations(); AddDestination(Destination); }
 	Ogre::Vector3 GetDestination(void){ if( mDestinations.empty() ) return Ogre::Vector3(0,0,0); else return mDestinations.front(); }
 
@@ -70,9 +68,15 @@ public:
 	unsigned int	Identifier;
 
 	//These can be filled with animations
+	//TODO: improve this
 	Ogre::AnimationState *AnimIdle;
 	Ogre::AnimationState *AnimWalk;
 	Ogre::AnimationState *AnimFight;
+
+	//These three functions are only to be called by CUIMain at each frame
+	virtual void Update(Ogre::Real ElapsedTime){};
+	void UpdateMovement(Ogre::Real ElapsedTime);
+	void UpdateAnimations(Ogre::Real ElapsedTime);
 
 protected:
 	EntityType mEntityType;

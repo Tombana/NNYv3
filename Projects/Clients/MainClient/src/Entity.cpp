@@ -17,7 +17,7 @@ EntityState CEntity::SetState(EntityState NewState)
 			if( AnimIdle ) AnimIdle->setEnabled(true);
 			if( AnimWalk ) AnimWalk->setEnabled(false);
 			break;
-		case State_Walking:
+		case State_Moving:
 			if( AnimIdle ) AnimIdle->setEnabled(false);
 			if( AnimWalk ) AnimWalk->setEnabled(true);
 			break;
@@ -73,10 +73,23 @@ Ogre::Vector3 CEntity::GetMovement(void)
 	}
 }
 
+Ogre::Real CEntity::GetDistanceLeft(void)
+{
+	//TODO: It should actually iterate through the destinations and get the total distance.
+	if( mDestinations.size() == 0 ) return 0;
+	return (mDestinations.front() - GetPosition()).length();
+}
+
+Ogre::Real CEntity::GetMoveTimeLeft(void)
+{
+	if( !IsMoving() ) return 0;
+	return GetDistanceLeft() / mMoveSpeed;
+}
+
 void CEntity::AddDestination(Ogre::Vector3 Destination)
 {
 	mDestinations.push(Destination);
-	SetState(State_Walking);
+	SetState(State_Moving);
 }
 
 void CEntity::ReachedDestination(void)

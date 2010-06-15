@@ -20,7 +20,7 @@
 //=================================
 #ifdef OLD_CEGUI
 #include <CEGUI/CEGUI.h>
-#include "OgreCEGUIRenderer.h"
+#include "Ogre/OgreCEGUIRenderer.h"
 #else
 #include <CEGUI/CEGUI.h>
 #include <CEGUI/RendererModules/Ogre/CEGUIOgreRenderer.h>

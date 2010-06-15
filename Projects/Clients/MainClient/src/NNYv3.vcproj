@@ -259,6 +259,22 @@
 					RelativePath=".\WindowListener.cpp"
 					>
 				</File>
+				<Filter
+					Name="Ogre"
+					>
+					<File
+						RelativePath=".\Ogre\EntityMaterialInstance.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Ogre\MaterialInstance.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\Ogre\SubEntityMaterialInstance.cpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="InGame"
@@ -358,10 +374,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\OgreCEGUIRenderer.h"
-					>
-				</File>
-				<File
 					RelativePath=".\OgreOverlayText.h"
 					>
 				</File>
@@ -369,6 +381,26 @@
 					RelativePath=".\UIMain.h"
 					>
 				</File>
+				<Filter
+					Name="Ogre"
+					>
+					<File
+						RelativePath=".\Ogre\EntityMaterialInstance.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Ogre\MaterialInstance.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Ogre\OgreCEGUIRenderer.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Ogre\SubEntityMaterialInstance.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="InGame"

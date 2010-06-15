@@ -15,12 +15,16 @@ public:
 	CWorldManager(void);
 	~CWorldManager(void);
 
+	//Release all resources
+	void Cleanup(void);
+
 	//These functions will create the entities in memory.
 	//They will not actually put a real item on the ground that can be picked up.
 	CItem* CreateItem(unsigned int Identifier, Ogre::SceneNode *Node);
 	CPlayer* CreatePlayer(unsigned int Identifier, Ogre::SceneNode *Node);
 	CMonster* CreateMonster(unsigned int Identifier, Ogre::SceneNode *Node);
 	CNpc* CreateNPC(unsigned int Identifier, Ogre::SceneNode *Node);
+	CLocalPlayer* CreateLocalPlayer(Ogre::SceneNode* Node);
 
 	void DestroyEntity(CEntity* ent);
 
@@ -30,7 +34,7 @@ public:
 	//TODO: Should the entity list have mutex protection?
 	typedef std::list<CEntity*> EntityList;
 	EntityList	mEntities;
-	CPlayer* LocalPlayer;
+	CLocalPlayer* LocalPlayer;
 
 private:
 

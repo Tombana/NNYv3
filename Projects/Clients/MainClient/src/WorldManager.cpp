@@ -6,6 +6,11 @@ CWorldManager::CWorldManager(void) : mEntities(), LocalPlayer(0)
 
 CWorldManager::~CWorldManager(void)
 {
+	Cleanup();
+}
+
+void CWorldManager::Cleanup(void)
+{
 	for( EntityList::iterator ent = mEntities.begin(); ent != mEntities.end(); ++ent ){
 		delete *ent;
 	}
@@ -30,6 +35,14 @@ CMonster* CWorldManager::CreateMonster(unsigned int Identifier, Ogre::SceneNode 
 CNpc* CWorldManager::CreateNPC(unsigned int Identifier, Ogre::SceneNode *Node)
 {
 	return (CNpc*)CreateEntity(EntityType_NPC, Identifier, Node);
+}
+
+CLocalPlayer* CWorldManager::CreateLocalPlayer(Ogre::SceneNode* Node)
+{
+	if( LocalPlayer != 0 ) return LocalPlayer; //Already exists
+	LocalPlayer = new CLocalPlayer(Node);
+	mEntities.push_back( LocalPlayer );
+	return LocalPlayer;
 }
 
 CEntity* CWorldManager::CreateEntity(EntityType Type, unsigned int Identifier, Ogre::SceneNode *Node)
