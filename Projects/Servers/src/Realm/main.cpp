@@ -1,10 +1,26 @@
 #include "main.h"
 
 //Obviously, this is the main program.
-//At first it prints the welcome screen, bind the server port and start the ACE_Reator coupled with ACE_Acceptor.
+//At first it prints the welcome screen, bind the server port and start ACE_Reactor coupled with ACE_Acceptor.
 //Then it will call ACE_Reactor::run_reactor_event_loop() in a infinite loop (it breaks if ACE returns any error).
 
 int main(int argc, char **argv) {
+	/*
+		//Create a circular buffer of 10 slots
+		CircularQueue<int> test(10);
+		//Create an object so it can be pushed the regular way
+		int x = 25;
+		if (!test.tryPush(x)) std::cout << "The queue is full, couldn't push x !" << std::endl;
+		//Try to push an object created on-the-fly
+		if (!test.tryPushRaw(11)) std::cout << "The queue is full, couldn't pushRaw 11 !" << std::endl;
+		//Try to pop an object to "out"
+		if (test.tryPop(out)) {
+			std::cerr << "Debug: " << out << std::endl;
+		} else {
+			std::cout << "The queue is empty, something went wrong man." << std::endl;
+		}
+	*/
+
 	//=========================================
     // STARTUP MESSAGE
     //=========================================

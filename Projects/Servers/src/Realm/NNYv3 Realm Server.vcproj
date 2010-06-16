@@ -234,6 +234,10 @@
 			Name="Common Files"
 			>
 			<File
+				RelativePath="..\..\..\Commons\CircularQueue.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Commons\Packet.cpp"
 				>
 			</File>
@@ -261,6 +265,10 @@
 		<Filter
 			Name="Capsules"
 			>
+			<File
+				RelativePath=".\Capsules\CapsuleDebug.h"
+				>
+			</File>
 			<File
 				RelativePath=".\Capsules\CapsuleRevision.h"
 				>
