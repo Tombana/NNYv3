@@ -21,23 +21,22 @@ public:
 private:
 	static ACE_THR_FUNC_RETURN threadTask(void * param);
 
-	ACE_Thread     m_thread; ///< The ACE_Thread object
 	ACE_thread_t   m_thread_id; ///< The thread ID, debugging purpose mostly
 	ACE_hthread_t  m_thread_handle; ///< The thread handle (suspend and all)
 };
 
-	    /*
-	bool wait();
-    void destroy();
+/*
+TODO: Member functions to implement
 
-    void suspend();
-    void resume();
+static void sleep(unsigned long msecs);
 
-	static void sleep(unsigned long msecs);
-	*/
+static ACE_thread_t currentId();
+static ACE_hthread_t currentHandle();
+static Thread * current();
 
-	//static ACE_thread_t currentId();
-    //static ACE_hthread_t currentHandle();
-	//static Thread * current();
+You may need this, it looks interesting:
+	//global object - container for Thread class representation of every thread
+    //static ACE_TSS<Thread> m_threadStorage;
+*/
 
 #endif
