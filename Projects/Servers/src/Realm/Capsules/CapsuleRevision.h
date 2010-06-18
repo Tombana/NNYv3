@@ -1,7 +1,7 @@
 #ifndef H_CAPSULE_REVISION
 #define H_CAPSULE_REVISION
 
-#include "Capsule.h"
+#include "../Capsule.h"
 #include "Packet.h"
 
 class CapsuleRevision : public Capsule {

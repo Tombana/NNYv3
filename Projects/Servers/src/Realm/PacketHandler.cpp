@@ -52,7 +52,7 @@ int PacketHandler::handle_input(ACE_HANDLE handle) {
 	//'buffer' is a special Packet class to read/write a byte array.
 	//This object is unique to all clients and is never destroyed.
 	//(well its actually destroyed when the socket disconnect but yeah)
-	session->buffer.append(input);
+	session->buffer.appendPacket(input);
 	//Print the handle
 	std::cout << "(Input from " << handle << ")" << std::endl;
 	//Print hex packets to help us a little
@@ -97,7 +97,7 @@ int PacketHandler::handle_input(ACE_HANDLE handle) {
 				//Lets continue the "so waited" code part
 				//Copy the 5+length first bytes from the buffer to 'inputCapsules'.
 				Packet inputCapsules;
-				inputCapsules.append(session->buffer.getStringRaw().substr(5, length)); //position to 5 and read length bytes
+				inputCapsules.getRefBuffer().append(session->buffer.getRefBuffer().substr(5, length)); //position to 5 and read length bytes
 				std::cerr << "(Printing input for capsules)" << std::endl;
 				inputCapsules.printHex();
 				//-----------------------------------------------

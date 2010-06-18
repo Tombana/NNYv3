@@ -1,7 +1,7 @@
 #ifndef H_CAPSULE_DEBUG
 #define H_CAPSULE_DEBUG
 
-#include "Capsule.h"
+#include "../Capsule.h"
 #include "Packet.h"
 
 class CapsuleDebug : public Capsule {

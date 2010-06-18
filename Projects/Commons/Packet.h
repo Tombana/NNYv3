@@ -3,7 +3,7 @@
 
 #include <iostream> //TODO temp printHex()
 #include <string>
-#include "resTypedef.h"
+#include "../Resources/resTypedef.h"
 
 class Packet {
 public:
@@ -45,10 +45,9 @@ public:
 	std::string genStringPacket();
 	//Advanced commands:
 	//I don't recommend using any of the following unless you know what you are doing
-    std::string getStringRaw(); //[Harmful]
-    void append(Packet &obj); //[Harmful]
-    void append(std::string &obj); //[Harmful]
-	void setSeek(unsigned int newSeek); //[Harmful]
+	void appendPacket(Packet &obj);
+    std::string& getRefBuffer(); //[Harmful]
+    void setSeek(unsigned int newSeek); //[Harmful]
     void modSeek(int newSeek); //[Harmful]
     
 private:

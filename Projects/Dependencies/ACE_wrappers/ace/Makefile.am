@@ -14,7 +14,7 @@ ACE_ROOT = $(top_srcdir)
 
 CLEANFILES =
 
-lib_LTLIBRARIES += libACE.la
+lib_LTLIBRARIES = libACE.la
 
 libACE_la_CPPFLAGS = \
   -I$(ACE_ROOT) \

@@ -96,19 +96,14 @@ BYTE Packet::operator[](int i) {
     return (BYTE)m_buffer[i];
 }
 
-//! [Harmful] This function append a raw std::string to the byte array
-void Packet::append(std::string &obj) {
-    m_buffer.append(obj);
+//! [Harmful] This function returns a reference to the byte array
+std::string& Packet::getRefBuffer() {
+    return m_buffer;
 }
 
 //! [Harmful] This function append another ByteArray to the byte array
-void Packet::append(Packet &obj) {
-    m_buffer.append(obj.getStringRaw());
-}
-
-//! [Harmful] Returns the byte array buffer @return std::string byte array buffer
-std::string Packet::getStringRaw() {
-    return m_buffer;
+void Packet::appendPacket(Packet &obj) {
+    m_buffer.append(obj.getRefBuffer());
 }
 
 //! Generate a packet @return a ByteArray of a generated packet header + the byte array buffer
