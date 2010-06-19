@@ -14,8 +14,6 @@
 #include "ace/SOCK_Acceptor.h"
 #include "ace/Acceptor.h"
 #include "ace/Reactor.h"
-#include "ace/OS.h"
-#include "ace/Time_Value.h"
 
 //Common resource files
 #include "resTypedef.h"
@@ -34,7 +32,6 @@
 #include "config.h"
 
 //Functions
-void pauseExit();
 void handle_signal(int signal);
 
 #endif

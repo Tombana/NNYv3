@@ -3,10 +3,12 @@
 
 #if defined(WIN32)
         #include "windows.h" //Needed by MySQL lib for sockets
+        #include "mysql.h" //MySQL library
+        #include "errmsg.h" //MySQL handling error messages
+#else
+        #include <mysql/mysql.h> //linux version: libmysqlclient
+        #include <mysql/errmsg.h> //linux version: libmysqlclient
 #endif
-
-#include "mysql.h" //MySQL library
-#include "errmsg.h" //MySQL handling error messages
 
 #include <stdlib.h> //atoi() include
 

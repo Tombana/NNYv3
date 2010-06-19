@@ -17,6 +17,11 @@
 	}
 */
 
+//Load the library to memory: EDIT, it will automatically when init() is called
+//database::load();
+//Global database connection
+database::connection g_db = database::init();
+
 //Obviously, this is the main program.
 //At first it prints the welcome screen, bind the server port and start ACE_Reactor coupled with ACE_Acceptor.
 //Then it will call ACE_Reactor::run_reactor_event_loop() in a infinite loop (it breaks if ACE returns any error).
@@ -46,44 +51,37 @@ int main(int argc, char **argv) {
 	"NN   NN NN  NN   NN NN    NN  NN   NN  NNN  "   << std::endl <<
 	"NN    NNNN  NN    NNNN    NN   NN NN     NN "   << std::endl <<
 	"NN     NNN  NN     NNN    NN    NNN   NNNN  "   << std::endl <<
-	"-------------------------------"				 << std::endl <<
-	"- Type: Realm server"							 << std::endl <<
+	"-------------------------------"		 << std::endl <<
+	"- Type: Realm server"				 << std::endl <<
 	"- Protocol version: " << NNY_PROTOCOL_VERSION   << std::endl <<
-	"- MySQL version: " << MYSQL_SERVER_VERSION		 << std::endl <<
-	"-------------------------------"				 << std::endl;
+	"- MySQL version: " << MYSQL_SERVER_VERSION	 << std::endl <<
+	"-------------------------------"		 << std::endl;
 	
 	//=========================================
-    //      SETTING UP THE DATABASE
-    //=========================================
-	//======== LOAD THE LIBRARY TO MEMORY
-	database::load();
-	//======== Initialization
-	database::connection db = database::init();
+        //      SETTING UP THE DATABASE
+        //=========================================
 	//======== Connection
-	if (!database::connect(db, "localhost", "nnyv3", "", "nnyv3", 3306)) {
+	if (!database::connect(g_db, "127.0.0.1", "nnyv3", "", "nnyv3", 3306)) {
 		std::cout << "We were unable to contact the MySQL database!" << std::endl;
-		pauseExit();
-	} else {
+        } else {
 		std::cout << "Connected to the MySQL database." << std::endl;
 	}
-	//======== Sending a query and saving the result
-	database::result db_result = database::query(db, "SELECT version_nb FROM version", database::STORE_RESULT);
+        //======== Sending a query and saving the result
+	database::result db_result = database::query(g_db, "SELECT version_nb FROM version", database::STORE_RESULT);
 	//======== Now we can check the result like this
 	if (db_result) {
 		database::row row = database::fetch_row(db_result); //there's only one row, we don't need a loop here
 		int version_nb = database::toInt(row[0]);
 		if (version_nb != CONFIG_SUPPORTED_DATABASE) {
 			std::cout << "This server supports only the v" << CONFIG_SUPPORTED_DATABASE << " database; yours is still using v" << version_nb << "." << std::endl;
-			pauseExit();
 		}
+		database::free_result(db_result);
 	}
-	//======== Freeing memory as soon as possible
-	database::free_result(db_result);
-
+	
 	//=========================================
-    // SETTING UP : `ACE_Acceptor`
-    //=========================================
-    std::cout << "Setting up acceptor..." << std::endl;
+        // SETTING UP : `ACE_Acceptor`
+        //=========================================
+        std::cout << "Setting up acceptor..." << std::endl;
 	
 	// Server port number.
 	const u_short port = 6131;
@@ -93,9 +91,9 @@ int main(int argc, char **argv) {
 	ACE_Acceptor<PacketHandler,ACE_SOCK_ACCEPTOR> acceptor(server_addr, ACE_Reactor::instance(), ACE_NONBLOCK);
 
 	//=========================================
-    // MAIN PROGRAM LOOP : `ACE_Reactor`
-    // It handles ACE_Acceptor events (like connections/deconnections) and incoming packets.
-    //=========================================
+        // MAIN PROGRAM LOOP : `ACE_Reactor`
+        // It handles ACE_Acceptor events (like connections/deconnections) and incoming packets.
+        //=========================================
 	
 	// Main event loop that handles packets
 	std::cout << "Server is now running!" << std::endl;
@@ -111,22 +109,19 @@ int main(int argc, char **argv) {
 		}
 	}
 
-    //===================================
-    // EXIT
-    //===================================
-    return 0;
-}
-
-void pauseExit() {
-	while (true) ACE_OS::sleep(ACE_Time_Value(1));
+        //===================================
+        // EXIT
+        //===================================
+        return EXIT_SUCCESS;
 }
 
 void handle_signal(int signal) {
 	std::cout << "SINGAL RECEIVED: " << signal << std::endl;
-	//Close the mysql connection
-	database::close(db);
+	//Never close the mysql connection unless it's REALLY needed, like now
+	database::close(g_db);
 	//Unload the library from memory (allocated earlier)
 	database::unload();
 	//Exiting
+	std::cout << "Exiting..." << std::endl;
 	exit(signal);
 }
