@@ -59,7 +59,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ACEsd.lib"
+				AdditionalDependencies="ACEsd.lib libmysql.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_debug.exe"
 				AdditionalLibraryDirectories="..\..\..\Dependencies\ACE_wrappers\lib;..\..\..\Dependencies\MySQL\lib"
 				GenerateDebugInformation="true"
@@ -134,7 +134,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ACEs.lib"
+				AdditionalDependencies="ACEs.lib libmysql.lib"
 				AdditionalLibraryDirectories="..\..\..\Dependencies\ACE_wrappers\lib;..\..\..\Dependencies\MySQL\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)\$(ProjectName).pdb"
@@ -235,6 +235,14 @@
 			>
 			<File
 				RelativePath="..\..\..\Commons\CircularQueue.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Commons\database.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Commons\database.h"
 				>
 			</File>
 			<File
