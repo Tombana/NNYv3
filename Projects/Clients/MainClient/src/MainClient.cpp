@@ -6,7 +6,7 @@ CMainClient* CMainClient::mSingleton = 0;
 
 CMainClient::CMainClient(void) : CThreadMessages(), Thread(),
 	m_state(State_Loading), m_mainsocket(), NetworkThreadRunning(0),
-	m_RealmServers(),m_Revision(0), m_WorldIP(), m_WorldPort(0),
+	m_RealmServers(),m_Revision(0), m_Worlds(), m_WorldServer(0),
 	m_ui(),
 	m_Username(), m_Password(), m_Characters()
 {
@@ -22,13 +22,15 @@ CMainClient::~CMainClient(void)
 
 int CMainClient::Run(void)
 {
+	m_state = State_Loading;
+
 	//==============
 	//Load the UI and display the loading screen
 	//==============
 	if( !m_ui.StartUI() ) return 0;
 
 	//==============
-	//Load the data files
+	//Load the data files. Possible to use Ogre's virtual file system?
 	//==============
 	//datafileclass.load();
 	
@@ -59,8 +61,7 @@ int CMainClient::Run(void)
 				m_mainsocket.socket_close(); //This should make any receiver thread that is busy receiving quit
 				break;
 			case Message_RealmLoaded:
-				if( m_WorldIP.empty() || !m_WorldPort )
-					m_ui.SendThreadMessage(new CMessageParamsMsgBox("Could not get world server info from realm server!", "Error"));
+				if( m_Worlds.empty() ) m_ui.SendThreadMessage(new CMessageParamsMsgBox("Could not get world server info from realm server!", "Error"));
 				//Signal 'Done Loading' to GUI and so on
 				m_state = State_LoginScreen;
 				m_ui.SendThreadMessage(new CMessageParamsDisplayLoginScreen(m_Username));
@@ -150,9 +151,12 @@ void* CMainClient::NetworkThread(void)
 			}
 			break;
 		case State_LoggingIn:
-			if( m_WorldIP.empty() || !m_WorldPort || !m_mainsocket.socket_connect(m_WorldIP, m_WorldPort)){
-				m_state = State_LoginScreen;
-				this->SendThreadMessage(Message_NoWorld);
+			{
+				WORLDSERVER& Server = m_Worlds[m_WorldServer];
+				if( Server.IP.empty() || !Server.Port || !m_mainsocket.socket_connect(Server.IP, Server.Port)){
+					m_state = State_LoginScreen;
+					this->SendThreadMessage(Message_NoWorld);
+				}
 			}
 			break;
 		default:

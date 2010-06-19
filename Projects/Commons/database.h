@@ -53,16 +53,16 @@ namespace database {
 
 	///Fetch a row of results
 	inline row fetch_row(result res) {
-		//Here ther's two possible output, a result set or NULL.
+		//Here there's two possible output, a row or NULL.
 		//The only way to handle the `NULL` state would be to call mysql_errno(MYSQL*)
 		//but we don't have the MYSQL* so I'll simply assume we are at the end of the result set
-		//and that no error occured. Actually, the two possible errors are:
+		//and that no error occured. Actually, the two possible errors are: (with USE_RESULT flag)
 		//	CR_SERVER_LOST   - The connection to the server was lost during the query.
 		//	CR_UNKNOWN_ERROR - An unknown error occurred.
 		//The second one doesn't scares me much, but CR_SERVER_LOST can be annoying... that's
 		//why I -VIVIDLY- recommend you uses STORE_RESULT flag, wich call mysql_store_result
 		//and then doesn't need a connection anymore because it's saved to memory.
-		return mysql_fetch_row(res);
+		return mysql_fetch_row(res); //TODO: Error handling if the flag was USE_RESULT earlier
 	}
 
 	///Free result
