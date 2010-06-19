@@ -18,7 +18,10 @@
 //Services handlers
 #include "PacketHandler.h"
 
-//testing
-#include "CircularQueue.h"
+//Namespaces
+#include "database.h"
+
+//Testing
+//#include "CircularQueue.h"
 
 #endif
