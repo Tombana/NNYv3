@@ -2,7 +2,10 @@
 #define H_THREAD
 
 #include <iostream>
+#pragma warning( push )
+#pragma warning( disable : 4996 ) //Temporarily disable the warnings.
 #include "ace/Thread.h"
+#pragma warning( pop ) 
 
 class Thread {
 public:

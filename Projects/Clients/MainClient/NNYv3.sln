@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NNYv3", "NNYv3\NNYv3.vcproj", "{49AAEB67-FD3C-4FE7-9EE7-4DBCE1832557}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NNYv3", "src\NNYv3.vcproj", "{49AAEB67-FD3C-4FE7-9EE7-4DBCE1832557}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
