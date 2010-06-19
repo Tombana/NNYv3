@@ -1,8 +1,34 @@
-NNYv3 0.3   (?? ??? 2010)
+NNYv3 0.4   (?? ??? 2010)
 
- NNYv3 0.3 - ??
+ NNYv3 0.4 - ???
 
  ==== Server Features ====
+ <Nothing yet>
+ 
+ ==== Client Features ====
+ <Nothing yet>
+ 
+ ==== Optimisation ====
+ <Nothing yet>
+ 
+ ==== Protocol Features ====
+ <Nothing yet>
+ 
+ ==== Portability ====
+ <Nothing yet>
+  
+ ---------------------------------------------------
+ 
+ NNYv3 0.3   (19 June 2010)
+
+ NNYv3 0.3 - Roughly draft with the new ACE library
+
+ ==== Server Features ====
+ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ ! IMPORTANT: We switched the whole project to the ACE library. So far it's the best choice I never did but it
+ !            involved a complete rewrite of all classes. Here belows are the logs of what changed BEFORE the
+ !            ACE update, meaning they arn't applicable anymore.
+ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  * Added: Character list
  * Added: Deleting a character
  * Work-in-progress: Selecting a character and entering world (half done)
@@ -21,7 +47,7 @@ NNYv3 0.3   (?? ??? 2010)
  * Added: PCKT_W_ENTER_WORLD_ACK (half done)
  
  ==== Portability ====
- * Not checked yet for linux
+ * It was working before the ACE/Database class update, I have no idea now, maybe it just require a quick linking/makefile fix to work.
  
  ---------------------------------------------------
  
