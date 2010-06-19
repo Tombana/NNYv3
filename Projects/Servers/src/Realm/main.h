@@ -3,6 +3,10 @@
 
 //STD library includes
 #include <iostream>
+#include <cstdlib> //EXIT_SUCCESS & EXIT_FAILURE
+
+//Handling signals
+#include <signal.h>
 
 //ACE library includes
 #include "ace/Thread.h"
@@ -10,6 +14,8 @@
 #include "ace/SOCK_Acceptor.h"
 #include "ace/Acceptor.h"
 #include "ace/Reactor.h"
+#include "ace/OS.h"
+#include "ace/Time_Value.h"
 
 //Common resource files
 #include "resTypedef.h"
@@ -23,5 +29,12 @@
 
 //Testing
 //#include "CircularQueue.h"
+
+//Configuration file
+#include "config.h"
+
+//Functions
+void pauseExit();
+void handle_signal(int signal);
 
 #endif
