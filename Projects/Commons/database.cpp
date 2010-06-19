@@ -2,25 +2,17 @@
 
 namespace database {
 	//========================================
-	//		INITIALIZE A CONNECTION
+	// SEND A QUERY BUT DON'T EXPECT A RESULT
 	//========================================
-	connection init() {
-		return mysql_init(NULL);
-	}
-
-	//========================================
-	//		 CONNECT TO A MYSQL SERVER
-	//========================================
-	bool connect(connection conn, const char *host, const char *username, const char *password, const char *database, unsigned int port) {
-		if (mysql_real_connect(conn, host, username, password, database, port, NULL, CLIENT_MULTI_STATEMENTS) == NULL) {
-			return false; //NULL means it failed
-		} else {
-			return true; //Otherwise everything's fine
+	void execute(connection conn, const char *request) {
+		int error = mysql_query(conn, request);
+		if (error) { //Zero = goodboy, everything else = badboy
+			handleError(conn, error); //TODO: You may want to handle specific errors here to re-try later (i.e. connection dropped)
 		}
 	}
 
 	//========================================
-	//	   SEND A QUERY AND EXPECT A RESULT
+	//	  SEND A QUERY AND EXPECT A RESULT
 	//========================================
 	result query(connection conn, const char *request, model_result type) {
 		int error = mysql_query(conn, request); //Zero = goodboy, everything else = badboy
@@ -55,6 +47,9 @@ namespace database {
 		}
 	}
 
+	//========================================
+	//	       HUMAN-READABLE ERRORS
+	//========================================
 	void handleError(connection conn, int errorCode) {
 		switch (errorCode) {
 			case 0:
@@ -78,12 +73,5 @@ namespace database {
 			default:
 				std::cout << "@database: Error: " << mysql_error(conn) << std::endl;
 		}
-	}
-
-	//========================================
-	//	   WE WANTS TO KNOW THE SQL ERROR
-	//========================================
-	const char *error(connection conn) {
-		return mysql_error(conn);
 	}
 } //End of namespace `database`
