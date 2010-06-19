@@ -1,10 +1,14 @@
 ##LD_LIBRARY_PATH = /home/nitrix/NNYv3/Projects/Dependencies/ACE_wrappers/build/ace/.libs
-LINK = -Wall -I../Commons -I../Resources -I../Dependencies/ACE_wrappers -lACE
-COMMONS = obj/Packet.o obj/Socket.o obj/Thread.o
+LINK = -Wall -I../Commons -I../Resources -I../Dependencies/ACE_wrappers -I../Dependencies/MySQL/include -lACE -lmysqlclient
+COMMONS = obj/Packet.o obj/Socket.o obj/Thread.o obj/database.o
 SRCS =  obj/Realm/main.o obj/Realm/PacketHandler.o obj/Realm/SessionMgr.o obj/Realm/PacketDispatcher.o
 
 all : $(COMMONS) $(SRCS)
 	g++ $(LINK) -o nnyv3_realm $(COMMONS) $(SRCS)
+
+obj/database.o : ../Commons/database.cpp \
+		 ../Commons/database.h
+		 g++ $(LINK) -c ../Commons/database.cpp -o obj/database.o
 
 obj/Packet.o : ../Commons/Packet.cpp \
 	       ../Commons/Packet.h

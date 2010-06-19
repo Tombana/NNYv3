@@ -11,7 +11,7 @@
 //We are dealing with functionoids/capsule stuff here
 #include "Capsule.h"
 //Needed to setup the table of interest
-#include "Capsules/CapsuleRevision.h"
+#include "Capsules/CapsuleVersion.h"
 #include "Capsules/CapsuleDebug.h"
 
 /**

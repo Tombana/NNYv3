@@ -2,10 +2,13 @@
 #define H_DATABASE
 
 #if defined(WIN32)
-	#include "windows.h"
-	#include "mysql.h" //MySQL library
-	#include "errmsg.h" //MySQL handling error messages
+        #include "windows.h" //Needed by MySQL lib for sockets
 #endif
+
+#include "mysql.h" //MySQL library
+#include "errmsg.h" //MySQL handling error messages
+
+#include <stdlib.h> //atoi() include
 
 #include <iostream>
 
