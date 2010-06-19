@@ -8,7 +8,9 @@ Connection with Client/Realm server
 PCKT_C_VERSION ->
                <- PCKT_R_DOWNLOAD (as many times as needed, optional)
                <- PCKT_R_DOWNLOAD_EOF
-               <- PCKT_R_CONNECT / PCKT_R_SERVER_GONE
+PCKT_C_GETWORLDLIST ->
+               <- PCKT_R_WORLD (as many times as needed, optional)
+               <- PCKT_R_WORLD_EOF
 
                X Socket is closed by the server
 
