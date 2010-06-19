@@ -1,6 +1,6 @@
-//Next available PCKT CODE is       0x0014 //PCKT decimal = 20
+//Next available PCKT CODE is       0x0015 //PCKT decimal = 21
 
-#define NNY_PROTOCOL_VERSION        37
+#define NNY_PROTOCOL_VERSION        38
 
 /*****************************
         [X] Multi-directional
@@ -19,6 +19,9 @@
 #define PCKT_C_REVISION             0x0002 //PCKT decimal = 2
 //Info: Send your revision to the realm server
 //Params: [DWORD]Client version
+#define PCKT_C_GETWORLDLIST         0x0014 //PCKT decimal = 20
+//Info: Reques the world list from the server. (In the form of PCKT_R_WORLD)
+//Params: [None]
 #define PCKT_C_AUTH                 0x000C //PCKT decimal = 12
 //Info: Authentication to the world server
 //Params: [String]Username (will be lowercased by the server)
@@ -57,21 +60,20 @@
 #define PCKT_R_DOWNLOAD_EOF     0x0004 //PCKT decimal = 4
 //Info: Tell the client he got the full list of what he must download, so now just proceed, kay thanks.
 //Params: [None]
-#define PCKT_R_CONNECT          0x0005 //PCKT decimal = 5
-//Info: Tell the client to connect to the specified worldserver
+#define PCKT_R_WORLD            0x0005 //PCKT decimal = 5
+//Info: Tell the client the info of a world server. (Repeated packets for multiple servers)
 //Params: [String]ipv4
 //Params: [Word]port
+//Params: [String]name
+#define PCKT_R_WORLD_EOF        0x0008 //PCKT decimal = 8
+//Info: Tell the client that the list of world servers is complete
+//Params: [None]
 #define PCKT_R_SYNC_KEY_ACK     0x0007 //PCKT decimal = 7
 //Info: Tell the server if its authorized or not
 //Params: [ACK] Ack code reply
 //Possible replies:
 //[ACK_FAILURE] = The realm server refused the sync_key
 //[ACK_SUCCESS] = The realm server accepted the sync_key and you're now online
-
-//Params: [Bool] True=Success / False=Failure
-#define PCKT_R_SERVER_GONE      0x0008 //PCKT decimal = 8
-//Info: Tell the client there's no server online
-//Params: [None]
 
 /*****************************
         [W]orld server

@@ -34,25 +34,31 @@ int CMainClient::HandleRealm(WORD Cmd, ByteArray& capsule)
 		// PCKT_R_DOWNLOAD_EOF
 		//=====================================
 		case PCKT_R_DOWNLOAD_EOF:
-			std::cout << "[capsuleHandler] All files are up to date.\n";
-			break;
-		//=====================================
-		// PCKT_R_CONNECT
-		//=====================================
-		case PCKT_R_CONNECT:
 			{
-			m_WorldIP = capsule.readString();
-			m_WorldPort = capsule.read<WORD>();
-			std::cout << "[capsuleHandler] We can connect to " << m_WorldIP.c_str() << ":" << m_WorldPort << std::endl;
-			m_state = State_LoginScreen;
-			this->SendThreadMessage(Message_RealmLoaded);
+			std::cout << "[capsuleHandler] All files are up to date.\n";
+			m_Worlds.clear();
+			ByteArray packetToSend;
+			packetToSend.addCmd(PCKT_C_GETWORLDLIST);
+			m_mainsocket << packetToSend;
 			}
 			break;
 		//=====================================
-		// PCKT_R_SERVER_GONE
+		// PCKT_R_WORLD
 		//=====================================
-		case PCKT_R_SERVER_GONE:
-			std::cout << "[capsuleHandler] There are currently no world servers online!\n";
+		case PCKT_R_WORLD:
+			{
+			WORLDSERVER Server;
+			Server.IP = capsule.readString();
+			Server.Port = capsule.read<WORD>();
+			Server.Name = capsule.readString();
+			m_Worlds.push_back(Server);
+			std::cout << "[capsuleHandler] World server: " << Server.IP.c_str() << ":" << Server.Port << " - " << Server.Name.c_str() << std::endl;
+			}
+			break;
+		//=====================================
+		// PCKT_R_WORLD_EOF
+		//=====================================
+		case PCKT_R_WORLD_EOF:
 			m_state = State_LoginScreen;
 			this->SendThreadMessage(Message_RealmLoaded);
 			break;

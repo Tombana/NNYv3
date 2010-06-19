@@ -67,13 +67,18 @@ private:
 	int HandleWorldLogin(WORD Cmd, ByteArray& capsule);
 	int HandleDefault(WORD Cmd, ByteArray& capsule);
 
-	//List of ips of realm servers
+	//List of ips of realm servers (static list, imbedded in the client)
 	std::vector<std::string> m_RealmServers;
 	//The version of this client
 	DWORD		m_Revision;
-	//The world server info
-	std::string	m_WorldIP;
-	WORD		m_WorldPort;
+	//The list of world servers (list gotten from realm server)
+	typedef struct WORLDSERVER{
+		std::string IP;
+		WORD Port;
+		std::string Name;
+	};
+	std::vector<WORLDSERVER> m_Worlds;
+	int m_WorldServer; //Index of chosen server.
 
 	//============
 	// Gui related
