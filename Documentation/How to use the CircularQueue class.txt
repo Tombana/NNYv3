@@ -1,0 +1,18 @@
+#include "CircularQueue.h"
+
+//Create a circular buffer of 10 slots
+CircularQueue<int> test(10);
+
+//Create an object so it can be pushed the regular way
+int x = 25;
+if (!test.tryPush(x)) std::cout << "The queue is full, couldn't push x !" << std::endl;
+
+//Try to push an object created on-the-fly
+if (!test.tryPushRaw(11)) std::cout << "The queue is full, couldn't pushRaw 11 !" << std::endl;
+
+//Try to pop an object to "out"
+if (test.tryPop(out)) {
+	std::cerr << "Debug: " << out << std::endl;
+} else {
+	std::cout << "The queue is empty, something went wrong man." << std::endl;
+}

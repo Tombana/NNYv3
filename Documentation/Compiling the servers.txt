@@ -1,0 +1,21 @@
+===========================
+IMPORTANT: Requirements on Linux
+===========================
+
+# apt-get install build-essential binutils gcc g++ cpp automake autoconf make libmysql++-dev libmysqlclient15-dev libtool libc6 libc6-dbg
+
+===========================
+How to compile on Windows:
+===========================
+1- Run Visual C++ 2008 project file
+
+2- Compile sources, press F11
+
+3- The program should launch fine, else make sure all DLLs
+are in the same directory the compiled program is running
+
+===========================
+How to compile on Linux:
+===========================
+$ cd Projects/Servers/
+$ ./build.sh
