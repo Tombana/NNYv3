@@ -282,7 +282,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Capsules\CapsuleRevision.h"
+				RelativePath=".\Capsules\CapsuleVersion.h"
 				>
 			</File>
 		</Filter>

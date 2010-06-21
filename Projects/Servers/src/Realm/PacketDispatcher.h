@@ -7,6 +7,7 @@
 #include "resTypedef.h"    //dispatch() parameter is 'CMD' type; defined in this file
 #include "resProtocol.h"   //Needed to setup the table of interest
 #include "Packet.h"
+#include "SessionMgr.h"
 
 //We are dealing with functionoids/capsule stuff here
 #include "Capsule.h"
@@ -25,7 +26,7 @@ class PacketDispatcher {
 	
 	public:
 		///Check the @a packetCmd in @a capsule and dispatch it to the right functionoid using @a m_table.
-		void dispatch(CMD packetCmd, Packet &capsule);
+		void dispatch(SESSION session, CMD packetCmd, Packet &capsule);
 	
 	private:
 		///An array of pointers to all capsule functionoids

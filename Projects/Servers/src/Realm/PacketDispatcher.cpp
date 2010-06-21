@@ -9,7 +9,7 @@ PacketDispatcher::PacketDispatcher() {
 	//Now fill the table with our packets of interest
 	//================== TABLE OF INTEREST =======================
 	m_table[PCKT_C_VERSION]		= new CapsuleVersion;
-	m_table[PCKT_X_DEBUG]	        = new CapsuleDebug;
+	m_table[PCKT_X_DEBUG]	    = new CapsuleDebug;
 	//============================================================
 }
 PacketDispatcher::~PacketDispatcher() {
@@ -21,14 +21,14 @@ PacketDispatcher::~PacketDispatcher() {
 		delete m_table[i];
 }
 
-void PacketDispatcher::dispatch(CMD packetCmd, Packet &capsule) {
+void PacketDispatcher::dispatch(SESSION session, CMD packetCmd, Packet &capsule) {
 	//Check if the packetCmd really exist
 	//Must be between 0(excluded) and lower to NNY_PROTOCOL_RANGE(included)
 	//Notation: ]0,NNY_PROTOCOL_RANGE]
 	if (packetCmd <= NNY_PROTOCOL_RANGE && packetCmd > 0) {
 		//Check if it have a functionoid assigned ('else' if NULL)
 		if (m_table[packetCmd] != NULL) {
-			m_table[packetCmd]->doit(capsule);
+			m_table[packetCmd]->doit(session, capsule);
 		} else {
 			std::cout << "[PacketDispatcher::dispatch] Packet dropped; not set in table of interest!" << std::endl;
 		}

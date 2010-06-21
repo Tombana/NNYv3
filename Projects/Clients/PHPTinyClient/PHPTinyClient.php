@@ -3,7 +3,7 @@
 $REMOTE_IP = '127.0.0.1';
 $REMOTE_PORT = 6131;
 $PROTOCOL_HPP_FILE = '../../Resources/resProtocol.h';
-$REVISION = 1234;
+$VERSION = 0;
 $VERBOSE = False;
 $USERNAME = 'nitrix';
 $PASSWORD = 'test';
@@ -218,8 +218,8 @@ while (true) {
 					//-------------------------
 					case PCKT_R_WELCOME:
 						echo '[capsuleHandler] Realm server welcome packet'."\n";
-						$BA->addCmd(PCKT_C_REVISION);
-						$BA->addDword($REVISION);
+						$BA->addCmd(PCKT_C_VERSION);
+						$BA->addDword($VERSION);
 						socket_write($SOCKET, $BA->getPacket());
 						$BA->clear();
 						break;
@@ -250,14 +250,18 @@ while (true) {
 						break;
 					//-------------------------
 					case PCKT_R_DOWNLOAD:
-						$CAPSULE->readDword();
-						$CAPSULE->readString();
-						$CAPSULE->readString();
+						$version = $CAPSULE->readDword();
+						$url = $CAPSULE->readString();
+						$path = $CAPSULE->readString();
+						//echo '->'.$version.' '.$url.' '.$path."\n";
 						echo '[capsuleHandler] File download requested but ignored'."\n";
 						break;
 					//-------------------------
 					case PCKT_R_DOWNLOAD_EOF:
 						echo '[capsuleHandler] List complete!'."\n";
+						$BA->addCmd(PCKT_C_GETWORLDLIST);
+						socket_write($SOCKET, $BA->getPacket());
+						$BA->clear();
 						break;
 					//-------------------------
 					case PCKT_X_DEBUG:

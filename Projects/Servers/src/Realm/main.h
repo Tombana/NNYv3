@@ -25,9 +25,6 @@
 //Namespaces
 #include "database.h"
 
-//Testing
-//#include "CircularQueue.h"
-
 //Configuration file
 #include "config.h"
 

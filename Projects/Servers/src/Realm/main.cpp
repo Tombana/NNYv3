@@ -1,32 +1,17 @@
 #include "main.h"
 
-// SOME EXEMPLES
-/* ================ CIRCULAR BUFFER ===================
-	//Create a circular buffer of 10 slots
-	CircularQueue<int> test(10);
-	//Create an object so it can be pushed the regular way
-	int x = 25;
-	if (!test.tryPush(x)) std::cout << "The queue is full, couldn't push x !" << std::endl;
-	//Try to push an object created on-the-fly
-	if (!test.tryPushRaw(11)) std::cout << "The queue is full, couldn't pushRaw 11 !" << std::endl;
-	//Try to pop an object to "out"
-	if (test.tryPop(out)) {
-		std::cerr << "Debug: " << out << std::endl;
-	} else {
-		std::cout << "The queue is empty, something went wrong man." << std::endl;
-	}
-*/
-
-//Load the library to memory: EDIT, it will automatically when init() is called
-//database::load();
-//Global database connection
-database::connection g_db = database::init();
+//!!!!!!!!!!!!!!!!!!!!!! =[ GLOBAL VARS ]= !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+database::connection g_db			  = database::init(); //Prepare a connection to the database
+unsigned int		 g_client_version = 4; //This default value will be overrided in main()
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 //Obviously, this is the main program.
 //At first it prints the welcome screen, bind the server port and start ACE_Reactor coupled with ACE_Acceptor.
 //Then it will call ACE_Reactor::run_reactor_event_loop() in a infinite loop (it breaks if ACE returns any error).
-
 int main(int argc, char **argv) {
+	//=========================================
+    // SETUP SIGNALS HANDLING
+    //=========================================
 	//Abnormal termination, such as instigated by the abort function. (Abort.)
 	signal(SIGABRT, handle_signal);
 	//Erroneous arithmetic operation, such as divide by 0 or overflow. (Floating point exception.)
@@ -51,22 +36,22 @@ int main(int argc, char **argv) {
 	"NN   NN NN  NN   NN NN    NN  NN   NN  NNN  "   << std::endl <<
 	"NN    NNNN  NN    NNNN    NN   NN NN     NN "   << std::endl <<
 	"NN     NNN  NN     NNN    NN    NNN   NNNN  "   << std::endl <<
-	"-------------------------------"		 << std::endl <<
-	"- Type: Realm server"				 << std::endl <<
+	"-------------------------------"                << std::endl <<
+	"- Type: Realm server"                           << std::endl <<
 	"- Protocol version: " << NNY_PROTOCOL_VERSION   << std::endl <<
-	"- MySQL version: " << MYSQL_SERVER_VERSION	 << std::endl <<
-	"-------------------------------"		 << std::endl;
+	"- MySQL version: " << MYSQL_SERVER_VERSION      << std::endl <<
+	"-------------------------------"                << std::endl;
 	
-	//=========================================
-        //      SETTING UP THE DATABASE
-        //=========================================
+    //=========================================
+    //      SETTING UP THE DATABASE
+    //=========================================
 	//======== Connection
 	if (!database::connect(g_db, "127.0.0.1", "nnyv3", "", "nnyv3", 3306)) {
 		std::cout << "We were unable to contact the MySQL database!" << std::endl;
         } else {
 		std::cout << "Connected to the MySQL database." << std::endl;
 	}
-        //======== Sending a query and saving the result
+    //======== Send a query and save the result
 	database::result db_result = database::query(g_db, "SELECT version_nb FROM version", database::STORE_RESULT);
 	//======== Now we can check the result like this
 	if (db_result) {
@@ -79,21 +64,21 @@ int main(int argc, char **argv) {
 	}
 	
 	//=========================================
-        // SETTING UP : `ACE_Acceptor`
-        //=========================================
-        std::cout << "Setting up acceptor..." << std::endl;
+    // SETTING UP : `ACE_Acceptor`
+    //=========================================
+    std::cout << "Setting up acceptor..." << std::endl;
 	
-	// Server port number.
+	//Server port number.
 	const u_short port = 6131;
 	ACE_INET_Addr server_addr(port);
 	
-	// Initialize server endpoint an register with the Reactor.
+	//Initialize server endpoint an register with the Reactor.
 	ACE_Acceptor<PacketHandler,ACE_SOCK_ACCEPTOR> acceptor(server_addr, ACE_Reactor::instance(), ACE_NONBLOCK);
 
 	//=========================================
-        // MAIN PROGRAM LOOP : `ACE_Reactor`
-        // It handles ACE_Acceptor events (like connections/deconnections) and incoming packets.
-        //=========================================
+    // MAIN PROGRAM LOOP : `ACE_Reactor`
+    // It handles ACE_Acceptor events (like connections/deconnections) and incoming packets.
+    //=========================================
 	
 	// Main event loop that handles packets
 	std::cout << "Server is now running!" << std::endl;
@@ -109,17 +94,17 @@ int main(int argc, char **argv) {
 		}
 	}
 
-        //===================================
-        // EXIT
-        //===================================
-        return EXIT_SUCCESS;
+    //===================================
+    // EXIT
+    //===================================
+    return EXIT_SUCCESS;
 }
 
 void handle_signal(int signal) {
 	std::cout << "SINGAL RECEIVED: " << signal << std::endl;
 	//Never close the mysql connection unless it's REALLY needed, like now
 	database::close(g_db);
-	//Unload the library from memory (allocated earlier)
+	//Unload the library from memory; allocated earlier from mysql_init()
 	database::unload();
 	//Exiting
 	std::cout << "Exiting..." << std::endl;

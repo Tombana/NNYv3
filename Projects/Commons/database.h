@@ -13,11 +13,14 @@
 #include <stdlib.h> //atoi() include
 
 #include <iostream>
+#include <string> //sql type
+#include <sstream>
 
 namespace database {
 	typedef MYSQL* connection;
 	typedef MYSQL_RES* result;
 	typedef MYSQL_ROW row;
+	typedef std::stringstream sql;
 	enum model_result { STORE_RESULT, USE_RESULT }; 
 
 	///Send a query to the MySQL server and expect a result
@@ -30,6 +33,15 @@ namespace database {
 	void handleError(connection coon, int errorCode);
 
 	//============= INLINE ==============
+	///Send a query to the MySQL server and expect a result
+	inline result query(connection conn, sql& request, model_result type) {
+		return query(conn, request.str().c_str(), type);
+	}
+	
+	///Send a query to the MySQL server but don't expect a result
+	inline void execute(connection conn, sql& request) {
+		execute(conn, request.str().c_str());
+	}
 
 	///Load mysql library
 	inline void load() {
