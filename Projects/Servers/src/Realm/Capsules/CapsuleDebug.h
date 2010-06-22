@@ -6,10 +6,7 @@
 
 class CapsuleDebug : public Capsule {
 public:
-	virtual void doit(SESSION session, Packet& capsule) {
-		std::cout << "[CapsuleDebug] Packet received!" << std::endl;
-		std::cout << "Message: " << capsule.readString() << std::endl;
-	}
+	virtual void doit(SESSION session, Packet& capsule);
 };
 
 #endif

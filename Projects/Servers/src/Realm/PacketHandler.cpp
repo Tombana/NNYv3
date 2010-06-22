@@ -98,8 +98,6 @@ int PacketHandler::handle_input(ACE_HANDLE handle) {
 				//Copy the 5+length first bytes from the buffer to 'inputCapsules'.
 				Packet inputCapsules;
 				inputCapsules.getRefBuffer().append(session->buffer.getRefBuffer().substr(5, length)); //position to 5 and read length bytes
-				std::cerr << "(Printing input for capsules)" << std::endl;
-				inputCapsules.printHex();
 				//-----------------------------------------------
 				//PROCESS (DISPTACH IN OUR CASE) TO THE CAPSULES
 				while (true) { //a loop to parse all CMDs in the packet

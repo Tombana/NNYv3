@@ -1,5 +1,5 @@
-#ifndef H_CAPSULE_VERSION
-#define H_CAPSULE_VERSION
+#ifndef H_CAPSULE_WORLDLIST
+#define H_CAPSULE_WORLDLIST
 
 //Relative path here; we are in a folder nammed "Casules/".
 #include "../Capsule.h"
@@ -12,7 +12,7 @@
 extern unsigned int g_client_version;
 extern database::connection g_db;
 
-class CapsuleVersion : public Capsule {
+class CapsuleWorldlist : public Capsule {
 public:
 	virtual void doit(SESSION session, Packet& capsule);
 }; //end of class

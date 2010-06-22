@@ -142,6 +142,20 @@ while (true) {
 			while (true) { //a loop to parse all CMDs in the capsule
 				switch ($CAPSULE->readWord()) {
 					//-------------------------
+					case PCKT_R_WORLD_EOF:
+						echo '[capsuleHandler] End of world server list'."\n";
+						break;
+					//-------------------------
+					case PCKT_R_WORLD:
+						echo '[capsuleHandler] New world server'."\n";
+						$ipv4 = $CAPSULE->readString();
+						$port = $CAPSULE->readDword();
+						$name = $CAPSULE->readString();
+						$online = $CAPSULE->readBool();
+							$status = ($online) ? 'online' : 'offline';
+						echo '-> '.$name.' ('.$ipv4.':'.$port.') is '.$status."\n";
+						break;
+					//-------------------------
 					case PCKT_W_ENTER_WORLD_ACK:
 						echo '[capsuleHandler] We got an ACK packet from the server about entering the world!'."\n";
 							switch ($CAPSULE->readAck()) {

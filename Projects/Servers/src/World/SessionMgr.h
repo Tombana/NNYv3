@@ -15,6 +15,9 @@ public:
 		ACE_SOCK_STREAM socket;
 		//Entering world
 		bool            logged; //Flag : is the character logged in (selected a character)
+		//Authentification
+		unsigned int    accountID; //Database account ID; needed for SQL queries and stuff like that
+		bool            authenticated; //Flag : is the character authenticated (login/password)
 		//Character infos
 		unsigned int    characterID; //Character ID (not the identity ID)
 		std::string     username; //Character in-game name

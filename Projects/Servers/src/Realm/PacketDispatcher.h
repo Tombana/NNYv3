@@ -14,6 +14,7 @@
 //Needed to setup the table of interest
 #include "Capsules/CapsuleVersion.h"
 #include "Capsules/CapsuleDebug.h"
+#include "Capsules/CapsuleWorldlist.h"
 
 /**
 * @brief Once a capsule is received, this will perform a quick check and dispatch it to the right capsule functionoid.

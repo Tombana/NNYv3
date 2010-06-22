@@ -278,11 +278,27 @@
 			Name="Capsules"
 			>
 			<File
+				RelativePath=".\Capsules\CapsuleDebug.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Capsules\CapsuleDebug.h"
 				>
 			</File>
 			<File
+				RelativePath=".\Capsules\CapsuleVersion.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Capsules\CapsuleVersion.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Capsules\CapsuleWorldlist.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Capsules\CapsuleWorldlist.h"
 				>
 			</File>
 		</Filter>

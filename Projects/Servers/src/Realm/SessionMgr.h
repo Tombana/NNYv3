@@ -28,16 +28,13 @@ public:
 		//Socket & packet buffer
 		Packet			buffer;
 		Socket			socket;
-		//Authentification
-		unsigned int    accountID; //Database account ID; needed for SQL queries and stuff like that
-		bool            authenticated; //Flag : is the character authenticated (login/password)
 		//Information
 		bool			isAWorldServer;
 		//I'm not scared for all other vars to be defined, because the first one that will be checked
 		//is `authenticated`, hence we perform checks on this only variable first, it would be smart to make
 		//sure it have a starting value. Here the user is not authenticated by default, so : false
 		//Oh and maybe some other flags if needed, let's list them:
-		s_session() : authenticated(false), isAWorldServer(false) {}
+		s_session() : isAWorldServer(false) {}
 	};
 	/**
 	* @brief Returns a pointer to the s_session structure stored in memory.

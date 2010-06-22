@@ -1,7 +1,7 @@
 /*****************************
 IMPORTANT, KEEP IT UP-TO-DATE
 *****************************/
-#define NNY_PROTOCOL_VERSION        38	   //Protocol version, useful when debugging
+#define NNY_PROTOCOL_VERSION        39	   //Protocol version, useful when debugging
 #define NNY_PROTOCOL_RANGE			0x0014 //Packet range from 0x00 to 0x14 are defined here
 //Next available PCKT CODE is       0x0015 //PCKT decimal = 21, usualy the next after NNY_PROTOCOL_RANGE
 
@@ -68,6 +68,7 @@ IMPORTANT, KEEP IT UP-TO-DATE
 //Params: [String]ipv4
 //Params: [Word]port
 //Params: [String]name
+//Params: [Bool]online
 #define PCKT_R_WORLD_EOF        0x0008 //PCKT decimal = 8
 //Info: Tell the client that the list of world servers is complete
 //Params: [None]
