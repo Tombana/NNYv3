@@ -1,10 +1,15 @@
 #ifndef H_PACKET
 #define H_PACKET
 
-#include <iostream> //TODO temp printHex()
+#include <iostream> //TODO: temp printHex()
 #include <string>
 #include "../Resources/resTypedef.h"
 
+//TODO: We should inline some of theses functions.
+//A assembly 'CALL' for theses small functions seems a little too much.
+//I'm pretty sure Visual C++ will optimise this class but I'm not sure about all compilers.
+//Hence in programming, coders are the rulers, I will make sure this class is inlined everytime :)
+//I'm just too lazy to do it right now, ahah :]
 class Packet {
 public:
     //Constructors/destructors

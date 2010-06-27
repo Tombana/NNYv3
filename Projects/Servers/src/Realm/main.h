@@ -28,6 +28,9 @@
 //Configuration file
 #include "config.h"
 
+//TODO: testing
+#include "WorldlinkMgr.h"
+
 //Functions
 void handle_signal(int signal);
 
