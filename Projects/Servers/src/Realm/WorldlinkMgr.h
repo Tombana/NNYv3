@@ -25,7 +25,7 @@ public:
 	void	createLink(WORLD_ID id);
 	void	destroyLink(WORLD_ID id);
 	bool	isOnline(WORLD_ID id);
-	Packet& getPacket();
+	Packet& getGeneratedPacket();
 private:
 	//===== Member structures
 	struct s_link {
@@ -40,7 +40,7 @@ private:
 	WorldlinkMgr();
 	~WorldlinkMgr();
 	void clearWorlds();
-	void genPacket();
+	void preparePacket();
 	//===== Member variables
 	std::map<WORLD_ID,s_link*>	m_data;
 	Packet						m_generatedPacket;

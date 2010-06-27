@@ -33,10 +33,10 @@ void WorldlinkMgr::loadWorldsFromDB(database::connection db) {
 		}
 		database::free_result(result);
 	}
-	genPacket(); //generate packet for later use
+	preparePacket(); //generate packet for later use
 }
 
-void WorldlinkMgr::genPacket() {
+void WorldlinkMgr::preparePacket() {
 	m_generatedPacket.clear();
 	std::map<WORLD_ID, s_link*>::iterator p;
 	for(p=m_data.begin(); p != m_data.end(); p++) {
@@ -50,18 +50,18 @@ void WorldlinkMgr::genPacket() {
 	m_generatedPacket.printHex();
 }
 
-Packet& WorldlinkMgr::getPacket() {
+Packet& WorldlinkMgr::getGeneratedPacket() {
 	return m_generatedPacket;
 }
 
 void WorldlinkMgr::createLink(WORLD_ID id) {
 	m_data[id]->online = true;
-	genPacket(); //regenerate packet for later use
+	preparePacket(); //regenerate packet for later use
 }
 
 void WorldlinkMgr::destroyLink(WORLD_ID id) {
 	m_data[id]->online = false;
-	genPacket(); //regenerate packet for later use
+	preparePacket(); //regenerate packet for later use
 }
 
 bool WorldlinkMgr::isOnline(WORLD_ID id) {
@@ -71,5 +71,5 @@ bool WorldlinkMgr::isOnline(WORLD_ID id) {
 void WorldlinkMgr::reloadWorldsFromDB(database::connection db) {
 	clearWorlds();
 	loadWorldsFromDB(db);
-	genPacket(); //regenerate packet for later use
+	preparePacket(); //regenerate packet for later use
 }
