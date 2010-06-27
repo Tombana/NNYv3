@@ -9,21 +9,23 @@
 #include "database.h"
 //Our containers
 #include <map>
-
-#include <iostream> //TODO: debugging
+//Generate packet
+#include "Packet.h"
+#include "resProtocol.h"
 
 class WorldlinkMgr {
 	///This make our class a singleton; read notes below if you need help using it.
 	friend class ACE_Singleton<WorldlinkMgr, ACE_Null_Mutex>;
 public:
 	///Detect added/removed servers from database & update in memory the destination IP/port if needed
-	void loadWorldsFromDB(database::connection db);
-	void reloadWorldsFromDB(database::connection db);
+	void	loadWorldsFromDB(database::connection db);
+	void	reloadWorldsFromDB(database::connection db);
 	//WARNING! createLink() / destroyLink() & isOnline() ids arn't checked for performance reasons!
 	//It means that you are supposed to know what you're doing when using this class.
-	void createLink(WORLD_ID id);
-	void destroyLink(WORLD_ID id);
-	bool isOnline(WORLD_ID id);
+	void	createLink(WORLD_ID id);
+	void	destroyLink(WORLD_ID id);
+	bool	isOnline(WORLD_ID id);
+	Packet& getPacket();
 private:
 	//===== Member structures
 	struct s_link {
@@ -38,13 +40,12 @@ private:
 	WorldlinkMgr();
 	~WorldlinkMgr();
 	void clearWorlds();
+	void genPacket();
 	//===== Member variables
-	//TODO: a bunch of containers here
 	std::map<WORLD_ID,s_link*>	m_data;
+	Packet						m_generatedPacket;
 };
 
 typedef ACE_Singleton<WorldlinkMgr, ACE_Null_Mutex> WORLDLINKMGR;
-//TODO: easier types
-//typedef	SessionMgr::s_session*					  SESSION;
 
 #endif
