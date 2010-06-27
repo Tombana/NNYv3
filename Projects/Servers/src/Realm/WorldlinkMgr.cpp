@@ -47,7 +47,6 @@ void WorldlinkMgr::preparePacket() {
 		m_generatedPacket.addBool(p->second->online); //online
 	}
 	m_generatedPacket.add<CMD>(PCKT_R_WORLD_EOF); //EOF
-	m_generatedPacket.printHex();
 }
 
 Packet& WorldlinkMgr::getGeneratedPacket() {
