@@ -1,5 +1,6 @@
 #include "InputHandler.h"
 #include "MainClient.h"
+#include "ThreadMessagesConstants.h"
 
 bool CInputHandler::windowClosing(Ogre::RenderWindow* rw)
 {

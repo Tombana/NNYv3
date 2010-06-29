@@ -2,6 +2,7 @@
 #include "MainClient.h"
 #include "WorldManager.h"
 #include "Camera.h"
+#include "ThreadMessagesConstants.h"
 
 CInputHandler::CInputHandler(CWorldManager& World, CCamera& Camera, Ogre::RenderWindow *window, Ogre::SceneManager *SceneMgr, Ogre::RaySceneQuery *RaySceneQuery) :
 	mWorld(World), mCamera(Camera), mWindow(window), mSceneMgr(SceneMgr), mRaySceneQuery(RaySceneQuery),

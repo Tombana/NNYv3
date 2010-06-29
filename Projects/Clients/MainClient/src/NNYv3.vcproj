@@ -342,6 +342,10 @@
 				RelativePath=".\ThreadMessages.h"
 				>
 			</File>
+			<File
+				RelativePath=".\ThreadMessagesConstants.h"
+				>
+			</File>
 			<Filter
 				Name="Network"
 				>

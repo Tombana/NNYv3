@@ -1,6 +1,6 @@
 #include "GUIHandler.h"
 #include "MainClient.h"
-
+#include "ThreadMessagesConstants.h"
 
 CGUIHandler::CGUIHandler(Ogre::RenderWindow *Window, Ogre::SceneManager *SceneMgr) :
 	mGUIRenderer(0), mGUISystem(0), mWindowManager(0), mRootWindow(0), WaitScreen(0), WaitScreenLabel(0)

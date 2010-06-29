@@ -2,6 +2,7 @@
 #include "MainClient.h"
 #include "GUIHandler.h"
 #include "resProtocol.h"
+#include "ThreadMessagesConstants.h"
 #include <iostream>
 
 CUIMain* CUIMain::mSingleton = 0;
