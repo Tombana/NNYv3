@@ -1,5 +1,6 @@
 #include "MainClient.h"
 #include "resProtocol.h"
+#include "ThreadMessagesConstants.h"
 
 int CMainClient::HandleWorldLogin(WORD Cmd, ByteArray& capsule)
 {

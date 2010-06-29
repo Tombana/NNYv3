@@ -1,6 +1,7 @@
 #include "MainClient.h"
 #include <iostream>
 #include "resProtocol.h"
+#include "ThreadMessagesConstants.h"
 
 CMainClient* CMainClient::mSingleton = 0;
 
