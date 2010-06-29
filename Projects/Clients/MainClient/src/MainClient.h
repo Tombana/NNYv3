@@ -76,6 +76,7 @@ private:
 		std::string IP;
 		WORD Port;
 		std::string Name;
+		bool Online;
 	};
 	std::vector<WORLDSERVER> m_Worlds;
 	int m_WorldServer; //Index of chosen server.
