@@ -214,6 +214,59 @@ int CGUIHandler::CloseWaitScreen(void)
 //===================
 // Login section
 //===================
+int CGUIHandler::DisplayWorldSelect(const std::vector<WORLDSERVER>& Servers)
+{
+	if( !DisplayWorldSelect(true) ){
+		//Load the window layout from file
+		CEGUI::Window *WorldSelectWindow = mWindowManager->loadWindowLayout("worldselect.layout");
+		//Subscribe the handler for the login and quit button
+		try{
+			CEGUI::Window *LoginButton = mWindowManager->getWindow("WorldSelectWindow/ButtonGo");
+			LoginButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::WorldSelectBtnClick, this));
+		}catch(CEGUI::UnknownObjectException){}
+		try{
+			CEGUI::Window *QuitButton = mWindowManager->getWindow("WorldSelectWindow/ButtonQuit");
+			QuitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::QuitBtnClick, this));
+		}catch(CEGUI::UnknownObjectException){}
+		//Attach the window to the root window so it's visible
+		mRootWindow->addChildWindow(WorldSelectWindow);
+	}
+	
+	//Add the world servers to the list
+	try{
+		CEGUI::Listbox* ListServers = static_cast<CEGUI::Listbox*>(mWindowManager->getWindow("WorldSelectWindow/ListWorlds"));
+		ListServers->resetList();
+		for( std::vector<WORLDSERVER>::const_iterator server = Servers.begin(); server != Servers.end(); ++server ){
+			CEGUI::String Text;
+			Text.append("[");
+			Text.append( server->Online ? "x" : " " );
+			Text.append( "] " );
+			Text.append( server->Name );
+			CEGUI::ListboxTextItem *listboxitem = new CEGUI::ListboxTextItem(Text);
+			listboxitem->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
+			listboxitem->setSelected(ListServers->getItemCount() == 0);
+			ListServers->addItem(listboxitem);
+		}
+	}catch(CEGUI::UnknownObjectException){}
+
+	return 1;
+}
+
+int CGUIHandler::DisplayWorldSelect(bool Enabled)
+{
+	try{ //See if the window already exists
+		CEGUI::Window *WorldSelectWindow = mWindowManager->getWindow("WorldSelectWindow");
+		WorldSelectWindow->setEnabled(Enabled);
+	}catch(CEGUI::UnknownObjectException){ return 0; };
+	return 1;
+}
+
+int CGUIHandler::CloseWorldSelect(void)
+{
+	mWindowManager->destroyWindow("WorldSelectWindow");
+	return 1;
+}
+
 int	CGUIHandler::DisplayLoginScreen(const std::string& RememberedUsername)
 {
 	bool CreateNew = false;
@@ -253,9 +306,25 @@ int	CGUIHandler::DisplayLoginScreen(const std::string& RememberedUsername)
 
 int CGUIHandler::CloseLoginScreen(void)
 {
-	CEGUI::Window *LoginWindow = mWindowManager->getWindow("LoginWindow");
-	LoginWindow->destroy();
+	mWindowManager->destroyWindow("LoginWindow");
 	return 1;
+}
+
+bool CGUIHandler::WorldSelectBtnClick(const CEGUI::EventArgs &e)
+{
+	int ServerIndex = -1;
+	try{
+		CEGUI::Listbox* ListServers = static_cast<CEGUI::Listbox*>(mWindowManager->getWindow("WorldSelectWindow/ListWorlds"));
+		CEGUI::ListboxItem* Item = ListServers->getFirstSelectedItem();
+		if( Item ) ServerIndex = ListServers->getItemIndex(Item);
+	}catch(CEGUI::UnknownObjectException){}catch(CEGUI::InvalidRequestException){}
+	if( ServerIndex == -1 ){
+		MsgBox("Please select a server!", "Error");
+	}else{
+		DisplayWorldSelect(false);
+		CMainClient::getSingleton().SendThreadMessage( new CMessageParamsConnectWorld(ServerIndex) );
+	}
+	return true;
 }
 
 bool CGUIHandler::LoginBtnClick(const CEGUI::EventArgs &e)

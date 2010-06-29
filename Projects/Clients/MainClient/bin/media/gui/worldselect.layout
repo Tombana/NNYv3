@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout >
+    <Window Type="TaharezLook/FrameWindow" Name="WorldSelectWindow" >
+        <Property Name="Text" Value="Server selection" />
+        <Property Name="TitlebarFont" Value="Commonwealth-10" />
+        <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+        <Property Name="TitlebarEnabled" Value="True" />
+        <Property Name="UnifiedAreaRect" Value="{{0.5,-200},{0.5,-250},{0.5,200},{0.5,250}}" />
+        <Window Type="TaharezLook/StaticText" Name="WorldSelectWindow/StaticInfo" >
+            <Property Name="Text" >Please select a server to play on.
+Characters are shared amongst all servers.</Property>
+            <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+            <Property Name="UnifiedAreaRect" Value="{{0,15},{0,35},{1,-15},{0,90}}" />
+        </Window>
+        <Window Type="TaharezLook/Listbox" Name="WorldSelectWindow/ListWorlds" >
+            <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+            <Property Name="UnifiedAreaRect" Value="{{0,15},{0,100},{1,-15},{1,-50}}" />
+        </Window>
+        <Window Type="TaharezLook/Button" Name="WorldSelectWindow/ButtonGo" >
+            <Property Name="Text" Value="Connect" />
+            <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+            <Property Name="UnifiedAreaRect" Value="{{1,-120},{1,-40},{1,-15},{1,-10}}" />
+        </Window>
+        <Window Type="TaharezLook/Button" Name="WorldSelectWindow/ButtonQuit" >
+            <Property Name="Text" Value="Quit" />
+            <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+            <Property Name="UnifiedAreaRect" Value="{{0,15},{1,-40},{0,120},{1,-10}}" />
+        </Window>
+    </Window>
+</GUILayout>

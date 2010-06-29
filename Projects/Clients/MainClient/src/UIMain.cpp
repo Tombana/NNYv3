@@ -46,6 +46,8 @@ int CUIMain::UIThread(void)
 		std::cerr << "[ERROR] An exception has occurred while loading Ogre: \n" << e.what() << std::endl;
     }
 	if( Success ){
+		mGUIHandler->DisplayWaitScreen("Loading... please wait");
+
 		//Setup physics
 
 		//Setup sound
@@ -129,7 +131,14 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 		case Message_NoWorld:
 			{
 				mGUIHandler->MsgBox("Unable to connect to the world server", "Error");
-				mGUIHandler->DisplayLoginScreen("");
+				mGUIHandler->DisplayWorldSelect(true);
+				mGUIHandler->CloseWaitScreen();
+			}
+			break;
+		case Message_DisplayWorldSelect:
+			{
+				CMessageParamsDisplayWorldSelect* servermsg = (CMessageParamsDisplayWorldSelect*)msg.params;
+				mGUIHandler->DisplayWorldSelect(servermsg->Servers);
 				mGUIHandler->CloseWaitScreen();
 			}
 			break;

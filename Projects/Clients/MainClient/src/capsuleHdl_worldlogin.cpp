@@ -12,15 +12,7 @@ int CMainClient::HandleWorldLogin(WORD Cmd, ByteArray& capsule)
 		case PCKT_W_WELCOME:
 			{
 			std::cout << "[capsuleHandler] Welcome from world server" << std::endl;
-			//It might be better to have a seperate function called SendLoginPacket
-			//and have it called from the CMainClient message loop instead of the networkthread
-			//sending it as response to the welcome packet.
-			ByteArray LoginPacket;
-			LoginPacket.addCmd(PCKT_C_AUTH);
-			LoginPacket.addString(m_Username);
-			LoginPacket.addString(m_Password);
-			LoginPacket.addBool(false); //Wether to kick the account that is logged in.
-			m_mainsocket << LoginPacket;
+			this->SendThreadMessage(Message_WorldConnected);
 			}
 			break;
 		//=====================================

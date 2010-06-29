@@ -27,6 +27,7 @@
 #endif
 
 #include "Callback.h"
+#include "Structures.h"
 
 class CGUIHandler
 {
@@ -65,6 +66,9 @@ public:
 	//===================
 	// Login section
 	//===================
+	int DisplayWorldSelect(const std::vector<WORLDSERVER>& Servers);
+	int DisplayWorldSelect(bool Enabled); //To enable/disable it
+	int CloseWorldSelect(void);
 	int DisplayLoginScreen(const std::string& RememberedUsername);
 	int CloseLoginScreen(void);
 
@@ -101,6 +105,7 @@ private:
 	//==========
 	//Login section
 	//==========
+	bool WorldSelectBtnClick(const CEGUI::EventArgs &e);
 	bool LoginBtnClick(const CEGUI::EventArgs &e);
 	bool AboutBtnClick(const CEGUI::EventArgs &e);
 };

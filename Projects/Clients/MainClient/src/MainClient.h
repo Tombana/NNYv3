@@ -37,10 +37,10 @@ private:
 	enum{ State_Loading = 0,
 		State_Quitting,
 		State_LoggingInRealm,
+		State_WorldSelectScreen,
+		State_SelectingWorld,
 		State_LoginScreen,
 		State_LoggingIn,
-		State_ServerSelectScreen,
-		State_SelectingServer,
 		State_CharSelectScreen,
 		State_SelectingChar,
 		State_LoadingIngame,
@@ -72,12 +72,6 @@ private:
 	//The version of this client
 	DWORD		m_Revision;
 	//The list of world servers (list gotten from realm server)
-	typedef struct WORLDSERVER{
-		std::string IP;
-		WORD Port;
-		std::string Name;
-		bool Online;
-	};
 	std::vector<WORLDSERVER> m_Worlds;
 	int m_WorldServer; //Index of chosen server.
 
