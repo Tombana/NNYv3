@@ -12,7 +12,7 @@ int CMainClient::HandleRealm(WORD Cmd, ByteArray& capsule)
 			std::cout << "[capsuleHandler] Welcome from realm server" << std::endl;
 			//Send version packet
 			ByteArray packetToSend;
-			packetToSend.addCmd(PCKT_C_REVISION);
+			packetToSend.addCmd(PCKT_C_VERSION);
 			packetToSend.add<DWORD>(m_Revision);
 			m_mainsocket << packetToSend;
 			}
@@ -51,6 +51,7 @@ int CMainClient::HandleRealm(WORD Cmd, ByteArray& capsule)
 			Server.IP = capsule.readString();
 			Server.Port = capsule.read<WORD>();
 			Server.Name = capsule.readString();
+			Server.Online = capsule.readBool();
 			m_Worlds.push_back(Server);
 			std::cout << "[capsuleHandler] World server: " << Server.IP.c_str() << ":" << Server.Port << " - " << Server.Name.c_str() << std::endl;
 			}

@@ -38,8 +38,6 @@ void CMainClient::HandlePackets(void)
 			//read a "~" (0x7E) byte firstly.
 			if (buffer.read<BYTE>() == 0x7E) { //[byte] Packet begining signature
 				DWORD length = buffer.read<DWORD>(); //we will need this later on so we know when we are done accumulating data
-				//BYTE nbCmds = buffer.read<BYTE>(); //might be usefull for debugging even if its useless now
-				buffer.read<BYTE>(); //still we must read it
 
 				//Is the length too big? We never know, some hackers could send a fake
 				//packet to force the server to put 1Go of trash in memory.
@@ -59,13 +57,13 @@ void CMainClient::HandlePackets(void)
 				//Okay now the interesting part
 				//is the [buffer data] (full size - packet header)
 				//greater OR equal the [capsule data] length we have been told earlier?
-				if (buffer.size()-6 >= length) {
+				if (buffer.size()-5 >= length) {
 					//Awesome we have enough bytes now :D
 					//Lets continue the "so waited" code part
-					//Copy the 6+length first bytes from the buffer to 'capsule'.
+					//Copy the 5+length first bytes from the buffer to 'capsule'.
 					ByteArray capsule;
-					std::string substring = buffer.getRaw().substr(6, length);
-					capsule.append(substring); //position to 6 and read length bytes
+					std::string substring = buffer.getRaw().substr(5, length);
+					capsule.append(substring); //position to 5 and read length bytes
 					//-----------------------------------------------
 					//PROCESS THE CAPSULE (switches and stuff)
 					while (true) { //a loop to parse all CMDs in the capsule
