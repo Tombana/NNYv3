@@ -13,7 +13,6 @@ typedef unsigned long  DWORD; //4 bytes : up to 0xFFFFFFFF
 //=============================
 typedef BYTE  ACK;      //Packet's acknowledgement codes
 typedef WORD  CMD;	    //Packet's command codes
-typedef DWORD WORLD_ID; //World servers unique identifier
 typedef WORD  PORT;		//A port will never be bigger than 65535
 
 #endif

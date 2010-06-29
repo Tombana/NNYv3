@@ -22,9 +22,9 @@ public:
 	void	reloadWorldsFromDB(database::connection db);
 	//WARNING! createLink() / destroyLink() & isOnline() ids arn't checked for performance reasons!
 	//It means that you are supposed to know what you're doing when using this class.
-	void	createLink(WORLD_ID id);
-	void	destroyLink(WORLD_ID id);
-	bool	isOnline(WORLD_ID id);
+	void	createLink(DWORD id);
+	void	destroyLink(DWORD id);
+	bool	isOnline(DWORD id);
 	Packet& getGeneratedPacket();
 private:
 	//===== Member structures
@@ -42,7 +42,7 @@ private:
 	void clearWorlds();
 	void preparePacket();
 	//===== Member variables
-	std::map<WORLD_ID,s_link*>	m_data;
+	std::map<DWORD,s_link*>		m_data;
 	Packet						m_generatedPacket;
 };
 

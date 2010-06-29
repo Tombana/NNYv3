@@ -8,7 +8,7 @@ WorldlinkMgr::~WorldlinkMgr() {
 }
 
 void WorldlinkMgr::clearWorlds() {
-	std::map<WORLD_ID, s_link*>::iterator p;
+	std::map<DWORD, s_link*>::iterator p;
 	for(p=m_data.begin(); p != m_data.end(); p++) {
 		delete p->second;
 	}
@@ -21,7 +21,7 @@ void WorldlinkMgr::loadWorldsFromDB(database::connection db) {
 		database::row row;
 		while (row = database::fetch_row(result)) {
 			//We do the conversion to integer only once and save it
-			WORLD_ID id = database::toInt(row[0]);
+			DWORD id = database::toInt(row[0]);
 			//We create a new link structure
 			m_data[id] = new s_link;
 			//We fill the structure
@@ -38,7 +38,7 @@ void WorldlinkMgr::loadWorldsFromDB(database::connection db) {
 
 void WorldlinkMgr::preparePacket() {
 	m_generatedPacket.clear();
-	std::map<WORLD_ID, s_link*>::iterator p;
+	std::map<DWORD, s_link*>::iterator p;
 	for(p=m_data.begin(); p != m_data.end(); p++) {
 		m_generatedPacket.add<CMD>(PCKT_R_WORLD); //CMD
 		m_generatedPacket.addString(p->second->ipv4); //ipv4
@@ -53,17 +53,17 @@ Packet& WorldlinkMgr::getGeneratedPacket() {
 	return m_generatedPacket;
 }
 
-void WorldlinkMgr::createLink(WORLD_ID id) {
+void WorldlinkMgr::createLink(DWORD id) {
 	m_data[id]->online = true;
 	preparePacket(); //regenerate packet for later use
 }
 
-void WorldlinkMgr::destroyLink(WORLD_ID id) {
+void WorldlinkMgr::destroyLink(DWORD id) {
 	m_data[id]->online = false;
 	preparePacket(); //regenerate packet for later use
 }
 
-bool WorldlinkMgr::isOnline(WORLD_ID id) {
+bool WorldlinkMgr::isOnline(DWORD id) {
 	return m_data[id]->online;
 }
 

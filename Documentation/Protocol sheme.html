@@ -1,0 +1,198 @@
+<html>
+
+<head>
+<title>Protocol sheme</title>
+<style type="text/css">
+<!--
+	.prephase_master {}
+	.prephase_slave {}
+	
+	.phase1_client { background-color:#CDAA7D; }
+	.phase1_server { background-color:#CDAA7D; }
+	.phase1_empty { background-color:#EEC591; }
+	.phase1_client_todo { background-color:#CDAA7D; color:red; }
+	.phase1_server_todo { background-color:#CDAA7D; color:red; }
+	
+    .phase2_client { background-color:#7AC5CD; }
+    .phase2_server { background-color:#7AC5CD; }
+	.phase2_empty { background-color:#8EE5EE; }
+	.phase2_client_todo { background-color:#7AC5CD; color:red; }
+	.phase2_server_todo { background-color:#7AC5CD; color:red; }
+-->
+</style>
+</head>
+
+<body vlink="blue" alink="blue" link="blue">
+<h1>Documentation: NNYv3 protocol sheme</h1>
+<ul>
+	<strong><u>Protocol layers</u></strong>
+	<li>Pre-phase: <a href="#pre-phase">All the World servers connect and identify to the Realm servers</a></li>
+	<li>Setup phase 1: <a href="#phase1">The Client connect to the Realm server</a></li>
+	<li>Setup phase 2: <a href="#phase2">The Client connect to the World server</a></li>
+	<li>Real-time frontend: <a href="#realtime_1">The Client and the World server exchange real-time informations</a></li>
+	<li>Real-time backend: <a href="#realmtime_2">The Realm servers and World servers exchange real-time informations</a></li>
+	<br/>
+	<strong><u>See also</u></strong>
+	<li>Development notes: <a href="#notes">Notes section</a></li>
+	<li>See the resource protocol file by <a href="../Projects/Resources/resProtocol.h">clicking here</a></li>
+	<li>Project page: <a href="http://github.com/nitrix/NNYv3">Follow us on Github</a>
+</ul>
+
+Packets in <font color="red">RED</font> aren't yet implemented.
+
+<!-- Table for Realm/World server communications -->
+<a name="pre-phase"/>
+<h3>Pre-phase</h3>
+	Comming soon
+	
+<!-- Table for Client/Realm server communications -->
+<a name="phase1"/>
+<h3>Setup phase 1</h3>
+<table bgcolor="#FFD39B" style="border-color:#8B7355; border-style:outset;">
+	<tr>
+		<td align="center"><strong>Client</strong></td>
+		<td align="center"><strong>Realm server</strong></td>
+	</tr>
+	<tr>
+		<td colspan=2 align="center"><u>Introduction</u></td>
+	</tr>
+	<tr>
+		<td class="phase1_empty"></td>
+		<td class="phase1_server">PCKT_R_WELCOME</td>
+	</tr>
+	<tr>
+		<td colspan=2 align="center"><br/><u>Update the client</u><br/><i>(can be skipped although it's not recommended)</i></td>
+	</tr>
+	<tr>
+		<td class="phase1_client">PCKT_C_VERSION</td>
+		<td class="phase1_empty"></td>
+	</tr>
+	<tr>
+		<td class="phase1_empty"></td>
+		<td class="phase1_server">PCKT_R_DOWNLOAD<br/><i>as many times as needed, optional</i></td>
+	</tr>
+	<tr>
+		<td class="phase1_empty"></td>
+		<td class="phase1_server">PCKT_R_DOWNLOAD_EOF</td>
+	</tr>
+	<tr>
+		<td colspan=2 align="center"><br/><u>Pick up a server</u></td>
+	</tr>
+	<tr>
+		<td class="phase1_client">PCKT_C_GETWORLDLIST</td>
+		<td class="phase1_empty"></td>
+	</tr>
+	<tr>
+		<td class="phase1_empty"></td>
+		<td class="phase1_server">PCKT_R_WORLD<br/><i>as many times as needed, optional</i></td>
+	</tr>
+    <tr>
+		<td class="phase1_empty"></td>
+		<td class="phase1_server">PCKT_R_WORLD_EOF</td>
+	</tr>
+	   <tr>
+		<td class="phase1_empty"></td>
+		<td class="phase1_server">* Close socket *</td>
+	</tr>
+</table>
+
+<a name="phase2"/>
+<h3>Setup phase 2</h3>
+<!-- Table for Client/World server communications -->
+<table bgcolor="#98F5FF" style="border-color:#53868B; border-style:outset;">
+	<tr>
+		<td align="center"><strong>Client</strong></td>
+		<td align="center"><strong>World server</strong></td>
+	</tr>
+	<tr>
+		<td colspan=2 align="center"><u>Introduction</u></td>
+	</tr>
+	<tr>
+		<td class="phase2_empty"></td>
+		<td class="phase2_server_todo">PCKT_W_WELCOME</td>
+	</tr>
+	<tr>
+		<td colspan=2 align="center"><br/><u>Authentication</u></td>
+	</tr>
+	<tr>
+		<td class="phase2_client_todo">PCKT_C_AUTH</td>
+		<td class="phase2_empty"></td>
+	</tr>
+	<tr>
+		<td class="phase2_empty"></td>
+		<td class="phase2_server_todo">PCKT_W_AUTH_ACK</td>
+	</tr>
+	<tr>
+		<td colspan=2 align="center"><u><br/>Character list</u></td>
+	</tr>
+	<tr>
+		<td class="phase2_client_todo">PCKT_C_GETCHARLIST</td>
+		<td class="phase2_empty"></td>
+	</tr>
+	<tr>
+		<td class="phase2_empty"></td>
+		<td class="phase2_server_todo">PCKT_W_CHARLIST_ADD<br/><i>as many times as needed, optional</i></td>
+	</tr>
+	<tr>
+		<td class="phase2_empty"></td>
+		<td class="phase2_server_todo">PCKT_W_CHARLIST_EOF</td>
+	</tr>
+	<tr>
+		<td colspan=2 align="center"><u><br/>Character management</u><br/><i>(this step is optional, there's two choices possible)</i></td>
+	</tr>
+	<tr>
+		<td class="phase2_client_todo">(1) PCKT_C_CREATE_CHAR<br/></td>
+		<td class="phase2_empty"></td>
+	</tr>
+	<tr>
+		<td class="phase2_empty"></td>
+		<td class="phase2_server_todo">PCKT_W_CREATE_CHAR_ACK</td>
+	</tr>
+	<tr>
+		<td class="phase2_client_todo">(2) PCKT_C_DELETECHAR</td>
+		<td class="phase2_empty"></td>
+	</tr>
+	<tr>
+		<td class="phase2_empty"></td>
+		<td class="phase2_server_todo">(returns nothing)</td>
+	</tr>
+	<tr>
+		<td colspan=2 align="center"><u><br/>Prepare to enter the world</u><br/><i>(this packet should be sent only if required)</i></td>
+	</tr>
+	<tr>
+		<td class="phase2_client_todo">PCKT_C_KICK_GHOST</td>
+		<td class="phase2_empty"></td>
+	</tr>
+	<tr>
+		<td colspan=2 align="center"><br/><u>Then enter the world</u></td>
+	</tr>
+	<tr>
+		<td class="phase2_client_todo">PCKT_C_ENTER_WORLD</td>
+		<td class="phase2_empty"></td>
+	</tr>
+	<tr>
+		<td class="phase2_empty"></td>
+		<td class="phase2_server_todo">PCKT_W_ENTER_WORLD_ACK</td>
+	</tr>
+	<tr>
+		<td class="phase2_empty"></td>
+		<td class="phase2_server_todo">PCKT_W_PLAYER_DATA</td>
+	</tr>
+</table>			  
+<a name="notes"/> 
+<h3>Notes section</h3>
+<pre>
+<strong>NitriX:</strong> Theses packets are subject to MAJOR modifications and must not in any case be
+considered as their final version. It's just some ideas I had on how we could implement
+things; nothing's sure yet and I really am open to suggestions or improvements if it can
+makes the engine better.
+
+<strong>Tombana:</strong> For the movement/deplacement packets: what about just one PCKT_C_MOVEMENT and
+then the next byte/word can specify what type of movement, like jump/wasd/turn and so on.
+So kind a like a subcommand.
+</pre>
+
+<a href="#">Go back to the begining</a><br/>
+</body>
+
+</html>
