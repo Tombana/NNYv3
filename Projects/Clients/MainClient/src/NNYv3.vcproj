@@ -177,10 +177,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\Camera.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Log.cpp"
 				>
 			</File>
@@ -231,6 +227,10 @@
 			<Filter
 				Name="UI"
 				>
+				<File
+					RelativePath=".\Camera.cpp"
+					>
+				</File>
 				<File
 					RelativePath=".\ConsoleOverlay.cpp"
 					>
@@ -319,10 +319,6 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Camera.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Log.h"
 				>
 			</File>
@@ -363,6 +359,10 @@
 				>
 				<File
 					RelativePath=".\Callback.h"
+					>
+				</File>
+				<File
+					RelativePath=".\Camera.h"
 					>
 				</File>
 				<File
