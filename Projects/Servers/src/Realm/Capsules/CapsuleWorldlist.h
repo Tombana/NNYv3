@@ -8,6 +8,9 @@
 #include "database.h"
 #include "Packet.h"
 #include "resProtocol.h"
+#include "resTypedef.h"
+//Special includes for handling world server list
+#include "../WorldlinkMgr.h"
 
 extern unsigned int g_client_version;
 extern database::connection g_db;

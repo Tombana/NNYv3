@@ -62,7 +62,13 @@ int main(int argc, char **argv) {
 		}
 		database::free_result(db_result);
 	}
-	
+
+	//=========================================
+    // SETTING UP WORLDLINK MANAGER
+    //=========================================
+	WORLDLINKMGR::instance()->loadWorldsFromDB(g_db);
+	std::cout << "World server list loaded." << std::endl;
+
 	//=========================================
     // SETTING UP : `ACE_Acceptor`
     //=========================================

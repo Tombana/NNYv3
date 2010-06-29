@@ -149,7 +149,7 @@ while (true) {
 					case PCKT_R_WORLD:
 						echo '[capsuleHandler] New world server'."\n";
 						$ipv4 = $CAPSULE->readString();
-						$port = $CAPSULE->readDword();
+						$port = $CAPSULE->readWord();
 						$name = $CAPSULE->readString();
 						$online = $CAPSULE->readBool();
 							$status = ($online) ? 'online' : 'offline';
@@ -228,6 +228,7 @@ while (true) {
 					//-------------------------
 					case PCKT_R_SERVER_GONE:
 						echo '[capsuleHandler] Server is gone, ahah!'."\n";
+						exit();
 						break;
 					//-------------------------
 					case PCKT_R_WELCOME:
