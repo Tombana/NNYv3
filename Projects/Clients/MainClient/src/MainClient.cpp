@@ -64,6 +64,20 @@ int CMainClient::Run(void)
 			case Message_RealmLoaded:
 				if( m_Worlds.empty() ) m_ui.SendThreadMessage(new CMessageParamsMsgBox("Could not get world server info from realm server!", "Error"));
 				//Signal 'Done Loading' to GUI and so on
+				m_state = State_WorldSelectScreen;
+				m_ui.SendThreadMessage(new CMessageParamsDisplayWorldSelect(m_Worlds));
+				break;
+			case Message_ConnectWorld:
+				{
+					CMessageParamsConnectWorld* worldmsg = (CMessageParamsConnectWorld*)msg.params;
+					if( m_state != State_WorldSelectScreen ) break;
+					m_WorldServer = worldmsg->ServerIndex;
+					m_state = State_SelectingWorld;
+					m_ui.SendThreadMessage(new CMessageParamsDisplayWaitScreen("Connecting..."));
+					StartNetworkThread();
+				}
+				break;
+			case Message_WorldConnected:
 				m_state = State_LoginScreen;
 				m_ui.SendThreadMessage(new CMessageParamsDisplayLoginScreen(m_Username));
 				break;
@@ -75,7 +89,12 @@ int CMainClient::Run(void)
 					m_Password = loginmsg->Password;
 					m_state = State_LoggingIn;
 					m_ui.SendThreadMessage(new CMessageParamsDisplayWaitScreen("Logging in..."));
-					StartNetworkThread();
+					ByteArray LoginPacket;
+					LoginPacket.addCmd(PCKT_C_AUTH);
+					LoginPacket.addString(m_Username);
+					LoginPacket.addString(m_Password);
+					LoginPacket.addBool(false); //Wether to kick the account that is logged in.
+					m_mainsocket << LoginPacket;
 				}
 				break;
 			case Message_KickAccount:
@@ -105,6 +124,7 @@ int CMainClient::Run(void)
 			//Forwards: (Since threadmessages are 1-reader-1-writer the network thread can't send directly to gui thread)
 			//
 			case Message_NoWorld:
+				m_state = State_WorldSelectScreen;
 			case Message_CloseWaitScreen:
 			case Message_LoginResponse:
 			case Message_DisplayCharSelect:
@@ -151,7 +171,7 @@ void* CMainClient::NetworkThread(void)
 				std::cout << "[ERROR] Could not connect to a realm server.\n";
 			}
 			break;
-		case State_LoggingIn:
+		case State_SelectingWorld:
 			{
 				WORLDSERVER& Server = m_Worlds[m_WorldServer];
 				if( Server.IP.empty() || !Server.Port || !m_mainsocket.socket_connect(Server.IP, Server.Port)){

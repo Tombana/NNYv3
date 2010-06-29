@@ -61,7 +61,6 @@ int CMainClient::HandleRealm(WORD Cmd, ByteArray& capsule)
 		// PCKT_R_WORLD_EOF
 		//=====================================
 		case PCKT_R_WORLD_EOF:
-			m_state = State_LoginScreen;
 			this->SendThreadMessage(Message_RealmLoaded);
 			break;
 		default:

@@ -15,9 +15,11 @@ static const int	Message_Quit		=	100;	//The user pressed close. This does not ne
 //To the main thread
 //
 static const int	Message_RealmLoaded	=	 999;	//parameters: none
-static const int	Message_Login		=	1000;	//parameters: Username, Password
-static const int	Message_KickAccount	=	1001;	//parameters: bool (true kicks and continues, false will close connection)
-static const int	Message_CharSelect	=	1002;	//parameters: slot
+static const int	Message_ConnectWorld=	1000;	//parameters: int ServerIndex
+static const int	Message_WorldConnected=	1001;	//parameters: none
+static const int	Message_Login		=	1002;	//parameters: Username, Password
+static const int	Message_KickAccount	=	1003;	//parameters: bool (true kicks and continues, false will close connection)
+static const int	Message_CharSelect	=	1004;	//parameters: slot
 //
 //To the GUI thread
 //
@@ -26,7 +28,7 @@ static const int	Message_DisplayWaitScreen	=	2001;	//parameters: text	(Any previ
 static const int	Message_CloseWaitScreen		=	2002;	//parameters: none	(Closes any previous wait screen)
 //Login procedure
 static const int	Message_NoWorld				=	2009;	//parameters: none
-static const int	Message_DisplayWorldSelect	=	2010;
+static const int	Message_DisplayWorldSelect	=	2010;	//parameters: vector<WORLDSERVER>& Serverlist
 static const int	Message_DisplayLoginScreen	=	2012;	//parameters: RememberedUsername
 static const int	Message_LoginResponse		=	2013;	//parameters: ACK_ code
 static const int	Message_DisplayCharSelect	=	2014;	//parameters: vector<CharacterInfo>, last_selected_char
@@ -42,6 +44,13 @@ static const int	MsgBoxBtnsYesNo	= 1;
 //
 //Messages to the main thread
 //
+
+class CMessageParamsConnectWorld : public CMessageParams{
+public:
+	CMessageParamsConnectWorld(int serverindex) : CMessageParams(Message_ConnectWorld), ServerIndex(serverindex) {}
+	int ServerIndex;
+};
+
 class CMessageParamsLogin : public CMessageParams{
 public:
 	CMessageParamsLogin(std::string username, std::string password) : CMessageParams(Message_Login),
@@ -77,6 +86,12 @@ public:
 };
 
 // Login procedure
+
+class CMessageParamsDisplayWorldSelect : public CMessageParams{
+public:
+	CMessageParamsDisplayWorldSelect(std::vector<WORLDSERVER>& servers) : CMessageParams(Message_DisplayWorldSelect), Servers(servers) {}
+	std::vector<WORLDSERVER>& Servers;
+};
 
 class CMessageParamsDisplayLoginScreen : public CMessageParams{
 public:

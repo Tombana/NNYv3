@@ -2,6 +2,13 @@
 
 #include <string>
 
+struct WORLDSERVER{
+	std::string IP;
+	unsigned short Port;
+	std::string Name;
+	bool Online;
+};
+
 struct CharacterInfo{
 	unsigned char	Slot;
 	std::string		Name;
