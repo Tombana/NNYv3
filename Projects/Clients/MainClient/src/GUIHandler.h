@@ -85,6 +85,9 @@ private:
 
 	bool QuitBtnClick(const CEGUI::EventArgs &e);
 
+	static const int DefaultButtonWidth = 100;
+	static const int DefaultButtonHeight = 30;
+	const CEGUI::UVector2 DefaultButtonSize;
 	//==========
 	//Message boxes
 	//==========
