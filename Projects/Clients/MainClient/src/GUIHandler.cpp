@@ -3,7 +3,8 @@
 #include "ThreadMessagesConstants.h"
 
 CGUIHandler::CGUIHandler(Ogre::RenderWindow *Window, Ogre::SceneManager *SceneMgr) :
-	mGUIRenderer(0), mGUISystem(0), mWindowManager(0), mRootWindow(0), WaitScreen(0), WaitScreenLabel(0)
+	mGUIRenderer(0), mGUISystem(0), mWindowManager(0), mRootWindow(0),
+		DefaultButtonSize(CEGUI::UDim(0, DefaultButtonWidth), CEGUI::UDim(0, DefaultButtonHeight)), WaitScreen(0), WaitScreenLabel(0)
 {
 	try{
 #ifdef OLD_CEGUI
@@ -13,7 +14,7 @@ CGUIHandler::CGUIHandler(Ogre::RenderWindow *Window, Ogre::SceneManager *SceneMg
 		mGUIRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
 		mGUISystem = CEGUI::System::getSingletonPtr();
 #endif
-		
+
 		CEGUI::Logger::getSingleton().setLoggingLevel(CEGUI::Informative);
 
 #ifdef OLD_CEGUI
@@ -43,12 +44,12 @@ CGUIHandler::CGUIHandler(Ogre::RenderWindow *Window, Ogre::SceneManager *SceneMg
 		//When setting the size you must create a UDim object to tell it what size it should be.
 		//The first parameter is the relative size of the object in relation to its parent.
 		//The second parameter is the absolute size of the object (in pixels).
-		//The important thing to realize is that you are only supposed to set one of the two parameters to UDim.
-		//The other parameter must be 0. So in this case we have made a button which is 15% as wide as its parent and 5% as tall.
-		//If we wanted to specify that it should be 20 pixels by 5 pixels,
-		//we would do that by setting the second parameter in both of the UDim calls to be 20 and 5 respectively.
-		btnQuit->setSize(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.05, 0)));
-		btnQuit->setPosition(CEGUI::UVector2(CEGUI::UDim(0.85, 0), CEGUI::UDim(0,0)));
+		//The important thing to realize is that usually you are only supposed to set one of the two parameters to UDim.
+		//The other parameter must then be 0.
+		//If you want something to be 100 px from the right side of the screen, you would set the relative
+		//parameter to 1 (completely right) and the absolute parameter to -100.
+		btnQuit->setSize(DefaultButtonSize);
+		btnQuit->setPosition(CEGUI::UVector2(CEGUI::UDim(1, -DefaultButtonWidth), CEGUI::UDim(0,0)));
 
 		//Set the function that handles the quit button
 		btnQuit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::QuitBtnClick, this));
@@ -108,7 +109,7 @@ bool CGUIHandler::MessageBoxBtnNoClick(const CEGUI::EventArgs &e)
 //The message box handler calls the callback function if one is specified
 bool CGUIHandler::MessageBoxClick(const CEGUI::EventArgs &e, int Button)
 {
-	CEGUI::WindowEventArgs& arg = *(CEGUI::WindowEventArgs*)&e;
+	const CEGUI::WindowEventArgs& arg = static_cast<const CEGUI::WindowEventArgs&>(e);
 	CEGUI::Window *MsgBox = arg.window->getParent();
 	CallbackFunction* callback = (CallbackFunction*)MsgBox->getUserData();
 	bool Destroy = true;
@@ -134,9 +135,11 @@ CEGUI::Window* CGUIHandler::MsgBox(std::string Text, std::string Title, int Butt
 	CEGUI::Window *Label = mWindowManager->createWindow("TaharezLook/StaticText");
 
 	Label->setProperty("HorzFormatting", "WordWrapLeftAligned");
-	Label->setArea(CEGUI::URect(CEGUI::UDim(0.03,0), CEGUI::UDim(0.15,0), CEGUI::UDim(0.97,0), CEGUI::UDim(0.80,0)));
-	MsgBox->setSize(CEGUI::UVector2(CEGUI::UDim(0.40,0), CEGUI::UDim(0.30,0)));
-	MsgBox->setPosition(CEGUI::UVector2(CEGUI::UDim(0.30,0), CEGUI::UDim(0.35,0)));
+	Label->setArea(CEGUI::URect(CEGUI::UDim(0.0,10), CEGUI::UDim(0,28), CEGUI::UDim(1,-10), CEGUI::UDim(1,-40)));
+	
+	MsgBox->setSize(CEGUI::UVector2(CEGUI::UDim(0,360), CEGUI::UDim(0,160)));
+	MsgBox->setMinSize(MsgBox->getSize());
+	MsgBox->setPosition(CEGUI::UVector2(CEGUI::UDim(0.5,-180), CEGUI::UDim(0.5,-130)));
 
 	MsgBox->setText(Title);
 	Label->setText(Text);
@@ -148,10 +151,10 @@ CEGUI::Window* CGUIHandler::MsgBox(std::string Text, std::string Title, int Butt
 	if( Buttons == MsgBoxBtnsYesNo ){
 		CEGUI::Window *ButtonYes = mWindowManager->createWindow("TaharezLook/Button");
 		CEGUI::Window *ButtonNo = mWindowManager->createWindow("TaharezLook/Button");
-		ButtonYes->setSize(CEGUI::UVector2(CEGUI::UDim(0.30,0), CEGUI::UDim(0.14,0)));
-		ButtonYes->setPosition(CEGUI::UVector2(CEGUI::UDim(0.18,0), CEGUI::UDim(0.83,0)));
-		ButtonNo->setSize(CEGUI::UVector2(CEGUI::UDim(0.30,0), CEGUI::UDim(0.14,0)));
-		ButtonNo->setPosition(CEGUI::UVector2(CEGUI::UDim(0.52,0), CEGUI::UDim(0.83,0)));
+		ButtonYes->setSize(DefaultButtonSize);
+		ButtonYes->setPosition(CEGUI::UVector2(CEGUI::UDim(0,50), CEGUI::UDim(1,-35)));
+		ButtonNo->setSize(DefaultButtonSize);
+		ButtonNo->setPosition(CEGUI::UVector2(CEGUI::UDim(1,-150), CEGUI::UDim(1,-35)));
 		ButtonYes->setText("Yes");
 		ButtonNo->setText("No");
 		ButtonYes->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::MessageBoxBtnYesClick, this));
@@ -160,8 +163,8 @@ CEGUI::Window* CGUIHandler::MsgBox(std::string Text, std::string Title, int Butt
 		MsgBox->addChildWindow(ButtonNo);
 	}else{
 		CEGUI::Window *ButtonOk = mWindowManager->createWindow("TaharezLook/Button");
-		ButtonOk->setSize(CEGUI::UVector2(CEGUI::UDim(0.40,0), CEGUI::UDim(0.14,0)));
-		ButtonOk->setPosition(CEGUI::UVector2(CEGUI::UDim(0.30,0), CEGUI::UDim(0.83,0)));
+		ButtonOk->setSize(DefaultButtonSize);
+		ButtonOk->setPosition(CEGUI::UVector2(CEGUI::UDim(0.5,-(DefaultButtonWidth/2)), CEGUI::UDim(1,-35)));
 		ButtonOk->setText("Ok");
 		ButtonOk->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::MessageBoxBtnOkClick, this));
 		MsgBox->addChildWindow(ButtonOk);
@@ -175,9 +178,10 @@ int	CGUIHandler::LoadWaitScreen(void)
 	WaitScreenLabel = mWindowManager->createWindow("TaharezLook/StaticText");
 
 	WaitScreenLabel->setProperty("HorzFormatting", "WordWrapLeftAligned");
-	WaitScreenLabel->setArea(CEGUI::URect(CEGUI::UDim(0.03,0), CEGUI::UDim(0.15,0), CEGUI::UDim(0.97,0), CEGUI::UDim(0.80,0)));
-	WaitScreen->setSize(CEGUI::UVector2(CEGUI::UDim(0.40,0), CEGUI::UDim(0.25,0)));
-	WaitScreen->setPosition(CEGUI::UVector2(CEGUI::UDim(0.30,0), CEGUI::UDim(0.35,0)));
+	WaitScreenLabel->setArea(CEGUI::URect(CEGUI::UDim(0.0,10), CEGUI::UDim(0,28), CEGUI::UDim(1,-10), CEGUI::UDim(1,-40)));
+	WaitScreen->setSize(CEGUI::UVector2(CEGUI::UDim(0,360), CEGUI::UDim(0,160)));
+	WaitScreen->setMinSize(WaitScreen->getSize());
+	WaitScreen->setPosition(CEGUI::UVector2(CEGUI::UDim(0.5,-180), CEGUI::UDim(0.5,-130)));
 
 	WaitScreen->setText("Please wait");
 	WaitScreenLabel->setText("Please wait");
@@ -217,19 +221,18 @@ int CGUIHandler::CloseWaitScreen(void)
 int CGUIHandler::DisplayWorldSelect(const std::vector<WORLDSERVER>& Servers)
 {
 	if( !DisplayWorldSelect(true) ){
-		//Load the window layout from file
-		CEGUI::Window *WorldSelectWindow = mWindowManager->loadWindowLayout("worldselect.layout");
-		//Subscribe the handler for the login and quit button
 		try{
+			//Load the window layout from file
+			CEGUI::Window *WorldSelectWindow = mWindowManager->loadWindowLayout("worldselect.layout");
+			//WorldSelectWindow->setMinSize( CEGUI::UVector2( CEGUI::UDim(0, 400), CEGUI::UDim(0, 400) ) );
+			//Subscribe the handler for the login and quit button
 			CEGUI::Window *LoginButton = mWindowManager->getWindow("WorldSelectWindow/ButtonGo");
 			LoginButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::WorldSelectBtnClick, this));
-		}catch(CEGUI::UnknownObjectException){}
-		try{
 			CEGUI::Window *QuitButton = mWindowManager->getWindow("WorldSelectWindow/ButtonQuit");
 			QuitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::QuitBtnClick, this));
+			//Attach the window to the root window so it's visible
+			mRootWindow->addChildWindow(WorldSelectWindow);
 		}catch(CEGUI::UnknownObjectException){}
-		//Attach the window to the root window so it's visible
-		mRootWindow->addChildWindow(WorldSelectWindow);
 	}
 	
 	//Add the world servers to the list
@@ -275,23 +278,22 @@ int	CGUIHandler::DisplayLoginScreen(const std::string& RememberedUsername)
 		LoginWindow->setEnabled(true);
 	}catch(CEGUI::UnknownObjectException){ CreateNew = true; };
 	if( CreateNew ){
-		//Load the window layout from file
-		CEGUI::Window *LoginWindow = mWindowManager->loadWindowLayout("loginscreen.layout");
-		//Set the password box to be masked
-		CEGUI::Editbox *Password = static_cast<CEGUI::Editbox*>(mWindowManager->getWindow("LoginWindow/Password"));
-		Password->setMaskCodePoint('*');
-		Password->setTextMasked(true);
-		//Subscribe the handler for the login and about button
 		try{
+			//Load the window layout from file
+			CEGUI::Window *LoginWindow = mWindowManager->loadWindowLayout("loginscreen.layout");
+			LoginWindow->setMinSize( CEGUI::UVector2( CEGUI::UDim(0, 200), CEGUI::UDim(0, 300) ) );
+			//Set the password box to be masked
+			CEGUI::Editbox *Password = static_cast<CEGUI::Editbox*>(mWindowManager->getWindow("LoginWindow/Password"));
+			Password->setMaskCodePoint('*');
+			Password->setTextMasked(true);
+			//Subscribe the handler for the login and about button
 			CEGUI::Window *LoginButton = mWindowManager->getWindow("LoginWindow/ButtonLogin");
 			LoginButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::LoginBtnClick, this));
-		}catch(CEGUI::UnknownObjectException){}
-		try{
 			CEGUI::Window *AboutButton = mWindowManager->getWindow("LoginWindow/ButtonAbout");
 			AboutButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&CGUIHandler::AboutBtnClick, this));
+			//Attach the window to the root window so it's visible
+			mRootWindow->addChildWindow(LoginWindow);
 		}catch(CEGUI::UnknownObjectException){}
-		//Attach the window to the root window so it's visible
-		mRootWindow->addChildWindow(LoginWindow);
 	}
 	
 	//Set the remembered username
