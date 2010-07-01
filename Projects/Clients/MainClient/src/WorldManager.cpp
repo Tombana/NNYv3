@@ -12,7 +12,7 @@ CWorldManager::~CWorldManager(void)
 void CWorldManager::Cleanup(void)
 {
 	for( EntityList::iterator ent = mEntities.begin(); ent != mEntities.end(); ++ent ){
-		delete *ent;
+		delete ent->second;
 	}
 	mEntities.clear();
 }
@@ -41,7 +41,9 @@ CLocalPlayer* CWorldManager::CreateLocalPlayer(Ogre::SceneNode* Node)
 {
 	if( LocalPlayer != 0 ) return LocalPlayer; //Already exists
 	LocalPlayer = new CLocalPlayer(Node);
-	mEntities.push_back( LocalPlayer );
+	//mEntities.push_back( LocalPlayer );
+	//TODO: Find a solution: there is no known identifier yet so how to add it to the list
+	mEntities[-1] = LocalPlayer;
 	return LocalPlayer;
 }
 
@@ -68,29 +70,40 @@ CEntity* CWorldManager::CreateEntity(EntityType Type, unsigned int Identifier, O
 	}
 	if( ret ){
 		ret->Identifier = Identifier;
-		mEntities.push_back( ret );
+		mEntities[Identifier] = ret;
 	}
 	return ret;
+}
+
+void CWorldManager::DestroyEntity(unsigned int Identifier)
+{
+	if( !Identifier ) return;
+	EntityList::iterator ent = mEntities.find(Identifier);
+	if( ent != mEntities.end() ){
+		delete ent->second;
+		mEntities.erase(ent);
+	}
+	return;
 }
 
 void CWorldManager::DestroyEntity(CEntity* Entity)
 {
 	if( !Entity ) return;
+	//DestroyEntity(Entity->Identifier);
 	for( EntityList::iterator ent = mEntities.begin(); ent != mEntities.end(); ++ent ){
-		if( *ent == Entity ){
-			delete *ent;
+		if( ent->second == Entity ){
 			mEntities.erase(ent);
 			break;
 		}
 	}
+	delete Entity;
 	return;
 }
 
 CEntity* CWorldManager::GetEntityFromIdentifier(unsigned int Identifier)
 {
 	if( !Identifier ) return 0;
-	for( EntityList::iterator ent = mEntities.begin(); ent != mEntities.end(); ++ent ){
-		if( (*ent)->Identifier == Identifier ) return *ent;
-	}
+	const EntityList::iterator entity = mEntities.find(Identifier);
+	if( entity != mEntities.end() ) return entity->second;
 	return 0;
 }

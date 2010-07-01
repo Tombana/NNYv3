@@ -7,7 +7,7 @@
 #include "Player.h"
 #include "Monster.h"
 #include "LocalPlayer.h"
-#include <list>
+#include <map>
 
 class CWorldManager
 {
@@ -26,13 +26,13 @@ public:
 	CNpc* CreateNPC(unsigned int Identifier, Ogre::SceneNode *Node);
 	CLocalPlayer* CreateLocalPlayer(Ogre::SceneNode* Node);
 
+	void DestroyEntity(unsigned int Identifier);
 	void DestroyEntity(CEntity* ent);
 
 	CEntity* GetEntityFromIdentifier(unsigned int Identifier);
 
-	//TODO: Should this be optimized to a binary-searchable list?
 	//TODO: Should the entity list have mutex protection?
-	typedef std::list<CEntity*> EntityList;
+	typedef std::map<unsigned int,CEntity*> EntityList;
 	EntityList	mEntities;
 	CLocalPlayer* LocalPlayer;
 
