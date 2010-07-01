@@ -5,24 +5,33 @@
 #include <iostream>
 
 //ACE library includes
-//#include "ace/OS.h"
-#include "ace/Thread.h"
 #include "ace/INET_Addr.h"
 #include "ace/SOCK_Acceptor.h"
 #include "ace/Acceptor.h"
 #include "ace/Reactor.h"
 
 //Common resource files
-#include "resTypedef.h"
+//#include "resTypedef.h"
 #include "resProtocol.h"
-
-//TestRunnable
-//#include "Thread.h"
-
-//For all the threading; like the RealmConnector thread
-//#include "RealmConnector.h"
 
 //Things the server needs
 #include "PacketHandler.h"
+#include "database.h"
+#include "config.h"
+
+//Setting up the dispatcher
+#include "PacketDispatcher.h"
+
+//Needed to add sources (capsules) to the dispatcher
+#include "Capsules/CapsuleDebug.h"
+
+//Some defines for the implementation
+#include "session.h" //define s_session
+typedef	s_session* SESSION;
+typedef ACE_Singleton<SessionMgr<SESSION>,ACE_Null_Mutex> SESSIONMGR;
+typedef ACE_Singleton<PacketDispatcher<SESSION>,ACE_Null_Mutex> PACKETDISPATCHER;
+
+//Functions
+void handle_signal(int signal);
 
 #endif

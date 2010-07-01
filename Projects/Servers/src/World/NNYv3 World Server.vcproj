@@ -59,7 +59,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ACEsd.lib"
+				AdditionalDependencies="ACEsd.lib libmysql.lib"
 				OutputFile="$(OutDir)\$(ProjectName)_debug.exe"
 				AdditionalLibraryDirectories="..\..\..\Dependencies\ACE_wrappers\lib;..\..\..\Dependencies\MySQL\lib"
 				GenerateDebugInformation="true"
@@ -134,7 +134,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ACEs.lib"
+				AdditionalDependencies="ACEs.lib libmysql.lib"
 				AdditionalLibraryDirectories="..\..\..\Dependencies\ACE_wrappers\lib;..\..\..\Dependencies\MySQL\lib"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(IntDir)\$(ProjectName).pdb"
@@ -181,10 +181,6 @@
 				RelativePath=".\PacketHandler.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\SessionMgr.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -200,7 +196,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SessionMgr.h"
+				RelativePath=".\session.h"
 				>
 			</File>
 		</Filter>
@@ -222,11 +218,39 @@
 			Name="Common Files"
 			>
 			<File
+				RelativePath="..\..\..\Commons\Capsule.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Commons\CircularQueue.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Commons\config.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Commons\database.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Commons\database.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Commons\Packet.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\Commons\Packet.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Commons\PacketDispatcher.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Commons\SessionMgr.h"
 				>
 			</File>
 			<File
@@ -243,6 +267,18 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Commons\Thread.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Capsule Files"
+			>
+			<File
+				RelativePath=".\Capsules\CapsuleDebug.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Capsules\CapsuleDebug.h"
 				>
 			</File>
 		</Filter>

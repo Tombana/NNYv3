@@ -1,8 +1,8 @@
 #ifndef H_DATABASE
 #define H_DATABASE
 
-#if defined(WIN32)
-        #include "windows.h" //Needed by MySQL lib for sockets
+#ifdef WIN32
+        #include "winsock2.h" //Needed by MySQL lib for sockets
         #include "mysql.h" //MySQL library
         #include "errmsg.h" //MySQL handling error messages
 #else

@@ -5,7 +5,6 @@
 #include "ace/SOCK_Stream.h"
 #include "ace/SOCK_Connector.h"
 #include "ace/Time_Value.h"
-//#include "ace/Log_Msg.h"
 
 #define SOCKET_READ_BUFFER_SIZE 1024
 #define SOCKET_TIMEOUT 10

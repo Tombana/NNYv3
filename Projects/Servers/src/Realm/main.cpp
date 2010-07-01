@@ -1,5 +1,7 @@
 #include "main.h"
 
+//REALM SERVER
+
 //!!!!!!!!!!!!!!!!!!!!!! =[ GLOBAL VARS ]= !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 database::connection g_db			  = database::init(); //Prepare a connection to the database
 unsigned int		 g_client_version = 4; //This default value will be overrided in main()
@@ -66,17 +68,27 @@ int main(int argc, char **argv) {
 	//=========================================
     // SETTING UP WORLDLINK MANAGER
     //=========================================
+	std::cout << "Setting up the world server list..." << std::endl;
 	WORLDLINKMGR::instance()->loadWorldsFromDB(g_db);
-	std::cout << "World server list loaded." << std::endl;
+
+	//=========================================
+    // SETTING UP PACKET DISPATCHER
+    //=========================================
+	std::cout << "Setting up the packet dispatcher..." << std::endl;
+	//Calling ACE_Singleton to get a pointer of our instance everytime would be stupid, once is enough.
+	PacketDispatcher<SESSION> *i_dispatcher = PACKETDISPATCHER::instance();
+	//Add sources to the dispatcher instance; btw the class destructor will make sure to delete created objects
+	i_dispatcher->addSource(PCKT_X_DEBUG, new CapsuleDebug);
+	i_dispatcher->addSource(PCKT_C_VERSION, new CapsuleVersion);
+	i_dispatcher->addSource(PCKT_C_GETWORLDLIST, new CapsuleWorldlist);
 
 	//=========================================
     // SETTING UP : `ACE_Acceptor`
     //=========================================
-    std::cout << "Setting up acceptor..." << std::endl;
+    std::cout << "Setting up acceptor on port 6131..." << std::endl;
 	
 	//Server port number.
-	const u_short port = 6131;
-	ACE_INET_Addr server_addr(port);
+	ACE_INET_Addr server_addr(6131);
 	
 	//Initialize server endpoint an register with the Reactor.
 	ACE_Acceptor<PacketHandler,ACE_SOCK_ACCEPTOR> acceptor(server_addr, ACE_Reactor::instance(), ACE_NONBLOCK);

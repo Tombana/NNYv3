@@ -1,17 +1,20 @@
 #ifndef H_WORLDLINKMGR
 #define H_WORLDLINKMGR
 
+//Std libraries
+#include <string>
 //This class is a singleton
 #include "ace/Singleton.h"
-//Need special typedefs
+#include "ace/Null_Mutex.h"
+//Need resource files
 #include "resTypedef.h"
+#include "resProtocol.h"
 //We need the database to load/reload the worlds
 #include "database.h"
 //Our containers
 #include <map>
 //Generate packet
 #include "Packet.h"
-#include "resProtocol.h"
 
 class WorldlinkMgr {
 	///This make our class a singleton; read notes below if you need help using it.

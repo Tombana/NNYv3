@@ -1,6 +1,6 @@
 #include "CapsuleVersion.h"
 
-void CapsuleVersion::doit(SESSION session, Packet& capsule) {
+void CapsuleVersion::doit(s_session* session, Packet& capsule) {
 	std::cout << "[CapsuleVersion] Packet PCKT_C_VERSION received!" << std::endl;
 	DWORD version = capsule.read<DWORD>();
 	std::cout << "Version: " << version << std::endl;

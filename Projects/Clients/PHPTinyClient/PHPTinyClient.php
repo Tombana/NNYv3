@@ -154,6 +154,9 @@ while (true) {
 						$online = $CAPSULE->readBool();
 							$status = ($online) ? 'online' : 'offline';
 						echo '-> '.$name.' ('.$ipv4.':'.$port.') is '.$status."\n";
+						$RECONNECT_IP = $ipv4; //TODO: check if it online or not at least, or let the user pick it up
+						$RECONNECT_PORT = $port; //...
+						$RECONNECT = true; //...
 						break;
 					//-------------------------
 					case PCKT_W_ENTER_WORLD_ACK:

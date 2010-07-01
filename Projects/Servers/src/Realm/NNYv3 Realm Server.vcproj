@@ -178,15 +178,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\PacketDispatcher.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\PacketHandler.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\SessionMgr.cpp"
 				>
 			</File>
 			<File
@@ -204,15 +196,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\config.h"
-				>
-			</File>
-			<File
 				RelativePath=".\main.h"
-				>
-			</File>
-			<File
-				RelativePath=".\PacketDispatcher.h"
 				>
 			</File>
 			<File
@@ -220,7 +204,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SessionMgr.h"
+				RelativePath=".\session.h"
 				>
 			</File>
 			<File
@@ -246,7 +230,15 @@
 			Name="Common Files"
 			>
 			<File
+				RelativePath="..\..\..\Commons\Capsule.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\Commons\CircularQueue.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Commons\config.h"
 				>
 			</File>
 			<File
@@ -263,6 +255,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Commons\Packet.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Commons\PacketDispatcher.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\Commons\SessionMgr.h"
 				>
 			</File>
 			<File
