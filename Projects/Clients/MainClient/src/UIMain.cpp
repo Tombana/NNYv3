@@ -77,7 +77,7 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	// 3. Its animation is updated (advanced to next frame)
 	//=================================
 	for(CWorldManager::EntityList::iterator ent = mWorld.mEntities.begin(); ent != mWorld.mEntities.end(); ++ent ){
-		CEntity *Entity = *ent;
+		CEntity *Entity = ent->second;
 		if( Entity == 0 ) continue; //Shouldn't happen but for safety
 		//
 		// 1. Update position if moving
