@@ -1,6 +1,6 @@
 #include "Item.h"
 
-CItem::CItem(Ogre::SceneNode *Node) : CEntity(EntityType_Item, Node)
+CItem::CItem(CWorldManager& World, Ogre::SceneNode *Node) : CEntity(World, EntityType_Item, Node)
 {
 }
 

@@ -1,6 +1,6 @@
 #include "Monster.h"
 
-CMonster::CMonster(Ogre::SceneNode *Node) : CCombatEntity(EntityType_Monster, Node)
+CMonster::CMonster(CWorldManager& World, Ogre::SceneNode *Node) : CCombatEntity(World, EntityType_Monster, Node)
 {
 }
 

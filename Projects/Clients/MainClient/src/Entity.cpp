@@ -1,29 +1,59 @@
 #include "Entity.h"
+#include "WorldManager.h"
 
-CEntity::CEntity( EntityType Type, Ogre::SceneNode *Node ) :
-	mEntityType(Type), mNode(Node), Identifier(0),
-	AnimIdle(0), AnimWalk(0), AnimFight(0),
+CEntity::CEntity( CWorldManager& World, EntityType Type, Ogre::SceneNode *Node ) :
+	mWorld(World), mEntityType(Type), mNode(Node), mIdentifier(0), Animations(),
 	mMoveSpeed(0.0f), mDestinations()
 {
 	SetState(State_Disabled);
+	mWorld.RegisterEntity(mIdentifier, this);
+}
+
+CEntity::~CEntity(void)
+{
+	////Ogre will clean up the nodes correctly so this should not be needed:
+	//if( mNode ){
+	//	//This method was not recommended.
+	//	mNode->getCreator()->destroySceneNode(mNode);
+	//}
+	mWorld.UnregisterEntity(this);
+}
+
+void CEntity::SetIdentifier(unsigned int Identifier)
+{
+	mIdentifier = Identifier;
+	mWorld.ChangeIdentifier(this, Identifier);
 }
 
 EntityState CEntity::SetState(EntityState NewState)
 {
 	EntityState OldState = mState;
 	mState = NewState;
+
+	//If it actually changed
+	if( mState != OldState ){
+		//Disable all old animations
+		if( !Animations[OldState].empty() ){
+			for( AnimList::iterator it = Animations[mState].begin(); it != Animations[mState].end(); ++it )
+				(*it)->setEnabled(false);
+		}
+		//Enable all new animations
+		if( !Animations[mState].empty() ){
+			for( AnimList::iterator it = Animations[mState].begin(); it != Animations[mState].end(); ++it )
+				(*it)->setEnabled(true);
+		}
+	}
+
+	//Do other stuff that is required
 	switch( mState ){
 		case State_Idle:
-			if( AnimIdle ) AnimIdle->setEnabled(true);
-			if( AnimWalk ) AnimWalk->setEnabled(false);
 			break;
 		case State_Moving:
-			if( AnimIdle ) AnimIdle->setEnabled(false);
-			if( AnimWalk ) AnimWalk->setEnabled(true);
 			break;
 		default:
 			break;
 	}
+
 	return OldState;
 }
 
@@ -57,10 +87,13 @@ void CEntity::UpdateMovement(Ogre::Real ElapsedTime)
 //This is only to be called by CUIMain
 void CEntity::UpdateAnimations(Ogre::Real ElapsedTime)
 {
-	//TODO: This obviously has to be some vector or array with all AnimationStates
-	if( AnimIdle && AnimIdle->getEnabled() && !AnimIdle->hasEnded() ) AnimIdle->addTime(ElapsedTime);
-	if( AnimWalk && AnimWalk->getEnabled() && !AnimWalk->hasEnded() ) AnimWalk->addTime(ElapsedTime);
-	if( AnimFight && AnimFight->getEnabled() && !AnimFight->hasEnded() ) AnimFight->addTime(ElapsedTime);
+	//TODO: if mState == State_Moving then the movespeed should be a multiplier on ElapsedTime
+	//TODO: if mState == State_Fighting then the attackspeed should be a multiplier on ElapsedTime
+	if( !Animations[mState].empty() ){
+		for( AnimList::iterator it = Animations[mState].begin(); it != Animations[mState].end(); ++it ){
+			if( !(*it)->hasEnded() ) (*it)->addTime(ElapsedTime);
+		}
+	}
 }
 
 Ogre::Vector3 CEntity::GetMovement(void)

@@ -5,6 +5,6 @@ class CItem :
 	public CEntity
 {
 public:
-	CItem(Ogre::SceneNode *Node);
+	CItem(CWorldManager& World, Ogre::SceneNode *Node);
 	virtual ~CItem(void);
 };

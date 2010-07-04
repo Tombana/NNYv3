@@ -85,7 +85,8 @@ int CUIMain::SetupOgre(void)
 	//Get a RaySceneQuery object. A SceneQuery object is a class that can query all
 	//objects in a region or scene. RaySceneQuery has it as a base class. RaySceneQuery
 	//can get all objects that intersect a ray.
-	mRaySceneQuery = mSceneMgr->createRayQuery(Ogre::Ray());
+	mQueryMouseMovement = mSceneMgr->createRayQuery(Ogre::Ray(), QUERY_MASK_MOUSE_MOVEMENT);
+	mQueryMouseSelection = mSceneMgr->createRayQuery(Ogre::Ray(), QUERY_MASK_MOUSE_SELECTING);
 
 	LoadWorld();
 
@@ -97,7 +98,7 @@ int CUIMain::SetupOgre(void)
 	//=================
 	// Create the input handler
 	//=================
-	mInputHandler = new CInputHandler(mWorld, mCamera, mWindow, mSceneMgr, mRaySceneQuery);
+	mInputHandler = new CInputHandler(mWorld, mCamera, mWindow, mSceneMgr, mQueryMouseMovement);
 	mRoot->addFrameListener(mInputHandler);
 	mRoot->addFrameListener(this);
 
@@ -145,38 +146,34 @@ int CUIMain::LoadWorld(void)
 	Ogre::MeshManager::getSingleton().createPlane("ground", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane,
 		2000,2000,20,20,true,1,5,5,Ogre::Vector3::UNIT_Z);
 	Ogre::Entity *GroundEnt = mSceneMgr->createEntity("GroundEntity", "ground");
+	GroundEnt->setQueryFlags(QUERY_MASK_MOUSE_MOVEMENT);
 	GroundEnt->setMaterialName("Rockwall");
 	mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(GroundEnt);
 
-
-	Ogre::SceneNode *LocalPlayerNode = mSceneMgr->getRootSceneNode()->createChildSceneNode("Node-LocalPlayer", Ogre::Vector3(0,0,-100));
-	Ogre::SceneNode *bodynode = LocalPlayerNode->createChildSceneNode("Node-PlayerBody");
-	Ogre::SceneNode *headnode = LocalPlayerNode->createChildSceneNode("Node-PlayerHead");
-	Ogre::Entity *body = mSceneMgr->createEntity("Ent-PlayerBody", "robot.mesh");
-	Ogre::Entity *head = mSceneMgr->createEntity("Ent-PlayerHead", "ogrehead.mesh");
-	bodynode->attachObject(body);
-	headnode->attachObject(head);
-	headnode->yaw(Ogre::Degree(180));
-	bodynode->yaw(Ogre::Degree(90));
-	headnode->scale(0.3,0.3,0.3);
-	headnode->setPosition(0, 80, -5);
-
-	LocalPlayerNode->setFixedYawAxis(true);
-
-	mWorld.LocalPlayer = mWorld.CreateLocalPlayer(LocalPlayerNode);
+	CharacterInfo local_player_info;
+	mWorld.LocalPlayer = new CLocalPlayer(mWorld, mSceneMgr->getRootSceneNode()->createChildSceneNode());
+	AttachMeshes(mWorld.LocalPlayer, local_player_info);
 	mWorld.LocalPlayer->SetMoveSpeed(50);
-	mWorld.LocalPlayer->AnimIdle = body->getAnimationState("Idle");
-	mWorld.LocalPlayer->AnimWalk = body->getAnimationState("Walk");
 	mWorld.LocalPlayer->SetState(State_Idle);
+
+	//Test:
+	CreateNewPlayer(0, CharacterInfo());
 
 	Ogre::SceneNode *DestMarkerNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
 	Ogre::SceneNode *DestMarkerSubNode = DestMarkerNode->createChildSceneNode();
 	Ogre::Entity *DestMarker = mSceneMgr->createEntity("Ent-DestMarker", "geosphere4500.mesh");
+	DestMarker->setQueryFlags(0);
 	DestMarkerSubNode->attachObject(DestMarker);
 	DestMarkerSubNode->scale(0.05, 0.05, 0.05);
 	DestMarkerSubNode->setPosition(0,10,0);
 	DestMarkerNode->setVisible(false);
 	mWorld.LocalPlayer->SetDestinationMarker(DestMarkerNode, DestMarker);
+
+	mMouseIndicator = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+	Ogre::Entity* MouseIndicatorEntity = mSceneMgr->createEntity("Ent-MouseIndicator", "geosphere4500.mesh");
+	MouseIndicatorEntity->setQueryFlags(0);
+	mMouseIndicator->attachObject(MouseIndicatorEntity);
+	mMouseIndicator->scale(0.03, 0.03, 0.03);
 	
 	return 1;
 }

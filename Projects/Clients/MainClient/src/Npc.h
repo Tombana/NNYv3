@@ -5,6 +5,6 @@ class CNpc :
 	public CEntity
 {
 public:
-	CNpc(Ogre::SceneNode *Node);
+	CNpc(CWorldManager& World, Ogre::SceneNode *Node);
 	virtual ~CNpc(void);
 };
