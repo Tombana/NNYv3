@@ -15,28 +15,24 @@ public:
 	CWorldManager(void);
 	~CWorldManager(void);
 
-	//Release all resources
+	//Delete all entities
 	void Cleanup(void);
-
-	//These functions will create the entities in memory.
-	//They will not actually put a real item on the ground that can be picked up.
-	CItem* CreateItem(unsigned int Identifier, Ogre::SceneNode *Node);
-	CPlayer* CreatePlayer(unsigned int Identifier, Ogre::SceneNode *Node);
-	CMonster* CreateMonster(unsigned int Identifier, Ogre::SceneNode *Node);
-	CNpc* CreateNPC(unsigned int Identifier, Ogre::SceneNode *Node);
-	CLocalPlayer* CreateLocalPlayer(Ogre::SceneNode* Node);
-
-	void DestroyEntity(unsigned int Identifier);
-	void DestroyEntity(CEntity* ent);
 
 	CEntity* GetEntityFromIdentifier(unsigned int Identifier);
 
 	//TODO: Should the entity list have mutex protection?
-	typedef std::map<unsigned int,CEntity*> EntityList;
+	typedef std::multimap<unsigned int,CEntity*> EntityList;
 	EntityList	mEntities;
 	CLocalPlayer* LocalPlayer;
 
 private:
+	friend class CEntity;
+	//Called by CEntity::CEntity (constructor)
+	void RegisterEntity(unsigned int Identifier, CEntity* Entity);
+	//Called by CEntity::~CEntity (deconstructor)
+	void UnregisterEntity(CEntity* Entity);
+	//Called by CEntity::SetIdentifier
+	void ChangeIdentifier(CEntity* Entity, unsigned int NewIdentifier);
 
 	CEntity* CreateEntity(EntityType Type, unsigned int Identifier, Ogre::SceneNode *Node);
 };

@@ -9,9 +9,9 @@ CUIMain* CUIMain::mSingleton = 0;
 
 CUIMain::CUIMain(void) : Ogre::FrameListener(), CThreadMessages(), Thread(),
 	Started(false),
-	mRoot(0), mSceneMgr(0), mWindow(0), mRaySceneQuery(0), mCamera(),
+	mRoot(0), mSceneMgr(0), mWindow(0), mCamera(), mQueryMouseMovement(0), mQueryMouseSelection(0),
 	mInputHandler(0), mGUIHandler(0), mShowConsole(false),
-	mWorld()
+	mWorld(), EntityNameCounter(0), mMouseIndicator(0)
 {
 	if( mSingleton == 0 ) mSingleton = this;
 }
@@ -68,6 +68,19 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	bool ContinueRendering = true;
 
 	Ogre::Real ElapsedTime = evt.timeSinceLastFrame;
+
+	//Test: show the 3D point that the cursor points to
+	CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getDisplayIndependantPosition();
+	Ogre::Ray ray(mCamera.GetCamera()->getCameraToViewportRay(mousePos.d_x, mousePos.d_y));
+	mQueryMouseMovement->setRay(ray);
+	Ogre::RaySceneQueryResult& qryResult = mQueryMouseMovement->execute();
+	for( Ogre::RaySceneQueryResult::iterator it = qryResult.begin(); it != qryResult.end(); ++it ){
+		//TODO: Test whether it is an entity or the ground.
+		if( it->movable && it->movable == mMouseIndicator->getAttachedObjectIterator().getNext() ) continue;
+		Ogre::Vector3 CollisionPoint = ray.getPoint(it->distance);
+		mMouseIndicator->setPosition(CollisionPoint);
+		break;
+	}
 
 	//=================================
 	// Update entities (movement, animations, effects)
@@ -195,4 +208,52 @@ bool CUIMain::MsgBoxKickCallback(void* Param)
 	bool DoKick = ((int)Param == CGUIHandler::MsgBoxBtnYes);
 	CMainClient::getSingleton().SendThreadMessage(new CMessageParamsKickAccount(DoKick));
 	return true;
+}
+
+CPlayer* CUIMain::CreateNewPlayer(unsigned int Identifier, const CharacterInfo& characterinfo)
+{
+	Ogre::SceneNode *MainNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
+	CPlayer* Player = new CPlayer(mWorld, MainNode);
+	AttachMeshes(Player, characterinfo);
+
+	Player->SetState(State_Idle);
+	//Set movespeed and so on based on characterinfo
+	Player->SetMoveSpeed(50);
+	return Player;
+}
+
+void CUIMain::AttachMeshes(CEntity* Entity, const CharacterInfo& characterinfo)
+{
+	Ogre::String EntityNameSuffix = Ogre::StringConverter::toString(EntityNameCounter);
+	++EntityNameCounter;
+
+	Ogre::SceneNode* MainNode = Entity->GetSceneNode();
+	MainNode->setFixedYawAxis(true);
+
+	//For every part of the entity (body,head,weapons,clothes) create a seperate node
+	//TODO: Do this based on characterinfo and stuff from datafiles (like xml files)
+	Ogre::SceneNode *bodynode = MainNode->createChildSceneNode();
+	Ogre::SceneNode *headnode = MainNode->createChildSceneNode();
+	Ogre::Entity *body = mSceneMgr->createEntity("Entity_Body_" + EntityNameSuffix, "robot.mesh");
+	Ogre::Entity *head = mSceneMgr->createEntity("Entity_Head_" + EntityNameSuffix, "ogrehead.mesh");
+	bodynode->attachObject(body);
+	headnode->attachObject(head);
+	headnode->yaw(Ogre::Degree(180));
+	bodynode->yaw(Ogre::Degree(90));
+	headnode->scale(0.3,0.3,0.3);
+	headnode->setPosition(0, 80, -5);
+
+	headnode->showBoundingBox(true);
+	bodynode->showBoundingBox(true);
+
+	//Make sure to do this to every (sub)entity that belongs to a player
+	body->setQueryFlags(QUERY_MASK_MOUSE_SELECTING);
+	head->setQueryFlags(QUERY_MASK_MOUSE_SELECTING);
+
+	//Animation names have to be taken from some data file (like xml).
+	Entity->Animations[State_Idle].push_back( body->getAnimationState("Idle") );
+	//Entity->Animations[State_Idle].push_back( head->getAnimationState("Idle") ); //Add the animations for every mesh
+	Entity->Animations[State_Moving].push_back( body->getAnimationState("Walk") );
+
+	return;
 }

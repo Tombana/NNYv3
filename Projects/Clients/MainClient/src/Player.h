@@ -5,6 +5,6 @@ class CPlayer :
 	public CCombatEntity
 {
 public:
-	CPlayer(Ogre::SceneNode *Node);
+	CPlayer(CWorldManager& World, Ogre::SceneNode *Node);
 	virtual ~CPlayer(void);
 };

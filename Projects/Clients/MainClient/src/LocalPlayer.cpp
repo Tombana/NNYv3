@@ -1,7 +1,7 @@
 #include "LocalPlayer.h"
 #include "Ogre\EntityMaterialInstance.h"
 
-CLocalPlayer::CLocalPlayer(Ogre::SceneNode *Node) : CPlayer(Node),
+CLocalPlayer::CLocalPlayer(CWorldManager& World, Ogre::SceneNode *Node) : CPlayer(World, Node),
 	DestinationMarker(0), MarkerEntity(0), CurrentAlpha(0), TotalMoveTime(0), MoveTimePassed(0), FadeInTime(0.5), FadeOutTime(1.0), FadeTimeRatio(FadeInTime/(FadeInTime+FadeOutTime))
 {
 }

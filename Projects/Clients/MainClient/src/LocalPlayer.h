@@ -8,7 +8,7 @@ class CLocalPlayer :
 	public CPlayer
 {
 public:
-	CLocalPlayer(Ogre::SceneNode *Node);
+	CLocalPlayer(CWorldManager& World, Ogre::SceneNode *Node);
 	virtual ~CLocalPlayer(void);
 
 	void SetDestinationMarker(Ogre::SceneNode* Node, Ogre::Entity* BlendingEntity);

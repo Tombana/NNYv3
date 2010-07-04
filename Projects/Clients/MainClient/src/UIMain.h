@@ -9,6 +9,10 @@
 #include "ConsoleOverlay.h"
 #include "WorldManager.h"
 
+//No idea in what header I should put this: 
+#define QUERY_MASK_MOUSE_MOVEMENT		0x01 //Wether this entity will intersect the mouse click ray for movement. Disable this flag for almost all entities except world fragments
+#define QUERY_MASK_MOUSE_SELECTING		0x02 //Wether this entity will intersect the mouse click ray for targeting entities.
+
 class CUIMain : public Ogre::FrameListener, public CThreadMessages, public Thread
 {
 public:
@@ -41,12 +45,14 @@ private:
 	Ogre::Root			*mRoot;
 	Ogre::SceneManager	*mSceneMgr;
 	Ogre::RenderWindow	*mWindow;
-	Ogre::RaySceneQuery	*mRaySceneQuery;
 	CInputHandler		*mInputHandler;
 	// CEGUI related
 	CGUIHandler			*mGUIHandler;
 	//Camera related
 	CCamera				mCamera;
+
+	Ogre::RaySceneQuery	*mQueryMouseMovement;
+	Ogre::RaySceneQuery *mQueryMouseSelection;
 
 	//This will be called every frame
 	bool frameRenderingQueued(const Ogre::FrameEvent& evt);
@@ -59,6 +65,9 @@ private:
 	bool				mShowConsole;
 	ConsoleOverlay		*mConsoleOverlay;
 
+	//3D mouse point indicator
+	Ogre::SceneNode* mMouseIndicator;
+
 	//=============
 	// Login section
 	//=============
@@ -68,4 +77,13 @@ private:
 	// InGame related
 	//================
 	CWorldManager mWorld;
+
+	int EntityNameCounter; //To generate unique entity names
+
+	CPlayer* CreateNewPlayer(unsigned int Identifier, const CharacterInfo& characterinfo);
+	
+	//This will attach the 3D models to the scenenode node of a player or other entity
+	//based on the looks-related-info in CharacterInfo.
+	//It will also put the animation info in the CEntity class
+	void AttachMeshes(CEntity* Entity, const CharacterInfo& characterinfo);
 };
