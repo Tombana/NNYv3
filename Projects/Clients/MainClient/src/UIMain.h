@@ -65,8 +65,11 @@ private:
 	bool				mShowConsole;
 	ConsoleOverlay		*mConsoleOverlay;
 
-	//3D mouse point indicator
-	Ogre::SceneNode* mMouseIndicator;
+	//3D mouse point indicator to point to where you are moving
+	Ogre::SceneNode* mMoveDestinationIndicator; //The sign that indicates the place where you move to when you click
+	Ogre::SceneNode* mEntityHoveringIndicator; //The sign that indicates which entity the mouse is hovering above
+	Ogre::SceneNode* mEntitySelectionIndicator; //The sign that indicates the selected entity
+
 
 	//=============
 	// Login section

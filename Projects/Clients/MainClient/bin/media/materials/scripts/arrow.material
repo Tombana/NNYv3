@@ -1,0 +1,34 @@
+material Arrow
+{
+	technique
+	{
+		pass
+		{
+			scene_blend alpha_blend
+			depth_write off
+			diffuse 0.8 0.8 0.8 0.85
+			
+			texture_unit
+			{
+				texture arrow.png
+			}
+		}
+	}
+}
+material ArrowTransparent
+{
+	technique
+	{
+		pass
+		{
+			scene_blend alpha_blend
+			depth_write off
+			diffuse 0.8 0.8 0.8 0.4
+			
+			texture_unit
+			{
+				texture arrow.png
+			}
+		}
+	}
+}

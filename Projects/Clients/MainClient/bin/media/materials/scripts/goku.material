@@ -1,0 +1,28 @@
+
+material goku/head
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture head.bmp
+			}
+		}
+	}
+}
+
+material goku/body
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture body.bmp
+			}
+		}
+	}
+}
