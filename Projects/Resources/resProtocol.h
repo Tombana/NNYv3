@@ -1,7 +1,7 @@
 /*****************************
 IMPORTANT, KEEP IT UP-TO-DATE
 *****************************/
-#define NNY_PROTOCOL_VERSION        39	   //Protocol version, useful when debugging
+#define NNY_PROTOCOL_VERSION        40	   //Protocol version, useful when debugging
 #define NNY_PROTOCOL_RANGE			0x0014 //Packet range from 0x00 to 0x14 are defined here
 //Next available PCKT CODE is       0x0015 //PCKT decimal = 21, usualy the next after NNY_PROTOCOL_RANGE
 
@@ -11,7 +11,7 @@ IMPORTANT, KEEP IT UP-TO-DATE
 *****************************/
 #define PCKT_X_DEBUG                0x0009 //PCKT decimal = 9
 //Info: Send a string for debugging purpose
-//Params: [PSTR]Text
+//Params: [String]Text
 #define PCKT_X_HACKING_ATTEMPT      0x000A //PCKT decimal = 10
 //Info: Hacking attempt detected!
 //Params: [None]
@@ -69,6 +69,7 @@ IMPORTANT, KEEP IT UP-TO-DATE
 //Params: [Word]port
 //Params: [String]name
 //Params: [Bool]online
+//Params: [Byte]flag
 #define PCKT_R_WORLD_EOF        0x0008 //PCKT decimal = 8
 //Info: Tell the client that the list of world servers is complete
 //Params: [None]
@@ -85,8 +86,8 @@ IMPORTANT, KEEP IT UP-TO-DATE
 #define PCKT_W_SYNC_KEY         0x0006 //PCKT decimal = 6
 //Info: Server signature sent to the realm server to be authorized & online
 //Additional: Realmserver will reply with PCKT_R_SYNC_KEY_ACK
-//Params: [dword]serverID
-//Params: [pstr]sync_key
+//Params: [Dword]serverID
+//Params: [String]sync_key
 #define PCKT_W_WELCOME          0x000B //PCKT decimal = 11
 //Info: Server signature sent by the world server to every sockets
 //Params: [None]

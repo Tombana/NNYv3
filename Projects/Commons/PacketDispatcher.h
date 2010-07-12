@@ -14,7 +14,7 @@
 /**
 * @brief Once a capsule is received, this will perform a quick check and dispatch it to the right capsule functionoid.
 * @class PacketDispatcher
-* @note This class is a singleton and so can only be used through calls like this: ACE_Singleton<PacketDispatcher<T>,ACE_Null_Mutex>::instance()->dispatch(CMD,Packet);
+* @note This class is a singleton and so can only be used through calls like this: ACE_Singleton<PacketDispatcher<T_SESSION>,ACE_Null_Mutex>::instance()->dispatch(CMD,Packet);
 **/
 template <typename T_SESSION>
 class PacketDispatcher {
@@ -32,12 +32,18 @@ class PacketDispatcher {
 				if (m_table[packetCmd]) {
 					m_table[packetCmd]->doit(session, capsule);
 				} else {
-					std::cout << "[PacketDispatcher::dispatch] Packet dropped; not set in table of interest!" << std::endl;
+					std::cout << "[PacketDispatcher::dispatch] Packet & socket dropped; not set in table of interest!" << std::endl;
 					capsule.setSeek(capsule.size());
+					//Close socket
+					//session->socket.close();
+					//TODO: Free the session?
 				}
 			} else {
-				std::cout << "[PacketDispatcher::dispatch] Packet dropped; out of protocol range!" << std::endl;
+				std::cout << "[PacketDispatcher::dispatch] Packet & socket dropped; out of protocol range!" << std::endl;
 				capsule.setSeek(capsule.size());
+				//Close socket
+				//session->socket.close();
+				//TODO: Free the session?
 			}
 		}
 		//Setting up table of interest

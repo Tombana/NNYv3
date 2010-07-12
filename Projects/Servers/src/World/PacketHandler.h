@@ -7,14 +7,7 @@
 #include "ace/Svc_Handler.h"
 #include "ace/Synch.h"
 #include "SessionMgr.h"
-#include "PacketDispatcher.h"
 #include "Socket.h"
-
-//Some defines for the implementation
-#include "session.h" //define s_session
-typedef	s_session* SESSION;
-typedef ACE_Singleton<SessionMgr<SESSION>,ACE_Null_Mutex> SESSIONMGR;
-typedef ACE_Singleton<PacketDispatcher<SESSION>,ACE_Null_Mutex> PACKETDISPATCHER;
 
 #define BUFFER_SIZE 1024
 
@@ -28,7 +21,8 @@ typedef ACE_Singleton<PacketDispatcher<SESSION>,ACE_Null_Mutex> PACKETDISPATCHER
 * @note You can connect many ACE modules to the same service handler but in our case it would be really messy.
 * @see The connection is made in @a main()
 **/
-class PacketHandler : public ACE_Svc_Handler<ACE_SOCK_STREAM,ACE_NULL_SYNCH> { 
+class PacketHandler : public ACE_Svc_Handler<ACE_SOCK_STREAM,ACE_NULL_SYNCH> {
+	friend class ACE_Singleton<PacketHandler, ACE_Null_Mutex>;
 public:
 	/**
 	* This function is called from @c ACE_Acceptor on every new connections. The implementation also create a new session in memory with SessionMgr.
@@ -49,6 +43,19 @@ public:
 	* 			We return -1 to call close_handle() and close the socket.
 	**/
 	int handle_input(ACE_HANDLE handle);
+	//contructor/destructor are privates, so the class can only be constructed with the ACE_Singleton typedef define below (ASessionMgr)
+	PacketHandler() {}
+	~PacketHandler() {}
 };
+
+//Packet dispatching system
+#include "PacketDispatcher.h"
+//Some defines for the implementation
+#include "session.h" //define s_session
+typedef	s_session* SESSION;
+typedef ACE_Singleton<SessionMgr<SESSION>,ACE_Null_Mutex> SESSIONMGR;
+typedef ACE_Singleton<PacketDispatcher<SESSION>,ACE_Null_Mutex> PACKETDISPATCHER;
+
+#include "RealmConnector.h"
 
 #endif

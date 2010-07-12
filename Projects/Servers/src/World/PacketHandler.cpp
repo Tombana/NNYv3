@@ -4,14 +4,15 @@ int PacketHandler::open(void*){
 	//Save the handle for now
 	ACE_HANDLE handle = get_handle();
 	//Print a message
-	std::cout << "New session " << handle << " created!" << std::endl;
+	std::cout << "New client " << handle << " joined!" << std::endl;
 	//Register the service handler with the reactor 
 	ACE_Reactor::instance()->register_handler(this, ACE_Event_Handler::READ_MASK);
 	//Add new session to the session manager
 	SESSIONMGR::instance()->addSession(handle);	
 	//Save the session for now
 	SESSION session = SESSIONMGR::instance()->getSession(handle);
-	//Set the session's objects with the information we have
+	//Prepare the session' objects with the information we already have.
+	//Here we don't test the pointer because it was just created; Therefore, we knows it is valid.
 	session->socket.setSocket(peer_);
 	//Prepare & send welcome packet
 	Packet welcomePacket;
@@ -32,21 +33,33 @@ int PacketHandler::handle_input(ACE_HANDLE handle) {
 	//session->inventory.newItem(1234);    //->iventory is an object of type `Inventory`
 	SESSION session = SESSIONMGR::instance()->getSession(handle);
 
-	//===== Here the famous packet parser!
-	//+++ so all the code following must be put in the section that receive/process incoming packets +++
-	//+++ this is usually placed whiting a while(true) loop with a socketRead blocking just before +++
+	//===== Check if the session pointer is invalid just in case
+	if (!session) {
+		//Warning: Session not found; it probably has been destroyed earlier!
+		return -1;
+	}
 
 	//===== Input buffer
 	//here we have read all bytes from the socket and put it into 'input'
 	Packet input = session->socket.read();
 
+	//===== Here the famous packet parser!
+	//+++ so all the code following must be put in the section that receive/process incoming packets +++
+	//+++ this is usually placed whiting a while(true) loop with a read() blocking right before +++
+
 	//===== Check if socket isn't closed
 	//The recv() function blocks until it receives data.
 	//If the function unblock with 0 byte read, the client logged out.
 	if (input.size() == 0) {
-			std::cerr << "Session " << handle << " destroyed!" << std::endl;
-			SESSIONMGR::instance()->delSession(handle);
-			return -1;
+		std::cout << "Client " << handle << " disconnected!" << std::endl;
+		//Check if it was the realm server
+		if (session->isARealmServer) {
+			REALMCONNECTOR::instance()->resume(); //resume the thread so it re-connects
+		}
+		//Delete the session, it's useless now
+		SESSIONMGR::instance()->delSession(handle);
+		//Oh and return -1
+		return -1;
 	}
 
 	//'buffer' is a special Packet class to read/write a byte array.
@@ -54,14 +67,15 @@ int PacketHandler::handle_input(ACE_HANDLE handle) {
 	//(well its actually destroyed when the socket disconnect but yeah)
 	session->buffer.appendPacket(input);
 	//Print the handle
-	std::cout << "(Input from " << handle << ")" << std::endl;
+	std::cout << "Input from " << handle << ": (";
 	//Print hex packets to help us a little
 	session->buffer.printHex();
+	std::cout << ")" << std::endl;
 
 	//a while() loop here:
 	//yeah sometimes there's many capsules in a packet so we have to
 	//do this loop more than once, but otherwise (and usually) it will simply break().
-	while (true) {
+	forever {
 	//----------------------------------
 		//Set the buffer seek to the begening so we can perform our checks without errors.
 		//By errors I mean this is making sure we arnt lost somewhere else in the buffer

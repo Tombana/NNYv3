@@ -16,7 +16,7 @@ void WorldlinkMgr::clearWorlds() {
 }
 
 void WorldlinkMgr::loadWorldsFromDB(database::connection db) {
-	database::result result = database::query(db, "SELECT id,ipv4,port,name,link_key FROM servers", database::STORE_RESULT);
+	database::result result = database::query(db, "SELECT id,ipv4,port,name,sync_key,flag FROM r_servers", database::STORE_RESULT);
 	if (result) {
 		database::row row;
 		while (row = database::fetch_row(result)) {
@@ -28,8 +28,9 @@ void WorldlinkMgr::loadWorldsFromDB(database::connection db) {
 			m_data[id]->ipv4		= row[1];
 			m_data[id]->port		= database::toInt(row[2]);
 			m_data[id]->name		= row[3];
-			m_data[id]->link_key	= row[4];
+			m_data[id]->sync_key	= row[4];
 			m_data[id]->online		= false;
+			m_data[id]->flag		= *(BYTE*)row[5]; //TODO: not sure the conversion is right
 		}
 		database::free_result(result);
 	}
@@ -45,6 +46,7 @@ void WorldlinkMgr::preparePacket() {
 		m_generatedPacket.add<PORT>(p->second->port); //port
 		m_generatedPacket.addString(p->second->name); //name
 		m_generatedPacket.addBool(p->second->online); //online
+		m_generatedPacket.add<BYTE>(p->second->flag); //flag
 	}
 	m_generatedPacket.add<CMD>(PCKT_R_WORLD_EOF); //EOF
 }
@@ -53,13 +55,24 @@ Packet& WorldlinkMgr::getGeneratedPacket() {
 	return m_generatedPacket;
 }
 
+WorldlinkMgr::s_link* WorldlinkMgr::getLink(DWORD id) {	
+	std::map<DWORD,s_link*>::const_iterator iter = m_data.find(id);
+	if (iter == m_data.end()) {
+		return NULL;
+	} else {
+		return iter->second;	
+	}
+}
+
 void WorldlinkMgr::createLink(DWORD id) {
 	m_data[id]->online = true;
+	std::cout << "Server " << m_data[id]->name << " joined the cluster!" << std::endl;
 	preparePacket(); //regenerate packet for later use
 }
 
 void WorldlinkMgr::destroyLink(DWORD id) {
 	m_data[id]->online = false;
+	std::cout << "Server " << m_data[id]->name << " left the cluster!" << std::endl;
 	preparePacket(); //regenerate packet for later use
 }
 

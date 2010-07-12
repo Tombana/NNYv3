@@ -53,25 +53,25 @@ namespace database {
 	void handleError(connection conn, int errorCode) {
 		switch (errorCode) {
 			case 0:
-				std::cout << "@datase: Wtf, an error was detected but the errorCode is good" << std::endl;
+				std::cout << "@ERROR: database: Wtf, an error was detected but the errorCode is good" << std::endl;
 				break;
 			case CR_COMMANDS_OUT_OF_SYNC:
-				std::cout << "@database: Commands out of sync" << std::endl;
+				std::cout << "@ERROR: database: Commands out of sync" << std::endl;
 				break;
 			case CR_OUT_OF_MEMORY:
-				std::cout << "@database: Out of memory" << std::endl;
+				std::cout << "@ERROR: database: Out of memory" << std::endl;
 				break;
 			case CR_SERVER_GONE_ERROR:
-				std::cout << "@database: Server is gone" << std::endl;
+				std::cout << "@ERROR: database: Server is gone" << std::endl;
 				break;
 			case CR_SERVER_LOST:
-				std::cout << "@database: Server connection lost during query" << std::endl;
+				std::cout << "@ERROR: database: Server connection lost during query" << std::endl;
 				break;
 			case CR_UNKNOWN_ERROR:
-				std::cout << "@database: Unknown error" << std::endl;
+				std::cout << "@ERROR: database: Unknown error" << std::endl;
 				break;
 			default:
-				std::cout << "@database: Error: " << mysql_error(conn) << std::endl;
+				std::cout << "@ERROR: database: MySQL error: " << mysql_error(conn) << std::endl;
 		}
 	}
 } //End of namespace `database`

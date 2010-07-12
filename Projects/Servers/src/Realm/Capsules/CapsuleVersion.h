@@ -2,6 +2,7 @@
 #define H_CAPSULE_VERSION
 
 //Common files
+#include <iostream>
 #include "Capsule.h"
 #include "database.h"
 #include "Packet.h"

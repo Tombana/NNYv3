@@ -8,6 +8,7 @@
 #include "ace/Synch.h"
 #include "SessionMgr.h"
 #include "PacketDispatcher.h"
+#include "WorldlinkMgr.h"
 #include "Socket.h"
 
 //Some typedefs needed for the implementation code

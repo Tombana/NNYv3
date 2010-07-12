@@ -50,6 +50,11 @@ Socket::Socket() {
 	m_buffer = new BYTE[SOCKET_READ_BUFFER_SIZE];
 }
 
+//Get handle
+ACE_HANDLE Socket::getHandle() {
+	return m_socket.get_handle();
+}
+
 //Set socket while being constructed
 Socket::Socket(ACE_SOCK_STREAM &stream) : m_socket(stream) {
 	Socket();
@@ -58,4 +63,5 @@ Socket::Socket(ACE_SOCK_STREAM &stream) : m_socket(stream) {
 //Destructor
 Socket::~Socket() {
 	delete[] m_buffer;
+	close(); //Hey the object is destroyed, why don't you kill the socket as well?
 }

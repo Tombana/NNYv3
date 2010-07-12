@@ -4,14 +4,15 @@ int PacketHandler::open(void*){
 	//Save the handle for now
 	ACE_HANDLE handle = get_handle();
 	//Print a message
-	std::cout << "New session " << handle << " created!" << std::endl;
+	std::cout << "New client " << handle << " joined!" << std::endl;
 	//Register the service handler with the reactor 
 	ACE_Reactor::instance()->register_handler(this, ACE_Event_Handler::READ_MASK);
 	//Add new session to the session manager
 	SESSIONMGR::instance()->addSession(handle);	
 	//Save the session for now
 	SESSION session = SESSIONMGR::instance()->getSession(handle);
-	//Set the session's objects with the information we have
+	//Prepare the session' objects with the information we already have.
+	//Here we don't test the pointer because it was just created; Therefore, we knows it is valid.
 	session->socket.setSocket(peer_);
 	//Prepare & send welcome packet
 	Packet welcomePacket;
@@ -32,36 +33,43 @@ int PacketHandler::handle_input(ACE_HANDLE handle) {
 	//session->inventory.newItem(1234);    //->iventory is an object of type `Inventory`
 	SESSION session = SESSIONMGR::instance()->getSession(handle);
 
-	//===== Here the famous packet parser!
-	//+++ so all the code following must be put in the section that receive/process incoming packets +++
-	//+++ this is usually placed whiting a while(true) loop with a socketRead blocking just before +++
+	//===== Check if the session pointer is invalid just in case
+	if (!session) {
+		//Warning: Session not found; it probably has been destroyed earlier!
+		return -1;
+	}
 
 	//===== Input buffer
 	//here we have read all bytes from the socket and put it into 'input'
 	Packet input = session->socket.read();
 
+	//===== Here the famous packet parser!
+	//+++ so all the code following must be put in the section that receive/process incoming packets +++
+	//+++ this is usually placed whiting a while(true) loop with a read() blocking right before +++
+
 	//===== Check if socket isn't closed
 	//The recv() function blocks until it receives data.
 	//If the function unblock with 0 byte read, the client logged out.
 	if (input.size() == 0) {
-			std::cerr << "Session " << handle << " destroyed!" << std::endl;
-			SESSIONMGR::instance()->delSession(handle);
-			return -1;
+		std::cout << "Client " << handle << " disconnected!" << std::endl;
+		if (session->isAWorldServer) WORLDLINKMGR::instance()->destroyLink(session->worldID);
+		SESSIONMGR::instance()->delSession(handle);
+		return -1;
 	}
 
 	//'buffer' is a special Packet class to read/write a byte array.
 	//This object is unique to all clients and is never destroyed.
 	//(well its actually destroyed when the socket disconnect but yeah)
 	session->buffer.appendPacket(input);
-	//Print the handle
-	std::cout << "(Input from " << handle << ")" << std::endl;
-	//Print hex packets to help us a little
-	session->buffer.printHex();
+	//Print the handle + input
+	std::cout << "Input from " << handle << ": (";
+	input.printHex();
+	std::cout << ")" << std::endl;
 
 	//a while() loop here:
 	//yeah sometimes there's many capsules in a packet so we have to
 	//do this loop more than once, but otherwise (and usually) it will simply break().
-	while (true) {
+	forever {
 	//----------------------------------
 		//Set the buffer seek to the begening so we can perform our checks without errors.
 		//By errors I mean this is making sure we arnt lost somewhere else in the buffer
@@ -83,8 +91,8 @@ int PacketHandler::handle_input(ACE_HANDLE handle) {
 				//packetToSend.add<CMD>(PCKT_X_HACKING_ATTEMPT);
 				//peer_.send_n(session->td.socket << packetToSend;
 				//td.socket.socket_close();
-				std::cerr << "[packetHandler] @ERROR: Length refused!" << std::endl;
-				std::cerr << "[PacketHandler] @ERROR: Socket closed for security reasons." << std::endl;
+				std::cerr << "@ERROR: PacketHandler: Length refused!" << std::endl;
+				std::cerr << "@ERROR: PacketHandler: Socket closed for security reasons." << std::endl;
 				SESSIONMGR::instance()->delSession(handle);
 				return -1; //break ACE_Svn_Handle and close the socket
 			}
@@ -135,9 +143,9 @@ int PacketHandler::handle_input(ACE_HANDLE handle) {
 			//At this point, i hope we arent expecting a new capsule
 			//because if its the case, that capsule doesnt starts with 0x7E.
 			//Something is definitivelly going wrong.
-			std::cerr << "[PacketHandler] @ERROR: Packets are corrupted!" << std::endl;
-			std::cerr << "[PacketHandler] @ERROR: There is another capsule in this packet, not starting with 0x7E!" << std::endl;
-			std::cerr << "[PacketHandler] @ERROR: Socket closed for security reasons." << std::endl;
+			std::cerr << "@ERROR: PacketHandler: Packets are corrupted!" << std::endl;
+			std::cerr << "@ERROR: PacketHandler: There is another capsule in this packet, not starting with 0x7E!" << std::endl;
+			std::cerr << "@ERROR: PacketHandler: Socket closed for security reasons." << std::endl;
 			SESSIONMGR::instance()->delSession(handle);
 			return -1; //break ACE_Svc_Handler, close the socket as well
 		}

@@ -2,6 +2,7 @@
 #define H_CAPSULE_DEBUG
 
 //Common files
+#include <iostream>
 #include "Capsule.h"
 #include "Packet.h"
 //Includes

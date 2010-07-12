@@ -8,6 +8,10 @@ struct s_session {
 	//Socket & packet buffer
 	Packet			buffer;
 	Socket			socket;
+	//Realm server exchange
+	bool			isARealmServer;
+	//Defaut constructor
+	s_session() : isARealmServer(false) {}
 };
 
 #endif

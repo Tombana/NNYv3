@@ -294,6 +294,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Capsules\CapsuleSync.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Capsules\CapsuleSync.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Capsules\CapsuleVersion.cpp"
 				>
 			</File>

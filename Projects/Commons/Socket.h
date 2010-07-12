@@ -18,7 +18,16 @@ public:
 	bool		connect(const char *host, unsigned short port);
 	void		close();
 	bool		write(Packet &data);
+	ACE_HANDLE  getHandle();
 	Packet      read();
+	//Inlined functions
+	inline void operator<<(Packet &data) {
+		write(data);
+	}
+	inline void operator>>(Packet &data) {
+		data = read();
+	}
+
 private:
 	ACE_SOCK_Connector  m_connector;
 	ACE_SOCK_Stream		m_socket;

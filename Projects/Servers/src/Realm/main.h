@@ -6,6 +6,8 @@
 #include <cstdlib> //EXIT_SUCCESS & EXIT_FAILURE
 #include <signal.h> //Handling signals
 //ACE library includes
+#include "ace/OS.h"
+#include "ace/Time_Value.h"
 #include "ace/Thread.h"
 #include "ace/INET_Addr.h"
 #include "ace/SOCK_Acceptor.h"
@@ -26,6 +28,7 @@
 #include "Capsules/CapsuleDebug.h"
 #include "Capsules/CapsuleVersion.h"
 #include "Capsules/CapsuleWorldlist.h"
+#include "Capsules/CapsuleSync.h"
 
 //Some typedefs needed to setup PacketDispatcher's instance
 #include "session.h" //define s_session

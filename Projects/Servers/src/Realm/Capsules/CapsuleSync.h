@@ -1,5 +1,5 @@
-#ifndef H_CAPSULE_WORLDLIST
-#define H_CAPSULE_WORLDLIST
+#ifndef H_CAPSULE_SYNC
+#define H_CAPSULE_SYNC
 
 //Common files
 #include <iostream>
@@ -13,10 +13,9 @@
 //Includes
 #include "../session.h" //define s_session
 
-extern unsigned int g_client_version;
 extern database::connection g_db;
 
-class CapsuleWorldlist : public Capsule<s_session*> {
+class CapsuleSync : public Capsule<s_session*> {
 public:
 	void doit(s_session* session, Packet& capsule);
 }; //end of class

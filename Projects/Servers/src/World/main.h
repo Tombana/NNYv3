@@ -19,17 +19,21 @@
 #include "database.h"
 #include "config.h"
 
-//Setting up the dispatcher
-#include "PacketDispatcher.h"
-
 //Needed to add sources (capsules) to the dispatcher
 #include "Capsules/CapsuleDebug.h"
+#include "Capsules/CapsuleRealmWelcome.h"
+#include "Capsules/CapsuleRealmSyncKeyAck.h"
 
-//Some defines for the implementation
+//Setting up the dispatcher
+#include "PacketDispatcher.h"
+//Some typedefs for the implementation
 #include "session.h" //define s_session
 typedef	s_session* SESSION;
 typedef ACE_Singleton<SessionMgr<SESSION>,ACE_Null_Mutex> SESSIONMGR;
 typedef ACE_Singleton<PacketDispatcher<SESSION>,ACE_Null_Mutex> PACKETDISPATCHER;
+
+//RealmConnector
+#include "RealmConnector.h"
 
 //Functions
 void handle_signal(int signal);

@@ -16,7 +16,7 @@ void CapsuleVersion::doit(s_session* session, Packet& capsule) {
 		if (version != g_client_version)  {
 			//Prepare SQL query, all updates > version but < g_client_version
 			database::sql sql;
-			sql << "SELECT version,url,path FROM updates WHERE version>" << version << " AND version<" << g_client_version << " ORDER BY version ASC";
+			sql << "SELECT version,url,path FROM r_updates WHERE version>" << version << " AND version<" << g_client_version << " ORDER BY version ASC";
 			//Send SQL query
 			database::result db_result = database::query(g_db, sql, database::STORE_RESULT);
 			//Dealing with results

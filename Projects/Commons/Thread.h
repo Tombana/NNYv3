@@ -23,6 +23,8 @@ private:
 
 	ACE_thread_t   m_thread_id; ///< The thread ID, debugging purpose mostly
 	ACE_hthread_t  m_thread_handle; ///< The thread handle (suspend and all)
+	int			   m_flag;
+	bool		   m_running;
 };
 
 /*

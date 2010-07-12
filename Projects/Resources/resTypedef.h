@@ -15,4 +15,9 @@ typedef BYTE  ACK;      //Packet's acknowledgement codes
 typedef WORD  CMD;	    //Packet's command codes
 typedef WORD  PORT;		//A port will never be bigger than 65535
 
+//=============================
+//    AND NOW SOME DEFINES
+//=============================
+#define forever	for(;;)
+
 #endif

@@ -53,13 +53,13 @@ int main(int argc, char **argv) {
 		std::cout << "Connected to the MySQL database." << std::endl;
 	}
     //======== Send a query and save the result
-	database::result db_result = database::query(g_db, "SELECT version_nb FROM version", database::STORE_RESULT);
+	database::result db_result = database::query(g_db, "SELECT version_w FROM version", database::STORE_RESULT);
 	//======== Now we can check the result like this
 	if (db_result) {
 		database::row row = database::fetch_row(db_result); //there's only one row, we don't need a loop here
 		int version_nb = database::toInt(row[0]);
-		if (version_nb != CONFIG_SUPPORTED_DATABASE) {
-			std::cout << "This server supports only the v" << CONFIG_SUPPORTED_DATABASE << " database; yours is still using v" << version_nb << "." << std::endl;
+		if (version_nb != CONFIG_DATABASE_VERSION_WORLD) {
+			std::cout << "This server supports only the v" << CONFIG_DATABASE_VERSION_WORLD << " world database; yours is still using v" << version_nb << "." << std::endl;
 		}
 		database::free_result(db_result);
 	}
@@ -78,10 +78,9 @@ int main(int argc, char **argv) {
     //            REALM CONNECTOR
     //  Create a threaded class and start it
     //=========================================
-    //Create the realm connector object
-    //ThreadRealmConnector threadRealmConnector;
+	std::cout << "Starting up the RealmConnector..." << std::endl;
     //Start the thread
-    //threadRealmConnector.start();
+    REALMCONNECTOR::instance()->start();
 
 	//=========================================
     // SETTING UP : `PacketDispatcher`
@@ -91,6 +90,8 @@ int main(int argc, char **argv) {
 	PacketDispatcher<SESSION> *i_dispatcher = PACKETDISPATCHER::instance();
 	//Add sources to the dispatcher instance; btw the class destructor will make sure to delete created objects
 	i_dispatcher->addSource(PCKT_X_DEBUG, new CapsuleDebug);
+	i_dispatcher->addSource(PCKT_R_WELCOME, new CapsuleRealmWelcome);
+	i_dispatcher->addSource(PCKT_R_SYNC_KEY_ACK, new CapsuleRealmSyncKeyAck);
 
 	//=========================================
     // SETTING UP : `ACE_Acceptor`

@@ -181,6 +181,10 @@
 				RelativePath=".\PacketHandler.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\RealmConnector.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -196,6 +200,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\RealmConnector.h"
+				>
+			</File>
+			<File
 				RelativePath=".\session.h"
 				>
 			</File>
@@ -206,11 +214,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\Common\resProtocol.h"
+				RelativePath="..\..\..\Resources\resProtocol.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Common\resTypedef.h"
+				RelativePath="..\..\..\Resources\resTypedef.h"
 				>
 			</File>
 		</Filter>
@@ -279,6 +287,22 @@
 			</File>
 			<File
 				RelativePath=".\Capsules\CapsuleDebug.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Capsules\CapsuleRealmSyncKeyAck.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Capsules\CapsuleRealmSyncKeyAck.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Capsules\CapsuleRealmWelcome.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Capsules\CapsuleRealmWelcome.h"
 				>
 			</File>
 		</Filter>

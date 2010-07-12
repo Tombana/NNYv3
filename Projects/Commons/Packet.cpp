@@ -158,7 +158,6 @@ void Packet::modSeek(int newSeek) {
 
 //! [Debugging] Prints (human-readable) the byte array
 void Packet::printHex() {
-    std::cerr << "[PrintHex]: (";
     unsigned int size = m_buffer.size();
     for (unsigned int i=0; i<size; i++) {
         if (i == size-1) {
@@ -167,5 +166,4 @@ void Packet::printHex() {
             printf("%02X ", (BYTE) m_buffer.at(i));
         }
     }
-    std::cerr << ")" << std::endl;
 }

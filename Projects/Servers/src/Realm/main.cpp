@@ -54,13 +54,15 @@ int main(int argc, char **argv) {
 		std::cout << "Connected to the MySQL database." << std::endl;
 	}
     //======== Send a query and save the result
-	database::result db_result = database::query(g_db, "SELECT version_nb FROM version", database::STORE_RESULT);
+	database::result db_result = database::query(g_db, "SELECT version_r FROM version", database::STORE_RESULT);
 	//======== Now we can check the result like this
 	if (db_result) {
 		database::row row = database::fetch_row(db_result); //there's only one row, we don't need a loop here
 		int version_nb = database::toInt(row[0]);
-		if (version_nb != CONFIG_SUPPORTED_DATABASE) {
-			std::cout << "This server supports only the v" << CONFIG_SUPPORTED_DATABASE << " database; yours is still using v" << version_nb << "." << std::endl;
+		if (version_nb != CONFIG_DATABASE_VERSION_REALM) {
+			std::cout << "This server supports only the v" << CONFIG_DATABASE_VERSION_REALM << " realm database; yours is still using v" << version_nb << "." << std::endl;
+			//Sleep forever
+			forever ACE_OS::sleep(ACE_Time_Value(1));
 		}
 		database::free_result(db_result);
 	}
@@ -81,6 +83,7 @@ int main(int argc, char **argv) {
 	i_dispatcher->addSource(PCKT_X_DEBUG, new CapsuleDebug);
 	i_dispatcher->addSource(PCKT_C_VERSION, new CapsuleVersion);
 	i_dispatcher->addSource(PCKT_C_GETWORLDLIST, new CapsuleWorldlist);
+	i_dispatcher->addSource(PCKT_W_SYNC_KEY, new CapsuleSync);
 
 	//=========================================
     // SETTING UP : `ACE_Acceptor`
@@ -100,7 +103,7 @@ int main(int argc, char **argv) {
 	
 	// Main event loop that handles packets
 	std::cout << "Server is now running!" << std::endl;
-	while(true) {
+	forever {
 		// dont move this outside the loop, the reactor will modify it
         //ACE_Time_Value interval(0, 100000);
 

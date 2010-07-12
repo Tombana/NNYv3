@@ -3,6 +3,8 @@
 Thread::Thread() {
 	m_thread_id = 0;
 	m_thread_handle = 0;
+	m_flag = 0;
+	m_running = false;
 }
 
 Thread::~Thread() {
@@ -19,26 +21,47 @@ bool Thread::wait() {
 }
 
 void Thread::destroy() {
-    if (ACE_Thread::kill(m_thread_id, -1) != 0)
-        return;
+    if (ACE_Thread::kill(m_thread_id, -1) != 0) return;
 
-    m_thread_id = 0;
+	m_thread_id = 0;
     m_thread_handle = 0;
+	m_flag = 0;
+	m_running = false;
 }
 
 void Thread::suspend() {
-    ACE_Thread::suspend(m_thread_handle);
+	if (m_flag > 0) { //check if someone tried to resume the thread earlier (even when active)
+		m_flag--; //if so, don't go to sleep then; simply decrement the flag
+	} else {
+		if (m_running) {
+			m_running = false;
+			ACE_Thread::suspend(m_thread_handle);
+		}
+	}
 }
 
 void Thread::resume() {
-    ACE_Thread::resume(m_thread_handle);
+	if (m_flag < 0) { //check if someone tried to suspend the thread earlier (when already suspended)
+		m_flag++; //if so, don't resume the thread; simply increment the flag
+	} else {
+		if (!m_running) {
+			m_running = true;
+			ACE_Thread::resume(m_thread_handle);
+		}
+	}
 }
 
 bool Thread::start() {
-	if (ACE_Thread::spawn(&Thread::threadTask, (void*)this, 0, &m_thread_id, &m_thread_handle) == 0) {
-		return true;
-	} else {
-		std::cout << "[Thread] @ERROR: ACE_Thread::spawn() failed!" << std::endl;
+	if (!m_running) { //start the thread only if it isn't already running
+		if (ACE_Thread::spawn(&Thread::threadTask, (void*)this, 0, &m_thread_id, &m_thread_handle) == 0) {
+			m_running = true;
+			return true;
+		} else {
+			std::cout << "@ERROR: Thread: ACE_Thread::spawn() failed!" << std::endl;
+			return false;
+		}
+	} else { //display an error otherwise
+		std::cout << "@ERROR: Thread: Thread is already running!" << std::endl;
 		return false;
 	}
 }
