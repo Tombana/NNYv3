@@ -23,6 +23,7 @@
 #include "Capsules/CapsuleDebug.h"
 #include "Capsules/CapsuleRealmWelcome.h"
 #include "Capsules/CapsuleRealmSyncKeyAck.h"
+#include "Capsules/CapsuleAuth.h"
 
 //Setting up the dispatcher
 #include "PacketDispatcher.h"

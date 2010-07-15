@@ -9,4 +9,7 @@
 #define CONFIG_REALMCONNECTOR_MAX_RETRY			0  //Maximum attempts to reconnect until taking a break.
 #define CONFIG_REALMCONNECTOR_SLEEPTIME			10 //How long that break will be
 
+//World configuration
+#define CONFIG_ALLOW_MULTIPLE_LOGIN	  0 //0 = false | 1 = true
+
 #endif

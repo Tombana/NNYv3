@@ -282,6 +282,14 @@
 			Name="Capsule Files"
 			>
 			<File
+				RelativePath=".\Capsules\CapsuleAuth.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Capsules\CapsuleAuth.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Capsules\CapsuleDebug.cpp"
 				>
 			</File>

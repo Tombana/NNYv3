@@ -92,6 +92,7 @@ int main(int argc, char **argv) {
 	i_dispatcher->addSource(PCKT_X_DEBUG, new CapsuleDebug);
 	i_dispatcher->addSource(PCKT_R_WELCOME, new CapsuleRealmWelcome);
 	i_dispatcher->addSource(PCKT_R_SYNC_KEY_ACK, new CapsuleRealmSyncKeyAck);
+	i_dispatcher->addSource(PCKT_C_AUTH, new CapsuleAuth);
 
 	//=========================================
     // SETTING UP : `ACE_Acceptor`
@@ -130,7 +131,7 @@ int main(int argc, char **argv) {
 }
 
 void handle_signal(int signal) {
-	std::cout << "SINGAL RECEIVED: " << signal << std::endl;
+	std::cout << "SIGNAL RECEIVED: " << signal << std::endl;
 	//Never close the mysql connection unless it's REALLY needed, like now
 	database::close(g_db);
 	//Unload the library from memory; allocated earlier from mysql_init()

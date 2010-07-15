@@ -99,7 +99,7 @@ IMPORTANT, KEEP IT UP-TO-DATE
 //[ACK_SUCCESS] = Good, you are now logged in
 //[ACK_NOT_FOUND] = We were unable to find your username in the database
 //[ACK_DOESNT_MATCH] = The password provided doesn't match your username
-//[ACK_ALREADY] = It seems like you are already logged in and dual logging isn't allowed
+//[ACK_ALREADY] = It seems like you are already logged in and multiple logging isn't allowed
 //[ACK_REFUSED] = The server explicitly refused your connection; you maybe are banned.
 #define PCKT_W_CHARLIST_ADD     0x000F //PCKT decimal = 15
 //Info: Send your character information to the client
