@@ -98,7 +98,7 @@ int CUIMain::SetupOgre(void)
 	//=================
 	// Create the input handler
 	//=================
-	mInputHandler = new CInputHandler(mWorld, mCamera, mWindow, mSceneMgr, mQueryMouseMovement);
+	mInputHandler = new CInputHandler(mWorld, mCamera, mWindow, mSceneMgr);
 	mRoot->addFrameListener(mInputHandler);
 	mRoot->addFrameListener(this);
 
@@ -182,6 +182,7 @@ int CUIMain::LoadWorld(void)
 	HoverIndicatorEntity->setQueryFlags(0);
 	SelectionIndicatorEntity->setQueryFlags(0);
 	HoverIndicatorEntity->setMaterialName("ArrowTransparent");
+	mEntitySelectionIndicator->setInheritOrientation(false);
 	mEntityHoveringIndicator->attachObject(HoverIndicatorEntity);
 	mEntitySelectionIndicator->attachObject(SelectionIndicatorEntity);
 	mEntityHoveringIndicator->setVisible(false);

@@ -46,6 +46,8 @@ EntityState CEntity::SetState(EntityState NewState)
 		}
 	}
 
+	if( mState != State_Moving ) ClearAllDestinations(); //Or remember the destinations?
+
 	//Do other stuff that is required
 	//See TODO CEntity::UpdateAnimations: maybe that should be in this switch case
 	switch( mState ){

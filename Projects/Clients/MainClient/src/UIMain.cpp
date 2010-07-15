@@ -11,7 +11,8 @@ CUIMain::CUIMain(void) : Ogre::FrameListener(), CThreadMessages(), Thread(),
 	Started(false),
 	mRoot(0), mSceneMgr(0), mWindow(0), mCamera(), mQueryMouseMovement(0), mQueryMouseSelection(0),
 	mInputHandler(0), mGUIHandler(0), mShowConsole(false),
-	mWorld(), EntityNameCounter(0), mMoveDestinationIndicator(0), mEntityHoveringIndicator(0), mEntitySelectionIndicator(0)
+	mWorld(), EntityNameCounter(0),
+	MouseOnEntity(0), MouseOnGround(false), mMoveDestinationIndicator(0), mEntityHoveringIndicator(0), mEntitySelectionIndicator(0)
 {
 	if( mSingleton == 0 ) mSingleton = this;
 }
@@ -69,34 +70,7 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 	Ogre::Real ElapsedTime = evt.timeSinceLastFrame;
 
-	//Test: show the 3D point that the cursor points to
-	CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getDisplayIndependantPosition();
-	Ogre::Ray ray(mCamera.GetCamera()->getCameraToViewportRay(mousePos.d_x, mousePos.d_y));
-	bool MouseOnEntity = false;
-	
-	mQueryMouseSelection->setRay(ray);
-	Ogre::RaySceneQueryResult& qryResult = mQueryMouseSelection->execute();
-	for( Ogre::RaySceneQueryResult::iterator it = qryResult.begin(); it != qryResult.end(); ++it ){
-		if( !it->movable ) continue;
-		CEntity* Entity = static_cast<CEntity*>( it->movable->getUserObject() );
-		if( !Entity ) continue;
-		MouseOnEntity = true;
-		mEntityHoveringIndicator->setPosition(Entity->GetPosition());
-		break;
-	}
-	if( !MouseOnEntity ) {
-		mQueryMouseMovement->setRay(ray);
-		Ogre::RaySceneQueryResult& qryResult = mQueryMouseMovement->execute();
-		for( Ogre::RaySceneQueryResult::iterator it = qryResult.begin(); it != qryResult.end(); ++it ){
-			//if( it->movable && it->movable == mMoveDestinationIndicator->getAttachedObjectIterator().getNext() ) continue;
-			Ogre::Vector3 CollisionPoint = ray.getPoint(it->distance);
-			mMoveDestinationIndicator->setPosition(CollisionPoint);
-			break;
-		}
-	}
-	mEntityHoveringIndicator->setVisible( MouseOnEntity );
-	mMoveDestinationIndicator->setVisible( !MouseOnEntity );
-
+	DoMouseRay();
 
 	//=================================
 	// Update entities (movement, animations, effects)
@@ -125,7 +99,7 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	//=================================
 	// Update camera position, smooth scrolling and zooming
 	//=================================
-	mCamera.Update(ElapsedTime, mWorld.LocalPlayer->GetPosition());
+	mCamera.Update(ElapsedTime, mWorld.LocalPlayer->GetPosition(), mWorld.LocalPlayer->GetMovement());
 
 	//=================================
 	// Messages sent to the gui thread
@@ -219,6 +193,93 @@ bool CUIMain::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	return ContinueRendering;
 }
 
+void CUIMain::DoMouseRay(void)
+{
+	CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getDisplayIndependantPosition();
+	Ogre::Ray ray(mCamera.GetCamera()->getCameraToViewportRay(mousePos.d_x, mousePos.d_y));
+	MouseOnEntity = 0;
+	MouseOnGround = false;
+	
+	mQueryMouseSelection->setRay(ray);
+	Ogre::RaySceneQueryResult& qryResult = mQueryMouseSelection->execute();
+	for( Ogre::RaySceneQueryResult::iterator it = qryResult.begin(); it != qryResult.end(); ++it ){
+		if( !it->movable ) continue;
+		MouseOnEntity = static_cast<CEntity*>( it->movable->getUserObject() );
+		if( !MouseOnEntity ) continue;
+		mEntityHoveringIndicator->setPosition(MouseOnEntity->GetPosition());
+		break;
+	}
+	if( !MouseOnEntity ) {
+		mQueryMouseMovement->setRay(ray);
+		Ogre::RaySceneQueryResult& qryResult = mQueryMouseMovement->execute();
+		for( Ogre::RaySceneQueryResult::iterator it = qryResult.begin(); it != qryResult.end(); ++it ){
+			Ogre::Vector3 CollisionPoint = ray.getPoint(it->distance);
+			mMoveDestinationIndicator->setPosition(CollisionPoint);
+			MouseOnGround = true;
+			break;
+		}
+	}
+	mEntityHoveringIndicator->setVisible( (MouseOnEntity != 0) );
+	mMoveDestinationIndicator->setVisible( MouseOnGround );
+
+	return;
+}
+
+bool CUIMain::DeselectEntity(void)
+{
+	if( mWorld.GetSelectedEntity() ){
+		if( mWorld.SetSelectedEntity(0) ){
+			//Make the indicator invisible
+			mEntitySelectionIndicator->setVisible(false);
+			//Detach it from the selected entity
+			Ogre::Node* ParentNode = mEntitySelectionIndicator->getParent();
+			if( ParentNode ) ParentNode->removeChild( mEntitySelectionIndicator );
+			return true;
+		}
+	}
+	return false;
+}
+
+bool CUIMain::LeftClickInWorld(void)
+{
+	if( MouseOnEntity ){
+		CEntity* Entity = MouseOnEntity;
+		//If the user clicked on the entity that was already selected -> interact
+		if( mWorld.GetSelectedEntity() == Entity ){
+			//LocalPlayer -> Do nothing?
+			if( Entity == mWorld.LocalPlayer ){
+
+			}
+			//An item -> (try to) pick up
+			else if( Entity->IsCItem() ){
+
+			}
+			//Fightable -> attack with default attack: user can choose melee or skill
+			//TODO: This 'default action' should be saved with your character (in server database)
+			else if( Entity->IsCCombatEntity() ){
+				mWorld.LocalPlayer->SetState(State_Fighting);
+			}
+		}
+		//The user clicked on an entity that was not the currently selected entity -> select it
+		else if( mWorld.SetSelectedEntity(Entity) ){
+			//Detach the indicator from previous entity
+			Ogre::Node* ParentNode = mEntitySelectionIndicator->getParent();
+			if( ParentNode ) ParentNode->removeChild( mEntitySelectionIndicator );
+			//Attach it to the new entity
+			Entity->GetSceneNode()->addChild( mEntitySelectionIndicator );
+			//Make it visible
+			mEntitySelectionIndicator->setVisible(true);
+		}
+		return true;
+	}else if( MouseOnGround ){
+		//TODO: Delete this top line. It's for development.
+		if( mWorld.GetSelectedEntity() ) mWorld.GetSelectedEntity()->SetSingleDestination( mMoveDestinationIndicator->getPosition() );
+		else mWorld.LocalPlayer->SetSingleDestination( mMoveDestinationIndicator->getPosition() );
+		return true;
+	}
+	return false;
+}
+
 bool CUIMain::MsgBoxKickCallback(void* Param)
 {
 	bool DoKick = ((int)Param == CGUIHandler::MsgBoxBtnYes);
@@ -269,7 +330,7 @@ void CUIMain::AttachMeshes(CEntity* Entity, const CharacterInfo& characterinfo)
 	bodymesh->_setBounds( boundingbox );
 
 	//headnode->showBoundingBox(true);
-	bodynode->showBoundingBox(true);
+	//bodynode->showBoundingBox(true);
 
 	//Make sure to do this to every (sub)entity that belongs to a player
 	body->setQueryFlags(QUERY_MASK_MOUSE_SELECTING);

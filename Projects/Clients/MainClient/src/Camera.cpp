@@ -42,20 +42,23 @@ Ogre::Camera* CCamera::GetCamera(void)
 	return mCamera;
 }
 
-void CCamera::Update(Ogre::Real ElapsedTime, Ogre::Vector3 PlayerPosition)
+void CCamera::Update(Ogre::Real ElapsedTime, Ogre::Vector3 PlayerPosition, Ogre::Vector3 PlayerMovement)
 {
 	//1. Camera position
 	Ogre::Vector3 CamPos = mCamNode->getPosition();
 	Ogre::Vector3 ToMove = PlayerPosition - CamPos;
 	Ogre::Real Dist = ToMove.length();
 	if( Dist > 0 ){ //If the camera node is not at the player
-		if( Dist > 100 ){ //Camera is more than 100 units away, so just teleport it to the player
-			mCamNode->setPosition(PlayerPosition);
+		 //Camera is more than 300 units away or really close and player is not moving, so just teleport it to the player
+		if( Dist > 300 || (PlayerMovement == Ogre::Vector3::ZERO && Dist < 0.1) ){
+			CamPos = PlayerPosition;
 		}else{ //Normal distance, so move camera with normal speed
 			//Speed depends on distance
-			CamPos += ToMove * (Dist * 0.05f * ElapsedTime);
-			mCamNode->setPosition(CamPos);
+			ToMove.normalise();
+			//The camera will be (PlayerSpeed / 2.0f) units behind the player
+			CamPos += ToMove * (Dist * 2.0f) * ElapsedTime; //Direction x Speed x TimeCorrection
 		}
+		mCamNode->setPosition(CamPos);
 	}
 
 	//2. Camera rotation

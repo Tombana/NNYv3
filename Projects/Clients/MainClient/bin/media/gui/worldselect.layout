@@ -8,7 +8,7 @@
         <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
         <Property Name="UnifiedMinSize" Value="{{0,300},{0,300}}" />
         <Property Name="TitlebarEnabled" Value="True" />
-        <Property Name="UnifiedAreaRect" Value="{{0.5,-150},{0.5,-220},{0.5,150},{0.5,220}}" />
+        <Property Name="UnifiedAreaRect" Value="{{0.5,-150},{0.5,-220},{0.5,150},{0.5,150}}" />
         <Window Type="TaharezLook/StaticText" Name="WorldSelectWindow/StaticInfo" >
             <Property Name="Text" >Please select a server to play on.
 Characters are shared amongst all servers.</Property>

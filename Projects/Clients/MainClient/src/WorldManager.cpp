@@ -1,6 +1,6 @@
 #include "WorldManager.h"
 
-CWorldManager::CWorldManager(void) : mEntities(), LocalPlayer(0)
+CWorldManager::CWorldManager(void) : mEntities(), LocalPlayer(0), mSelectedEntity(0)
 {
 }
 
@@ -42,4 +42,20 @@ CEntity* CWorldManager::GetEntityFromIdentifier(unsigned int Identifier)
 	const EntityList::iterator entity = mEntities.find(Identifier);
 	if( entity != mEntities.end() ) return entity->second;
 	return 0;
+}
+
+//If this returns false then the entity can not be set as selected
+bool CWorldManager::SetSelectedEntity(CEntity* Entity)
+{
+	//if( Entity == 0 ) //Trying to deselect the selected entity
+	
+	if( mSelectedEntity == Entity ) return false; //Already selected this entity (or no selected entity and trying to deselect)
+
+	mSelectedEntity = Entity;
+	return true;
+}
+
+CEntity* CWorldManager::GetSelectedEntity(void)
+{
+	return mSelectedEntity;
 }
