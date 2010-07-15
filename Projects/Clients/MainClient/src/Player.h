@@ -7,4 +7,6 @@ class CPlayer :
 public:
 	CPlayer(CWorldManager& World, Ogre::SceneNode *Node);
 	virtual ~CPlayer(void);
+
+	virtual const bool IsCPlayer(void) const{ return true; }
 };

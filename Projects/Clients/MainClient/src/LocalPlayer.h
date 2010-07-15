@@ -11,6 +11,8 @@ public:
 	CLocalPlayer(CWorldManager& World, Ogre::SceneNode *Node);
 	virtual ~CLocalPlayer(void);
 
+	virtual const bool IsCLocalPlayer(void) const{ return true; }
+
 	void SetDestinationMarker(Ogre::SceneNode* Node, Ogre::Entity* BlendingEntity);
 
 	//To enable/disable the destination marker

@@ -4,20 +4,14 @@
 #include "Camera.h"
 #include "ThreadMessagesConstants.h"
 
-CInputHandler::CInputHandler(CWorldManager& World, CCamera& Camera, Ogre::RenderWindow *window, Ogre::SceneManager *SceneMgr, Ogre::RaySceneQuery *RaySceneQuery) :
-	mWorld(World), mCamera(Camera), mWindow(window), mSceneMgr(SceneMgr), mRaySceneQuery(RaySceneQuery),
-		mInputManager(0), mKeyboard(0), mMouse(0), mGUISystem(CEGUI::System::getSingletonPtr())
+CInputHandler::CInputHandler(CWorldManager& World, CCamera& Camera, Ogre::RenderWindow *window, Ogre::SceneManager *SceneMgr) :
+	mWorld(World), mCamera(Camera), mWindow(window), mSceneMgr(SceneMgr),
+		mInputManager(0), mKeyboard(0), mMouse(0), mGUISystem(CEGUI::System::getSingletonPtr()),
+		mEscapeTimer(0), mMaxEscapeDelay(1.5)
 {
 	size_t windowHnd = 0;
 	mWindow->getCustomAttribute("WINDOW", &windowHnd);
-	
-	std::ostringstream windowHndStr;
-	windowHndStr << windowHnd;
-	
-	OIS::ParamList pl;
-	pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
-	
-	mInputManager = OIS::InputManager::createInputSystem( pl );
+	mInputManager = OIS::InputManager::createInputSystem( windowHnd );
 
 	//Create the keyboard and mouse device in buffered mode
 	mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject( OIS::OISKeyboard, true ));
@@ -42,19 +36,29 @@ bool CInputHandler::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
 	mKeyboard->capture();
 	mMouse->capture();
+	mEscapeTimer += evt.timeSinceLastFrame;
 	return true;
 }
 
 bool CInputHandler::keyPressed(const OIS::KeyEvent &arg)
 {
 	if( mGUISystem ){
-		mGUISystem->injectKeyDown(arg.key);
-		mGUISystem->injectChar(arg.text);
+		bool HandledKeyDown = mGUISystem->injectKeyDown(arg.key);
+		bool HandledChar = mGUISystem->injectChar(arg.text);
+		if( HandledKeyDown || HandledChar ) return true;
 	}
 
 	switch (arg.key){
 		case OIS::KC_ESCAPE:
-			CMainClient::getSingleton().SendThreadMessage(Message_Quit);
+			//If an entity was selected -> deselect
+			if( !CUIMain::getSingleton().DeselectEntity() ){
+				//If nothing was selected
+				//Quit after pressing esc two times within the delay time
+				if( mEscapeTimer < mMaxEscapeDelay ){
+					CMainClient::getSingleton().SendThreadMessage(Message_Quit);
+				}
+				mEscapeTimer = 0;
+			}
             break;
 		case OIS::KC_GRAVE:
 			CUIMain::getSingleton().ToggleConsole();
@@ -112,16 +116,7 @@ bool CInputHandler::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 	if( ProcessedByGUI ) return true;
 
 	if( id == OIS::MB_Left ){
-		CEGUI::Point mousePos = CEGUI::MouseCursor::getSingleton().getDisplayIndependantPosition();
-		Ogre::Ray ray(mCamera.GetCamera()->getCameraToViewportRay(mousePos.d_x, mousePos.d_y));
-		mRaySceneQuery->setRay(ray);
-		Ogre::RaySceneQueryResult& qryResult = mRaySceneQuery->execute();
-		for( Ogre::RaySceneQueryResult::iterator it = qryResult.begin(); it != qryResult.end(); ++it ){
-			//TODO: Test whether it is an entity or the ground.
-			Ogre::Vector3 Collision = ray.getPoint(it->distance);
-			if( mWorld.LocalPlayer ) mWorld.LocalPlayer->SetSingleDestination(Collision);
-			break;
-		}
+		return CUIMain::getSingleton().LeftClickInWorld();
 	}
 	return true;
 }

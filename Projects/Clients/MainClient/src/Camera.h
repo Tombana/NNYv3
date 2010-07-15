@@ -17,7 +17,7 @@ public:
 	Ogre::Camera* GetCamera(void);
 
 	//Update position, rotation and zoom
-	void Update(Ogre::Real ElapsedTime, Ogre::Vector3 PlayerPosition);
+	void Update(Ogre::Real ElapsedTime, Ogre::Vector3 PlayerPosition, Ogre::Vector3 PlayerMovement);
 
 	//These are written to by CInputHandler
 	Ogre::Real			mCamZoomSpeed; //Zoomspeed. positive means zooming out

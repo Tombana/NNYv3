@@ -12,7 +12,7 @@ class CCamera;
 class CInputHandler : public Ogre::FrameListener, public Ogre::WindowEventListener, public OIS::KeyListener, public OIS::MouseListener
 {
 public:
-	CInputHandler(CWorldManager& World, CCamera& Camera, Ogre::RenderWindow *window, Ogre::SceneManager *SceneMgr, Ogre::RaySceneQuery *RaySceneQuery);
+	CInputHandler(CWorldManager& World, CCamera& Camera, Ogre::RenderWindow *window, Ogre::SceneManager *SceneMgr);
 	~CInputHandler(void);
 	
 	bool frameRenderingQueued(const Ogre::FrameEvent& evt);
@@ -35,9 +35,11 @@ private:
 	CCamera&			mCamera;
 	Ogre::RenderWindow	*mWindow;
 	Ogre::SceneManager	*mSceneMgr;
-	Ogre::RaySceneQuery *mRaySceneQuery;
 	OIS::InputManager	*mInputManager;
 	OIS::Keyboard		*mKeyboard;
 	OIS::Mouse			*mMouse;
 	CEGUI::System		*mGUISystem;
+
+	Ogre::Real			mEscapeTimer;
+	const Ogre::Real	mMaxEscapeDelay;
 };

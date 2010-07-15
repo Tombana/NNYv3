@@ -33,6 +33,14 @@ public:
 	CEntity( CWorldManager& World, EntityType Type, Ogre::SceneNode *Node );
 	virtual ~CEntity(void);
 
+	virtual long getTypeID(void) const{ return mEntityType; } //From Ogre::UserDefinedObject
+	virtual const bool IsCItem(void) const{ return false; }
+	virtual const bool IsCNpc(void) const{ return false; }
+	virtual const bool IsCCombatEntity(void) const{ return false; }
+	virtual const bool IsCMonster(void) const{ return false; }
+	virtual const bool IsCPlayer(void) const{ return false; }
+	virtual const bool IsCLocalPlayer(void) const{ return false; }
+
 	//Sets the state and returns the old state.
 	//Will set the appropriate animations
 	EntityState SetState(EntityState NewState);
@@ -76,7 +84,7 @@ public:
 protected:
 	CWorldManager& mWorld;
 
-	EntityType mEntityType;
+	const EntityType mEntityType;
 
 	EntityState mState;
 

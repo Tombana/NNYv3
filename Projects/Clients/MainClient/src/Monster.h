@@ -7,4 +7,6 @@ class CMonster :
 public:
 	CMonster(CWorldManager& World, Ogre::SceneNode *Node);
 	virtual ~CMonster(void);
+
+	virtual const bool IsCMonster(void) const{ return true; }
 };
