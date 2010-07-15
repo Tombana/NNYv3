@@ -257,7 +257,15 @@ bool CUIMain::LeftClickInWorld(void)
 			//Fightable -> attack with default attack: user can choose melee or skill
 			//TODO: This 'default action' should be saved with your character (in server database)
 			else if( Entity->IsCCombatEntity() ){
-				mWorld.LocalPlayer->SetState(State_Fighting);
+				CCombatEntity* Target = static_cast<CCombatEntity*>(Entity);
+				//TODO: Options:
+				//Send attack request to server in order to know whether it is possible to attack this entity.
+				//Or walk up to it and only send the attack request when close enough to melee/skill.
+				if( mWorld.LocalPlayer->IsWithinAttackRange(Target,0) ){
+					mWorld.LocalPlayer->SetState(State_Fighting);
+				}else{
+					mWorld.LocalPlayer->FollowEntity(Target);
+				}
 			}
 		}
 		//The user clicked on an entity that was not the currently selected entity -> select it

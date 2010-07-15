@@ -3,7 +3,7 @@
 
 CEntity::CEntity( CWorldManager& World, EntityType Type, Ogre::SceneNode *Node ) :
 	mWorld(World), mEntityType(Type), mNode(Node), mState(State_Disabled), mIdentifier(0), Animations(),
-	mMoveSpeed(0.0f), mDestinations()
+	mMoveSpeed(0.0f), mDestinations(), mFollowing(0), mRadius(15)
 {
 	SetState(State_Disabled);
 	mWorld.RegisterEntity(mIdentifier, this);
@@ -64,27 +64,29 @@ EntityState CEntity::SetState(EntityState NewState)
 
 void CEntity::UpdateMovement(Ogre::Real ElapsedTime)
 {
-	//Also update walk/idle animation?
 	if( IsMoving() ){
-		Ogre::Real LenghtLeftToGo = (GetDestination() - GetPosition()).length();
-		Ogre::Vector3 Movement = GetMovement();
-		Ogre::Vector3 CorrectedMovement = ( Movement * ElapsedTime );
+		Ogre::Vector3 Destination = GetDestination();
+		if( Destination != Ogre::Vector3::ZERO ){
+			Ogre::Real LenghtLeftToGo = (Destination - GetPosition()).length();
+			Ogre::Vector3 Movement = GetMovement();
+			Ogre::Vector3 CorrectedMovement = ( Movement * ElapsedTime );
 
-		//Set the right angle for the entity
-		mNode->lookAt( GetDestination(), Ogre::Node::TS_WORLD );
+			//Set the right angle for the entity
+			mNode->lookAt( Destination, Ogre::Node::TS_WORLD );
 
-		if( CorrectedMovement.length() < LenghtLeftToGo ){ //Not at destination yet, just move
-			mNode->translate( CorrectedMovement );
-		}else{ //Arrived at destination
-			mNode->setPosition( GetDestination() );
-			ReachedDestination();
-			//TODO: If there is a next destination then go there with the frametime left of this movement.
-			//(Loop till all frametime is used for movement)
-			//Example: if there are 3 destinations left, and the first 2 will be reached
-			//in 2 seconds.
-			//If the user has a slow computer that updates the frame every 2,5 seconds,
-			//then it should first use x seconds to reach destination one, then check
-			//for how many seconds left, and use those to go to the next node and so on.
+			if( CorrectedMovement.length() < LenghtLeftToGo ){ //Not at destination yet, just move
+				mNode->translate( CorrectedMovement );
+			}else{ //Arrived at destination
+				mNode->setPosition( Destination );
+				ReachedDestination();
+				//TODO: If there is a next destination then go there with the frametime left of this movement.
+				//(Loop till all frametime is used for movement)
+				//Example: if there are 3 destinations left, and the first 2 will be reached
+				//in 2 seconds.
+				//If the user has a slow computer that updates the frame every 2,5 seconds,
+				//then it should first use x seconds to reach destination one, then check
+				//for how many seconds left, and use those to go to the next node and so on.
+			}
 		}
 	}
 }
@@ -101,14 +103,35 @@ void CEntity::UpdateAnimations(Ogre::Real ElapsedTime)
 	}
 }
 
+Ogre::Vector3 CEntity::GetDestination(void)
+{
+	if( mDestinations.empty() ){
+		if( !mFollowing )
+			return Ogre::Vector3::ZERO;
+		else{
+			Ogre::Vector3 TargetPos = mFollowing->GetPosition();
+			Ogre::Vector3 Diff = GetPosition() - TargetPos;
+			Ogre::Real FinalDist = mRadius + mFollowing->mRadius;
+			if( Diff.squaredLength() > FinalDist*FinalDist ){ //Not within range of follow target
+				Diff.normalise();
+				return TargetPos + Diff * FinalDist;
+			}else
+				return Ogre::Vector3::ZERO;
+		}
+	}else
+		return mDestinations.front();
+}
+
 Ogre::Vector3 CEntity::GetMovement(void)
 {
-	if( mDestinations.size() == 0 ){
-		return Ogre::Vector3(0,0,0);
-	}else{
-		Ogre::Vector3 Direction( (mDestinations.front() - GetPosition()).normalisedCopy() );
-		return (Direction * mMoveSpeed);
+	if( IsMoving() ){
+		Ogre::Vector3 Destination = GetDestination();
+		if( Destination != Ogre::Vector3::ZERO ){
+			Ogre::Vector3 Direction( (Destination - GetPosition()).normalisedCopy() );
+			return (Direction * mMoveSpeed);
+		}
 	}
+	return Ogre::Vector3::ZERO;
 }
 
 Ogre::Real CEntity::GetDistanceLeft(void)
@@ -132,6 +155,24 @@ void CEntity::AddDestination(Ogre::Vector3 Destination)
 
 void CEntity::ReachedDestination(void)
 {
-	mDestinations.pop();
-	if( mDestinations.empty() ) SetState(State_Idle);
+	//If fixed-point destination
+	if( !mDestinations.empty() ){
+		mDestinations.pop();
+		if( mDestinations.empty() ) SetState(State_Idle);
+	//If following an entity
+	}else if( mFollowing ){
+		//TODO: Maybe some sort of notification/event that this entity reached target.
+		//Keep in mind that the target could still be moving.
+	}
+}
+
+bool CEntity::FollowEntity(CEntity* Entity)
+{	
+	ClearAllDestinations();
+
+	mFollowing = Entity;
+
+	SetState( mFollowing ? State_Moving : State_Idle );
+
+	return true;
 }

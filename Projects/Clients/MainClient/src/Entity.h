@@ -58,19 +58,39 @@ public:
 
 	//Position
 	inline const Ogre::Vector3 & GetPosition(void) const { return mNode->getPosition(); }
+	Ogre::Real GetDistance( CEntity* Entity ) const { return (GetPosition() - Entity->GetPosition()).length(); }
 
+	//
 	//Movement
-	Ogre::Vector3 GetMovement(void);
+	//
+	//This will return the first destination point.
+	//If following a target it will return the position at which this entity
+	// would stop if the target was not moving. See mRaidus for details.
+	Ogre::Vector3 GetDestination(void);
+	//Get the normalized move direction times the move speed
+	Ogre::Vector3 GetMovement(void); //returns Direction * Speed
 	bool IsMoving(void){ return (mState == State_Moving); }
+	bool IsFollowing(void){ return (IsMoving() && mFollowing && mDestinations.empty()); }
+	CEntity* GetFollowing(void){ return mFollowing; }
+	//For fixed-point destination only:
 	Ogre::Real GetDistanceLeft(void);
 	Ogre::Real GetMoveTimeLeft(void);
 
 	//Change movement
+	void StopMoving(void){ ClearAllDestinations(); FollowEntity(0); SetState(State_Idle); }
+	//
+	//Change movement - fixed point destination
+	//
 	virtual void AddDestination(Ogre::Vector3 Destination);
 	virtual void ReachedDestination(void);
 	virtual void ClearAllDestinations(void){ while( !mDestinations.empty() ){ mDestinations.pop(); } }
 	void SetSingleDestination(Ogre::Vector3 Destination){ ClearAllDestinations(); AddDestination(Destination); }
-	Ogre::Vector3 GetDestination(void){ if( mDestinations.empty() ) return Ogre::Vector3(0,0,0); else return mDestinations.front(); }
+
+	//
+	//Change movement - following an entity
+	//
+	//Pass zero to stop following. Passing an entity will clear the fixed-point destination
+	bool FollowEntity(CEntity* Entity);
 
 	//For every EntityState there is a list of AnimationState's that belongs to it.
 	typedef std::vector<Ogre::AnimationState*> AnimList;
@@ -80,6 +100,10 @@ public:
 	virtual void Update(Ogre::Real ElapsedTime){};
 	void UpdateMovement(Ogre::Real ElapsedTime);
 	void UpdateAnimations(Ogre::Real ElapsedTime);
+
+	//This is used for:
+	//When A follows B, it stops when the Distance(A,B) == RadiusA + RadiusB
+	Ogre::Real mRadius;
 
 protected:
 	CWorldManager& mWorld;
@@ -98,5 +122,10 @@ protected:
 	Ogre::Real mMoveSpeed; //Speed in units per second
 	//TODO: rotate-movement. Like in Flyff the items on the ground rotate.
 	//What type do we need to hold rotation? Vector3 or Quaternion ?
+
+	//Move destinations: either the entity is following another entity or it is
+	//heading to a fixed destination.
+	//If both of these are set (should not be possible) then the fixed destination goes first!
 	std::queue<Ogre::Vector3> mDestinations; //The positions the entity is heading to.
+	CEntity* mFollowing; //Zero when not following. Might change this to Ogre::SceneNode to be able to follow other things.
 };
