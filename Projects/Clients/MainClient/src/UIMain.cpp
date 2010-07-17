@@ -303,7 +303,7 @@ CPlayer* CUIMain::CreateNewPlayer(unsigned int Identifier, const CharacterInfo& 
 
 	Player->SetState(State_Idle);
 	//Set movespeed and so on based on characterinfo
-	Player->SetMoveSpeed(50);
+	Player->SetMoveSpeed(100);
 	return Player;
 }
 
@@ -315,41 +315,78 @@ void CUIMain::AttachMeshes(CEntity* Entity, const CharacterInfo& characterinfo)
 	Ogre::SceneNode* MainNode = Entity->GetSceneNode();
 	MainNode->setFixedYawAxis(true);
 
+	typedef std::vector<Ogre::Entity*> EntList;
+	EntList AttachedEntities;
+
 	//For every part of the entity (body,head,weapons,clothes) create a seperate node
 	//TODO: Do this based on characterinfo and stuff from datafiles (like xml files)
-	Ogre::SceneNode *bodynode = MainNode->createChildSceneNode();
-	//Ogre::SceneNode *headnode = MainNode->createChildSceneNode();
-	Ogre::Entity *body = mSceneMgr->createEntity("Entity_Body_" + EntityNameSuffix, "goku.mesh");
-	//Ogre::Entity *head = mSceneMgr->createEntity("Entity_Head_" + EntityNameSuffix, "ogrehead.mesh");
-	bodynode->attachObject(body);
-	//headnode->attachObject(head);
-	//headnode->yaw(Ogre::Degree(180));
-	bodynode->yaw(Ogre::Degree(180));
-	bodynode->setPosition(Ogre::Vector3(0,5,0));
-	//headnode->scale(0.3,0.3,0.3);
-	//headnode->setPosition(0, 80, -5);
+	switch( characterinfo.Looks.ModelId ){
+		case 3: //Robot
+			{
+				Ogre::SceneNode *bodynode = MainNode->createChildSceneNode();
+				Ogre::SceneNode *headnode = MainNode->createChildSceneNode();
+				Ogre::Entity *body = mSceneMgr->createEntity("Entity_Body_" + EntityNameSuffix, "robot.mesh");
+				Ogre::Entity *head = mSceneMgr->createEntity("Entity_Head_" + EntityNameSuffix, "ogrehead.mesh");
+				AttachedEntities.push_back(body);
+				AttachedEntities.push_back(head);
+				bodynode->attachObject(body);
+				headnode->attachObject(head);
 
-	body->setUserObject(Entity);
-	//head->setUserObject(Entity);
+				headnode->yaw(Ogre::Degree(180));
+				bodynode->yaw(Ogre::Degree(90));
+				headnode->scale(0.3,0.3,0.3);
+				headnode->setPosition(0, 80, -5);
 
-	Ogre::MeshPtr bodymesh = body->getMesh();
-	Ogre::AxisAlignedBox boundingbox = bodymesh->getBounds();
-	boundingbox.scale(Ogre::Vector3(0.7,1,0.9));
-	bodymesh->_setBounds( boundingbox );
+				Entity->Animations[State_Idle].push_back( body->getAnimationState("Idle") );
+				Entity->Animations[State_Moving].push_back( body->getAnimationState("Walk") );
+				Entity->Animations[State_Fighting].push_back( body->getAnimationState("Shoot") );
+			}
+			break;
+		case 2: //Vegeta
+			{
+				Ogre::SceneNode *bodynode = MainNode->createChildSceneNode();
+				Ogre::Entity *body = mSceneMgr->createEntity("Entity_Body_" + EntityNameSuffix, "vegeta.mesh");
+				AttachedEntities.push_back(body);
+				bodynode->attachObject(body);
+				bodynode->yaw(Ogre::Degree(180));
+				bodynode->setPosition(Ogre::Vector3(0,5,0));
+				Entity->Animations[State_Idle].push_back( body->getAnimationState("Idle") );
+				Entity->Animations[State_Moving].push_back( body->getAnimationState("Move") );
+				Entity->Animations[State_MovingFast].push_back( body->getAnimationState("Move_Fast") );
+				Entity->Animations[State_Fighting].push_back( body->getAnimationState("Fight") );
+			}
+			break;
+		case 1: //Goku
+			{
+				Ogre::SceneNode *bodynode = MainNode->createChildSceneNode();
+				Ogre::Entity *body = mSceneMgr->createEntity("Entity_Body_" + EntityNameSuffix, "goku.mesh");
+				AttachedEntities.push_back(body);
+				bodynode->attachObject(body);
+				bodynode->yaw(Ogre::Degree(180));
+				bodynode->setPosition(Ogre::Vector3(0,5,0));
+				Entity->Animations[State_Idle].push_back( body->getAnimationState("Idle") );
+				Entity->Animations[State_Moving].push_back( body->getAnimationState("Move") );
+				Entity->Animations[State_MovingFast].push_back( body->getAnimationState("Move_Fast") );
+				Entity->Animations[State_Fighting].push_back( body->getAnimationState("Fight") );
+			}
+			break;
+		default: //Ogre head
+			{
+				Ogre::SceneNode *headnode = MainNode->createChildSceneNode();
+				Ogre::Entity *head = mSceneMgr->createEntity("Entity_Head_" + EntityNameSuffix, "ogrehead.mesh");
+				AttachedEntities.push_back(head);
+				headnode->attachObject(head);
+				headnode->yaw(Ogre::Degree(180));
+				headnode->scale(0.5,0.5,0.5);
+				headnode->setPosition(0,10,0);
+			}
+			break;
+	}
 
-	//headnode->showBoundingBox(true);
-	//bodynode->showBoundingBox(true);
-
-	//Make sure to do this to every (sub)entity that belongs to a player
-	body->setQueryFlags(QUERY_MASK_MOUSE_SELECTING);
-	//head->setQueryFlags(QUERY_MASK_MOUSE_SELECTING);
-
-	//Animation names have to be taken from some data file (like xml).
-	Entity->Animations[State_Idle].push_back( body->getAnimationState("Idle") );
-	//Entity->Animations[State_Idle].push_back( head->getAnimationState("Idle") ); //Add the animations for every mesh
-	Entity->Animations[State_Moving].push_back( body->getAnimationState("Move") );
-	Entity->Animations[State_MovingFast].push_back( body->getAnimationState("Move_Fast") );
-	Entity->Animations[State_Fighting].push_back( body->getAnimationState("Fight") );
+	for( EntList::iterator ent = AttachedEntities.begin(); ent != AttachedEntities.end(); ++ent ){
+		(*ent)->setUserObject(Entity);
+		(*ent)->setQueryFlags(QUERY_MASK_MOUSE_SELECTING);
+	}
 
 	return;
 }

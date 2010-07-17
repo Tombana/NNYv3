@@ -102,8 +102,19 @@ public:
 	void UpdateAnimations(Ogre::Real ElapsedTime);
 
 	//This is used for:
-	//When A follows B, it stops when the Distance(A,B) == RadiusA + RadiusB
+	//When A follows B, it stops when Distance(A,B) == RadiusA + RadiusB
+	//A starts following B again when Distance(A,B) == RadiusPadA + RadiusPadB
+	//The second one should be bigger to prevent the following problem:
+	//if A is faster than B:
+	// 1. A reaches B
+	// 2. A goes into 'Idle'
+	// 3. B moves another millimeter
+	// 4. A goes into 'Move' again
+	// 5. A reaches B because A is faster
+	// 6. Goto step 2.
+	// This will repeat very quickly resulting in fast changes between the animations which looks laggy
 	Ogre::Real mRadius;
+	Ogre::Real mRadiusPad; 
 
 protected:
 	CWorldManager& mWorld;
@@ -128,4 +139,6 @@ protected:
 	//If both of these are set (should not be possible) then the fixed destination goes first!
 	std::queue<Ogre::Vector3> mDestinations; //The positions the entity is heading to.
 	CEntity* mFollowing; //Zero when not following. Might change this to Ogre::SceneNode to be able to follow other things.
+
+	Ogre::Vector3 GetFollowDestination(void); //Also implements mRadius
 };

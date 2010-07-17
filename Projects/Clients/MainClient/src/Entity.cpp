@@ -3,7 +3,7 @@
 
 CEntity::CEntity( CWorldManager& World, EntityType Type, Ogre::SceneNode *Node ) :
 	mWorld(World), mEntityType(Type), mNode(Node), mState(State_Disabled), mIdentifier(0), Animations(),
-	mMoveSpeed(0.0f), mDestinations(), mFollowing(0), mRadius(15)
+	mMoveSpeed(0.0f), mDestinations(), mFollowing(0), mRadius(15), mRadiusPad(25)
 {
 	SetState(State_Disabled);
 	mWorld.RegisterEntity(mIdentifier, this);
@@ -64,6 +64,20 @@ EntityState CEntity::SetState(EntityState NewState)
 
 void CEntity::UpdateMovement(Ogre::Real ElapsedTime)
 {
+
+	//If this entity was following another entity, and this entity reached the other entity
+	//it goes into State_Idle. However when that other entity then starts moving again
+	//this entity should follow again and switch back to State_Moving.
+	if( IsMoving() == false ){ //Not moving
+		if( mFollowing ){ //But following an entity
+			Ogre::Real MaxRangeSquared = (mRadiusPad + mFollowing->mRadiusPad);
+			MaxRangeSquared *= MaxRangeSquared;
+			if( (GetPosition() - mFollowing->GetPosition()).squaredLength() > MaxRangeSquared ){ //and not in range of that entity
+				SetState(State_Moving); //Move!
+			}
+		}
+	}
+	
 	if( IsMoving() ){
 		Ogre::Vector3 Destination = GetDestination();
 		if( Destination != Ogre::Vector3::ZERO ){
@@ -106,20 +120,22 @@ void CEntity::UpdateAnimations(Ogre::Real ElapsedTime)
 Ogre::Vector3 CEntity::GetDestination(void)
 {
 	if( mDestinations.empty() ){
-		if( !mFollowing )
-			return Ogre::Vector3::ZERO;
-		else{
-			Ogre::Vector3 TargetPos = mFollowing->GetPosition();
-			Ogre::Vector3 Diff = GetPosition() - TargetPos;
-			Ogre::Real FinalDist = mRadius + mFollowing->mRadius;
-			if( Diff.squaredLength() > FinalDist*FinalDist ){ //Not within range of follow target
-				Diff.normalise();
-				return TargetPos + Diff * FinalDist;
-			}else
-				return Ogre::Vector3::ZERO;
-		}
+		return GetFollowDestination();
 	}else
 		return mDestinations.front();
+}
+
+Ogre::Vector3 CEntity::GetFollowDestination(void){
+	if( mFollowing ){
+		Ogre::Vector3 TargetPos = mFollowing->GetPosition();
+		Ogre::Vector3 Diff = GetPosition() - TargetPos;
+		Ogre::Real FinalDist = mRadius + mFollowing->mRadius;
+		if( Diff.squaredLength() > FinalDist*FinalDist ){ //Not within range of follow target
+			Diff.normalise();
+			return TargetPos + Diff * FinalDist;
+		}
+	}
+	return Ogre::Vector3::ZERO;
 }
 
 Ogre::Vector3 CEntity::GetMovement(void)
@@ -149,6 +165,7 @@ Ogre::Real CEntity::GetMoveTimeLeft(void)
 
 void CEntity::AddDestination(Ogre::Vector3 Destination)
 {
+	FollowEntity(0); //Stop following
 	mDestinations.push(Destination);
 	SetState(State_Moving);
 }
@@ -161,6 +178,7 @@ void CEntity::ReachedDestination(void)
 		if( mDestinations.empty() ) SetState(State_Idle);
 	//If following an entity
 	}else if( mFollowing ){
+		SetState(State_Idle);
 		//TODO: Maybe some sort of notification/event that this entity reached target.
 		//Keep in mind that the target could still be moving.
 	}

@@ -1,0 +1,27 @@
+material vegeta/body
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture vegeta_body.bmp
+			}
+		}
+	}
+}
+
+material vegeta/head
+{
+	technique
+	{
+		pass
+		{
+			texture_unit
+			{
+				texture vegeta_head.bmp
+			}
+		}
+	}
+}

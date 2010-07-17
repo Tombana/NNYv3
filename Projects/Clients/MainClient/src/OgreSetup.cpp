@@ -153,13 +153,20 @@ int CUIMain::LoadWorld(void)
 	RootNode->createChildSceneNode()->attachObject(GroundEnt);
 
 	CharacterInfo local_player_info;
+	local_player_info.Looks.ModelId = 1;
 	mWorld.LocalPlayer = new CLocalPlayer(mWorld, RootNode->createChildSceneNode());
 	AttachMeshes(mWorld.LocalPlayer, local_player_info);
 	mWorld.LocalPlayer->SetMoveSpeed(100);
 	mWorld.LocalPlayer->SetState(State_Idle);
 
 	//Test:
-	CreateNewPlayer(0, CharacterInfo());
+	CharacterInfo player_info;
+	player_info.Looks.ModelId = 3;
+	CreateNewPlayer(0, player_info);
+	player_info.Looks.ModelId = 2;
+	CreateNewPlayer(0, player_info);
+	player_info.Looks.ModelId = 0;
+	CreateNewPlayer(0, player_info);
 
 	Ogre::SceneNode *DestMarkerNode = RootNode->createChildSceneNode();
 	Ogre::Entity *DestMarker = mSceneMgr->createEntity("Ent-DestMarker", "arrow.mesh");
