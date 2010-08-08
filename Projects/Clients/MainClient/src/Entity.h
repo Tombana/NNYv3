@@ -22,12 +22,12 @@ typedef enum EntityType{	EntityType_Unkown = 0,
 							EntityType_Monster,
 							EntityType_NPC };
 
-typedef enum EntityState{ State_Disabled = 0, State_Idle, State_Moving, State_Fighting, State_MAXENTITYSTATE } ;
+typedef enum EntityState{ State_Disabled = 0, State_Idle, State_Moving, State_MovingFast, State_Fighting, State_MAXENTITYSTATE } ;
 
 //The base class for all entities.
 //The entity can be a visible object.
 //Everything related to that can be gotten from the mNode member.
-class CEntity
+class CEntity : public Ogre::UserDefinedObject //UserDefinedObject will let CEntity link with Ogre::Entity
 {
 public:
 	CEntity( CWorldManager& World, EntityType Type, Ogre::SceneNode *Node );

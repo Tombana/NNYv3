@@ -142,38 +142,50 @@ int CUIMain::CleanupOgre(void)
 
 int CUIMain::LoadWorld(void)
 {
+	Ogre::SceneNode* RootNode = mSceneMgr->getRootSceneNode();
+
 	Ogre::Plane plane(Ogre::Vector3::UNIT_Y, -1); //1 unit under the ground
 	Ogre::MeshManager::getSingleton().createPlane("ground", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane,
 		2000,2000,20,20,true,1,5,5,Ogre::Vector3::UNIT_Z);
 	Ogre::Entity *GroundEnt = mSceneMgr->createEntity("GroundEntity", "ground");
 	GroundEnt->setQueryFlags(QUERY_MASK_MOUSE_MOVEMENT);
 	GroundEnt->setMaterialName("Rockwall");
-	mSceneMgr->getRootSceneNode()->createChildSceneNode()->attachObject(GroundEnt);
+	RootNode->createChildSceneNode()->attachObject(GroundEnt);
 
 	CharacterInfo local_player_info;
-	mWorld.LocalPlayer = new CLocalPlayer(mWorld, mSceneMgr->getRootSceneNode()->createChildSceneNode());
+	mWorld.LocalPlayer = new CLocalPlayer(mWorld, RootNode->createChildSceneNode());
 	AttachMeshes(mWorld.LocalPlayer, local_player_info);
-	mWorld.LocalPlayer->SetMoveSpeed(50);
+	mWorld.LocalPlayer->SetMoveSpeed(100);
 	mWorld.LocalPlayer->SetState(State_Idle);
 
 	//Test:
 	CreateNewPlayer(0, CharacterInfo());
 
-	Ogre::SceneNode *DestMarkerNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-	Ogre::SceneNode *DestMarkerSubNode = DestMarkerNode->createChildSceneNode();
-	Ogre::Entity *DestMarker = mSceneMgr->createEntity("Ent-DestMarker", "geosphere4500.mesh");
+	Ogre::SceneNode *DestMarkerNode = RootNode->createChildSceneNode();
+	Ogre::Entity *DestMarker = mSceneMgr->createEntity("Ent-DestMarker", "arrow.mesh");
 	DestMarker->setQueryFlags(0);
-	DestMarkerSubNode->attachObject(DestMarker);
-	DestMarkerSubNode->scale(0.05, 0.05, 0.05);
-	DestMarkerSubNode->setPosition(0,10,0);
+	DestMarkerNode->attachObject(DestMarker);
 	DestMarkerNode->setVisible(false);
 	mWorld.LocalPlayer->SetDestinationMarker(DestMarkerNode, DestMarker);
 
-	mMouseIndicator = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-	Ogre::Entity* MouseIndicatorEntity = mSceneMgr->createEntity("Ent-MouseIndicator", "geosphere4500.mesh");
+	mMoveDestinationIndicator = RootNode->createChildSceneNode();
+	Ogre::Entity* MouseIndicatorEntity = mSceneMgr->createEntity("Ent-MouseIndicator", "arrow.mesh");
 	MouseIndicatorEntity->setQueryFlags(0);
-	mMouseIndicator->attachObject(MouseIndicatorEntity);
-	mMouseIndicator->scale(0.03, 0.03, 0.03);
-	
+	MouseIndicatorEntity->setMaterialName("ArrowTransparent");
+	mMoveDestinationIndicator->attachObject(MouseIndicatorEntity);
+	mMoveDestinationIndicator->scale(0.8, 0.8, 0.8);
+
+	mEntityHoveringIndicator = RootNode->createChildSceneNode();
+	mEntitySelectionIndicator = RootNode->createChildSceneNode();
+	Ogre::Entity* HoverIndicatorEntity = mSceneMgr->createEntity("Ent-HoveringIndicator", "arrows.mesh");
+	Ogre::Entity* SelectionIndicatorEntity = mSceneMgr->createEntity("Ent-SelectionIndicator", "arrows.mesh");
+	HoverIndicatorEntity->setQueryFlags(0);
+	SelectionIndicatorEntity->setQueryFlags(0);
+	HoverIndicatorEntity->setMaterialName("ArrowTransparent");
+	mEntityHoveringIndicator->attachObject(HoverIndicatorEntity);
+	mEntitySelectionIndicator->attachObject(SelectionIndicatorEntity);
+	mEntityHoveringIndicator->setVisible(false);
+	mEntitySelectionIndicator->setVisible(false);
+
 	return 1;
 }

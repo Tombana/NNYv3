@@ -2,7 +2,7 @@
 #include "WorldManager.h"
 
 CEntity::CEntity( CWorldManager& World, EntityType Type, Ogre::SceneNode *Node ) :
-	mWorld(World), mEntityType(Type), mNode(Node), mIdentifier(0), Animations(),
+	mWorld(World), mEntityType(Type), mNode(Node), mState(State_Disabled), mIdentifier(0), Animations(),
 	mMoveSpeed(0.0f), mDestinations()
 {
 	SetState(State_Disabled);
@@ -34,8 +34,10 @@ EntityState CEntity::SetState(EntityState NewState)
 	if( mState != OldState ){
 		//Disable all old animations
 		if( !Animations[OldState].empty() ){
-			for( AnimList::iterator it = Animations[mState].begin(); it != Animations[mState].end(); ++it )
+			for( AnimList::iterator it = Animations[OldState].begin(); it != Animations[OldState].end(); ++it ){
 				(*it)->setEnabled(false);
+				(*it)->setTimePosition(0);
+			}
 		}
 		//Enable all new animations
 		if( !Animations[mState].empty() ){
@@ -45,6 +47,7 @@ EntityState CEntity::SetState(EntityState NewState)
 	}
 
 	//Do other stuff that is required
+	//See TODO CEntity::UpdateAnimations: maybe that should be in this switch case
 	switch( mState ){
 		case State_Idle:
 			break;
