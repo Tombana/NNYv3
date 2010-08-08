@@ -9,7 +9,7 @@ void CorePackets::invalidCMD(Packet &input) {
 	input.backSeek(sizeof(CMD));
 	std::cout << "[CorePackets][invalidCMD] Packet #" << input.read<CMD>() << " doesn't exist!" << std::endl;
 	std::cout << "Dump: (";
-	input.printHex();
+	input.printHexFromSeek();
 	std::cout << ")" << std::endl;
 	input.clear();
 }

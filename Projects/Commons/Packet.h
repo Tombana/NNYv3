@@ -45,6 +45,7 @@ public:
     }
 
     void printHex();
+	void printHexFromSeek();
     bool eof();
 	//Processing packets
 	std::string genStringPacket();

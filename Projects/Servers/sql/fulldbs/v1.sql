@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50148
 File Encoding         : 65001
 
-Date: 2010-06-21 19:26:01
+Date: 2010-06-29 11:14:25
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -23,13 +23,14 @@ CREATE TABLE `servers` (
   `ipv4` varchar(255) DEFAULT '0.0.0.0',
   `port` int(10) unsigned DEFAULT '0',
   `name` varchar(20) DEFAULT '',
+  `link_key` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of servers
 -- ----------------------------
-INSERT INTO `servers` VALUES ('1', '127.0.0.1', '6132', 'TestLocalMachine');
+INSERT INTO `servers` VALUES ('1', '127.0.0.1', '6132', 'TestLocalMachine', '7jpWng9Wjc');
 
 -- ----------------------------
 -- Table structure for `updates`

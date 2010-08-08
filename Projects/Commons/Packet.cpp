@@ -166,3 +166,15 @@ void Packet::printHex() {
         }
     }
 }
+
+//! [Debugging] Prints (human-readable) the byte array
+void Packet::printHexFromSeek() {
+    unsigned int size = m_buffer.size();
+    for (unsigned int i=m_seek; i<size; i++) {
+        if (i == size-1) {
+            printf("%02X", (BYTE) m_buffer.at(i));
+        } else {
+            printf("%02X ", (BYTE) m_buffer.at(i));
+        }
+    }
+}

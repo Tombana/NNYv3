@@ -32,7 +32,7 @@ void ConnectionPackets::auth(SESSION& session, Packet& input) {
 
 	//Prepare the query
 	database::sql req;
-	req << "SELECT w_accounts.id,LOWER(password),count(online) FROM w_accounts ";
+	req << "SELECT count(w_accounts.id),w_accounts.id,LOWER(password),count(online) FROM w_accounts ";
 	req << "LEFT OUTER JOIN w_characters ";
 	req << "ON w_accounts.id = w_characters.accountID AND w_characters.online=1 ";
 	req << "WHERE w_accounts.username=LOWER('" << cleanUsername << "')";
@@ -47,14 +47,15 @@ void ConnectionPackets::auth(SESSION& session, Packet& input) {
 	//Check if result is valid just in case it would impossibly fail.
 	if (result) {
 		database::row row = database::fetch_row(result);
-		if (row) {
-			std::cout << "-> row " << row[0] << " " << row[1] << " " << row[2] << std::endl;
-			std::string db_password = row[1];
+		//BE AWARE! Because this use JOIN & COUNT() at the same time, we will ALWAYS get 1 result, not 0, not 2.
+		//Therefore we must know how many entries were really found with another count().
+		if (database::toInt(row[0])) { ///<-- this is the other count()
+			std::string db_password = row[2];
 			if (db_password == password) {
 				//TODO: check kickGhost and do what you're supposed to
 
 				//If multiple login isn't allowed, check if we don't have a char logged already
-				if (!CONFIG_ALLOW_MULTIPLE_LOGIN && database::toInt(row[2]) > 0) {
+				if (!CONFIG_ALLOW_MULTIPLE_LOGIN && database::toInt(row[3]) > 0) {
 					packetToSend.add<ACK>(ACK_ALREADY);
 				} else {
 					packetToSend.add<ACK>(ACK_SUCCESS);
@@ -70,4 +71,6 @@ void ConnectionPackets::auth(SESSION& session, Packet& input) {
 	} else {
 		packetToSend.add<ACK>(ACK_INTERNAL_ERROR);
 	}
+
+	session->socket.write(packetToSend);
 }
