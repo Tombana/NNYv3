@@ -1,8 +1,3 @@
-////////-- SPAGHETTI JUNCTION --//////////
-// This code uses some GoTo statements,
-// sorry about the readable-ness.
-//////////////////////////////////////////
-
 #include "RealmConnector.h"
 
 RealmConnector::RealmConnector() {
@@ -14,7 +9,7 @@ RealmConnector::~RealmConnector() {
 
 void RealmConnector::run() {
 	forever {
-        if (m_socket.connect("127.0.0.1", 6131)) {
+        if (m_socket.connect("127.0.0.1", 6131)) { //TODO: Load from configuration file
 			//Get handle
 			ACE_HANDLE handle = m_socket.getHandle();
 			//Add new session to the session manager

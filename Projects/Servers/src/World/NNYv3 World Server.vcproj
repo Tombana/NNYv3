@@ -178,6 +178,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PacketDispatcher.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\PacketHandler.cpp"
 				>
 			</File>
@@ -193,6 +197,10 @@
 			>
 			<File
 				RelativePath=".\main.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PacketDispatcher.h"
 				>
 			</File>
 			<File
@@ -226,14 +234,6 @@
 			Name="Common Files"
 			>
 			<File
-				RelativePath="..\..\..\Commons\Capsule.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Commons\CircularQueue.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\Commons\config.h"
 				>
 			</File>
@@ -251,10 +251,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\Commons\Packet.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Commons\PacketDispatcher.h"
 				>
 			</File>
 			<File
@@ -279,38 +275,30 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Capsule Files"
+			Name="Packet Files"
 			>
 			<File
-				RelativePath=".\Capsules\CapsuleAuth.cpp"
+				RelativePath=".\Packets\ConnectionPackets.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Capsules\CapsuleAuth.h"
+				RelativePath=".\Packets\ConnectionPackets.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Capsules\CapsuleDebug.cpp"
+				RelativePath=".\Packets\CorePackets.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Capsules\CapsuleDebug.h"
+				RelativePath=".\Packets\CorePackets.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Capsules\CapsuleRealmSyncKeyAck.cpp"
+				RelativePath=".\Packets\RealmPackets.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Capsules\CapsuleRealmSyncKeyAck.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Capsules\CapsuleRealmWelcome.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\Capsules\CapsuleRealmWelcome.h"
+				RelativePath=".\Packets\RealmPackets.h"
 				>
 			</File>
 		</Filter>

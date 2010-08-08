@@ -151,9 +151,8 @@ void Packet::setSeek(unsigned int newSeek) {
 }
 
 //! [Harmful] Modify sightly the position of the seek in the byte array
-//! It can be a negative number (int)
-void Packet::modSeek(int newSeek) {
-    m_seek += newSeek;
+void Packet::backSeek(unsigned int modSeek) {
+    m_seek -= modSeek;
 }
 
 //! [Debugging] Prints (human-readable) the byte array

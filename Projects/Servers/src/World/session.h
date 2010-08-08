@@ -14,4 +14,6 @@ struct s_session {
 	s_session() : isARealmServer(false) {}
 };
 
+typedef	s_session* SESSION;
+
 #endif

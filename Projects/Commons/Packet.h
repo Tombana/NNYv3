@@ -49,11 +49,11 @@ public:
 	//Processing packets
 	std::string genStringPacket();
 	//Advanced commands:
-	//I don't recommend using any of the following unless you know what you are doing
+	//TODO: I don't recommend using any of the following unless you know what you are doing
 	void appendPacket(Packet &obj);
     std::string& getRefBuffer(); //[Harmful]
     void setSeek(unsigned int newSeek); //[Harmful]
-    void modSeek(int newSeek); //[Harmful]
+    void backSeek(unsigned int modSeek); //[Harmful]
     
 private:
     std::string m_buffer;

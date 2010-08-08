@@ -2,8 +2,7 @@
 IMPORTANT, KEEP IT UP-TO-DATE
 *****************************/
 #define NNY_PROTOCOL_VERSION        40	   //Protocol version, useful when debugging
-#define NNY_PROTOCOL_RANGE			0x0014 //Packet range from 0x00 to 0x14 are defined here
-//Next available PCKT CODE is       0x0015 //PCKT decimal = 21, usualy the next after NNY_PROTOCOL_RANGE
+//Next available PCKT CODE is       0x0015 //PCKT decimal = 21
 
 /*****************************
         [X] Multi-directional
@@ -23,7 +22,8 @@ IMPORTANT, KEEP IT UP-TO-DATE
 //Info: Send your revision to the realm server
 //Params: [DWORD]Client version
 #define PCKT_C_GETWORLDLIST         0x0014 //PCKT decimal = 20
-//Info: Reques the world list from the server. (In the form of PCKT_R_WORLD)
+//Info: Reques the world list from the realm server.
+//Important: The realm will reply with PCKT_R_WORLD packets then PCKT_R_WOLD_EOF.
 //Params: [None]
 #define PCKT_C_AUTH                 0x000C //PCKT decimal = 12
 //Info: Authentication to the world server
@@ -127,7 +127,7 @@ IMPORTANT, KEEP IT UP-TO-DATE
 
 /*****************************
        ACK codes (BYTEs)
-  next available is number 0x06 (decimal 6)
+  next available is number 0x07 (decimal 7)
 *****************************/
 #define ACK_FAILURE             0x00
 #define ACK_SUCCESS             0x01
@@ -135,3 +135,4 @@ IMPORTANT, KEEP IT UP-TO-DATE
 #define ACK_DOESNT_MATCH        0x03
 #define ACK_ALREADY             0x04
 #define ACK_REFUSED             0x05
+#define ACK_INTERNAL_ERROR		0x06

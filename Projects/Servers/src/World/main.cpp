@@ -83,18 +83,6 @@ int main(int argc, char **argv) {
     REALMCONNECTOR::instance()->start();
 
 	//=========================================
-    // SETTING UP : `PacketDispatcher`
-    //=========================================
-	std::cout << "Setting up PacketDispatcher..." << std::endl;
-	//Calling ACE_Singleton to get a pointer of our instance everytime would be stupid, once is enough.
-	PacketDispatcher<SESSION> *i_dispatcher = PACKETDISPATCHER::instance();
-	//Add sources to the dispatcher instance; btw the class destructor will make sure to delete created objects
-	i_dispatcher->addSource(PCKT_X_DEBUG, new CapsuleDebug);
-	i_dispatcher->addSource(PCKT_R_WELCOME, new CapsuleRealmWelcome);
-	i_dispatcher->addSource(PCKT_R_SYNC_KEY_ACK, new CapsuleRealmSyncKeyAck);
-	i_dispatcher->addSource(PCKT_C_AUTH, new CapsuleAuth);
-
-	//=========================================
     // SETTING UP : `ACE_Acceptor`
     //=========================================
     std::cout << "Setting up ACE_Acceptor on port 6132..." << std::endl;

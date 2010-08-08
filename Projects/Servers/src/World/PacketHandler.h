@@ -8,6 +8,7 @@
 #include "ace/Synch.h"
 #include "SessionMgr.h"
 #include "Socket.h"
+#include "resProtocol.h"
 
 #define BUFFER_SIZE 1024
 
@@ -50,12 +51,12 @@ public:
 
 //Packet dispatching system
 #include "PacketDispatcher.h"
-//Some defines for the implementation
-#include "session.h" //define s_session
-typedef	s_session* SESSION;
-typedef ACE_Singleton<SessionMgr<SESSION>,ACE_Null_Mutex> SESSIONMGR;
-typedef ACE_Singleton<PacketDispatcher<SESSION>,ACE_Null_Mutex> PACKETDISPATCHER;
 
+//Some defines for the implementation
+#include "session.h" //define SESSION
+typedef ACE_Singleton<SessionMgr<SESSION>,ACE_Null_Mutex> SESSIONMGR;
+
+//Realm connector
 #include "RealmConnector.h"
 
 #endif

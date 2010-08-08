@@ -258,10 +258,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Commons\PacketDispatcher.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\Commons\SessionMgr.h"
 				>
 			</File>

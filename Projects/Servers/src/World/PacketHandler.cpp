@@ -100,7 +100,7 @@ int PacketHandler::handle_input(ACE_HANDLE handle) {
 				std::cerr << "[packetHandler] @ERROR: Length refused!" << std::endl;
 				std::cerr << "[PacketHandler] @ERROR: Socket closed for security reasons." << std::endl;
 				SESSIONMGR::instance()->delSession(handle);
-				return -1; //break ACE_Svn_Handle and close the socket
+				return -1; //break ACE_Svc_Handle and close the socket
 			}
 
 			//Okay now the interesting part:
@@ -113,9 +113,9 @@ int PacketHandler::handle_input(ACE_HANDLE handle) {
 				Packet inputCapsules;
 				inputCapsules.getRefBuffer().append(session->buffer.getRefBuffer().substr(5, length)); //position to 5 and read length bytes
 				//-----------------------------------------------
-				//PROCESS (DISPTACH IN OUR CASE) TO THE CAPSULES
+				//DISPTACH THE CAPSULES TO THE APPRORIATE FUNCTIONS
 				while (true) { //a loop to parse all CMDs in the packet
-					PACKETDISPATCHER::instance()->dispatch(session, inputCapsules.read<CMD>(), inputCapsules);
+					PacketDispatcher::dispatch(session, inputCapsules);
 					if (inputCapsules.eof()) break; //break the loop, no more CMDs
 				}
 				//-----------------------------------------------
@@ -149,9 +149,9 @@ int PacketHandler::handle_input(ACE_HANDLE handle) {
 			//At this point, i hope we arent expecting a new capsule
 			//because if its the case, that capsule doesnt starts with 0x7E.
 			//Something is definitivelly going wrong.
-			std::cerr << "[PacketHandler] @ERROR: Packets are corrupted!" << std::endl;
-			std::cerr << "[PacketHandler] @ERROR: There is another capsule in this packet, not starting with 0x7E!" << std::endl;
-			std::cerr << "[PacketHandler] @ERROR: Socket closed for security reasons." << std::endl;
+			std::cerr << "@ERROR: PacketHandler: Packets are corrupted!" << std::endl;
+			std::cerr << "@ERROR: PacketHandler: There is another capsule in this packet, not starting with 0x7E!" << std::endl;
+			std::cerr << "@ERROR: PacketHandler: Socket closed for security reasons." << std::endl;
 			SESSIONMGR::instance()->delSession(handle);
 			return -1; //break ACE_Svc_Handler, close the socket as well
 		}

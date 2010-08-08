@@ -23,7 +23,7 @@ void CapsuleVersion::doit(s_session* session, Packet& capsule) {
 			if (db_result) {
 				database::row row;
 				while (row = database::fetch_row(db_result)) {
-					packetToSend.add<CMD>(PCKT_R_DOWNLOAD);
+					packetToSend.add<CMD>(PCKT_R_DOWNLOAD); //TODO: There should be a PCKT_R_DELETE and PCKT_R_MOVE too
 					packetToSend.add<DWORD>(database::toInt(row[0])); //(int) version
 					packetToSend.addString(row[1]); //url
 					packetToSend.addString(row[2]); //path
