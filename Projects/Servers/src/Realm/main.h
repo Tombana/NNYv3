@@ -24,16 +24,10 @@
 #include "config.h"
 //Needed to setup WorldlinkMgr's instance
 #include "WorldlinkMgr.h"
-//Capsules
-#include "Capsules/CapsuleDebug.h"
-#include "Capsules/CapsuleVersion.h"
-#include "Capsules/CapsuleWorldlist.h"
-#include "Capsules/CapsuleSync.h"
 
 //Some typedefs needed to setup PacketDispatcher's instance
 #include "session.h" //define s_session
 typedef	s_session* SESSION;
-typedef ACE_Singleton<PacketDispatcher<SESSION>,ACE_Null_Mutex> PACKETDISPATCHER;
 
 //Functions
 void handle_signal(int signal);

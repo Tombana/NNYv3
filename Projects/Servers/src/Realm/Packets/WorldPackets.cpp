@@ -1,10 +1,10 @@
-#include "CapsuleSync.h"
+#include "WorldPackets.h"
 
-void CapsuleSync::doit(s_session* session, Packet& capsule) {
-	std::cout << "[CapsuleSync] PCKT_W_SYNC_KEY received!" << std::endl;
+void WorldPackets::syncKey(SESSION& session, Packet& input) {
+	std::cout << "[WorldPackets][syncKey] PCKT_W_SYNC_KEY received!" << std::endl;
 	//Save vars
-	DWORD serverID = capsule.read<DWORD>();
-	std::string sync_key = capsule.readString();
+	DWORD serverID = input.read<DWORD>();
+	std::string sync_key = input.readString();
 	std::cout << "Server ID: " << serverID << std::endl;
 	std::cout << "Sync key: " << sync_key << std::endl;
 	//Get the saved sync_key from WORDLINKMGR
@@ -20,7 +20,6 @@ void CapsuleSync::doit(s_session* session, Packet& capsule) {
 			session->worldID = serverID;
 			session->isAWorldServer = true;
 			link->socket = session->socket;
-			//std::cout << "Server " << link->name << " joined the cluster!" << std::endl;
 		} else {
 			packetToSend.add<ACK>(ACK_FAILURE);
 		}

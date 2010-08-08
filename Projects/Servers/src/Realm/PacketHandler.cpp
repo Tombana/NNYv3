@@ -109,7 +109,7 @@ int PacketHandler::handle_input(ACE_HANDLE handle) {
 				//-----------------------------------------------
 				//PROCESS (DISPTACH IN OUR CASE) TO THE CAPSULES
 				while (true) { //a loop to parse all CMDs in the packet
-					PACKETDISPATCHER::instance()->dispatch(session, inputCapsules.read<CMD>(), inputCapsules);
+					PacketDispatcher::dispatch(session, inputCapsules);
 					if (inputCapsules.eof()) break; //break the loop, no more CMDs
 				}
 				//-----------------------------------------------

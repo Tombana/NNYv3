@@ -13,9 +13,7 @@
 
 //Some typedefs needed for the implementation code
 #include "session.h" //define s_session
-typedef	s_session* SESSION;
 typedef ACE_Singleton<SessionMgr<SESSION>,ACE_Null_Mutex> SESSIONMGR;
-typedef ACE_Singleton<PacketDispatcher<SESSION>,ACE_Null_Mutex> PACKETDISPATCHER;
 
 #define BUFFER_SIZE 1024
 

@@ -19,4 +19,6 @@ struct s_session {
 	s_session() : isAWorldServer(false) {}
 };
 
+typedef s_session* SESSION;
+
 #endif

@@ -30,7 +30,7 @@ void WorldlinkMgr::loadWorldsFromDB(database::connection db) {
 			m_data[id]->name		= row[3];
 			m_data[id]->sync_key	= row[4];
 			m_data[id]->online		= false;
-			m_data[id]->flag		= *(BYTE*)row[5]; //TODO: not sure the conversion is right
+			m_data[id]->flag		= *row[5];
 		}
 		database::free_result(result);
 	}

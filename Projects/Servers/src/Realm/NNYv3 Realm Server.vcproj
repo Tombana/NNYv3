@@ -178,6 +178,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PacketDispatcher.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\PacketHandler.cpp"
 				>
 			</File>
@@ -192,11 +196,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\Capsule.h"
+				RelativePath=".\main.h"
 				>
 			</File>
 			<File
-				RelativePath=".\main.h"
+				RelativePath=".\PacketDispatcher.h"
 				>
 			</File>
 			<File
@@ -229,14 +233,6 @@
 		<Filter
 			Name="Common Files"
 			>
-			<File
-				RelativePath="..\..\..\Commons\Capsule.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\Commons\CircularQueue.h"
-				>
-			</File>
 			<File
 				RelativePath="..\..\..\Commons\config.h"
 				>
@@ -279,38 +275,38 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="Capsules"
+			Name="Packet Files"
 			>
 			<File
-				RelativePath=".\Capsules\CapsuleDebug.cpp"
+				RelativePath=".\Packets\CorePackets.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Capsules\CapsuleDebug.h"
+				RelativePath=".\Packets\CorePackets.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Capsules\CapsuleSync.cpp"
+				RelativePath=".\Packets\UpdaterPackets.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Capsules\CapsuleSync.h"
+				RelativePath=".\Packets\UpdaterPackets.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Capsules\CapsuleVersion.cpp"
+				RelativePath=".\Packets\WorldlistPackets.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Capsules\CapsuleVersion.h"
+				RelativePath=".\Packets\WorldlistPackets.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Capsules\CapsuleWorldlist.cpp"
+				RelativePath=".\Packets\WorldPackets.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\Capsules\CapsuleWorldlist.h"
+				RelativePath=".\Packets\WorldPackets.h"
 				>
 			</File>
 		</Filter>

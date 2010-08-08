@@ -1,8 +1,8 @@
-#include "CapsuleVersion.h"
+#include "UpdaterPackets.h"
 
-void CapsuleVersion::doit(s_session* session, Packet& capsule) {
-	std::cout << "[CapsuleVersion] Packet PCKT_C_VERSION received!" << std::endl;
-	DWORD version = capsule.read<DWORD>();
+void UpdaterPackets::checkVersion(SESSION& session, Packet& input) {
+	std::cout << "[UpdaterPackets][checkVersion] PCKT_C_VERSION received!" << std::endl;
+	DWORD version = input.read<DWORD>();
 	std::cout << "Version: " << version << std::endl;
 
 	Packet packetToSend;
@@ -34,4 +34,4 @@ void CapsuleVersion::doit(s_session* session, Packet& capsule) {
 		packetToSend.add<CMD>(PCKT_R_DOWNLOAD_EOF);
 		session->socket.write(packetToSend);
 	}
-} //end of doit()
+}

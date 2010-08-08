@@ -74,18 +74,6 @@ int main(int argc, char **argv) {
 	WORLDLINKMGR::instance()->loadWorldsFromDB(g_db);
 
 	//=========================================
-    // SETTING UP PACKET DISPATCHER
-    //=========================================
-	std::cout << "Setting up the packet dispatcher..." << std::endl;
-	//Calling ACE_Singleton to get a pointer of our instance everytime would be stupid, once is enough.
-	PacketDispatcher<SESSION> *i_dispatcher = PACKETDISPATCHER::instance();
-	//Add sources to the dispatcher instance; btw the class destructor will make sure to delete created objects
-	i_dispatcher->addSource(PCKT_X_DEBUG, new CapsuleDebug);
-	i_dispatcher->addSource(PCKT_C_VERSION, new CapsuleVersion);
-	i_dispatcher->addSource(PCKT_C_GETWORLDLIST, new CapsuleWorldlist);
-	i_dispatcher->addSource(PCKT_W_SYNC_KEY, new CapsuleSync);
-
-	//=========================================
     // SETTING UP : `ACE_Acceptor`
     //=========================================
     std::cout << "Setting up acceptor on port 6131..." << std::endl;
